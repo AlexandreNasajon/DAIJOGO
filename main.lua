@@ -1,54 +1,60 @@
---ignora-----
+
 math.randomseed(os.time())
--------------
-function printcarta(carta)
-  print(carta["name"],carta["atq"],carta["def"])
+
+function printcard(card)
+  print(">",card["type"],card["name"],card["power"],card["resistance"])
 end
-function printmao(hand)
+function printhand(hand)
   i = 1
   while i <= #hand do
-    printcarta(hand[i])
+    printcard(hand[i])
   
     i = i+1
   end  
 end
+function printboard(board)
+    print(board["board"])
+end
+
 card = {
-  {["name"] = "mago",["atq"]=25,["def"]=21},
-  {["name"] = "demon",["atq"]=20,["def"]=15},
-  {["name"] = "knight",["atq"]=10,["def"]=20},
-  {["name"] = "Witch",["atq"]=5,["def"]=30},
-  {["name"] = "Wolf",["atq"]=10,["def"]=15}
+  {["type"] = "monster",["name"] = "Demon",["power"] = 20,["resistance"]=20},
+  {["type"] = "monster",["name"] = "Mage",["power"] = 15,["resistance"]=30},
+  {["type"] = "monster",["name"] = "Knight",["power"] = 25,["resistance"]=15},
+  {["type"] = "monster",["name"] = "Witch",["power"] = 30,["resistance"]=15},
+  {["type"] = "monster",["name"] = "Wolf",["power"] = 15,["resistance"]=15},
+  {["type"] = "monster",["name"] = "Tiger",["power"] = 20,["resistance"]=15},
+  {["type"] = "monster",["name"] = "Angel",["power"] = 25,["resistance"]=25}
 }
 
-deck = {card[1],card[2],card[3],card[4],card[5]}
-mao = {deck[math.random(1,5)],deck[math.random(1,5)],deck[math.random(1,5)]}
+deck = {card[1],card[2],card[3],card[4],card[5],card[6],card[7]}
+hand = {deck[math.random(1,#card)],deck[math.random(1,#card)],deck[math.random(1,#card)]}
+board = {}
 
---numerocartasmao = 3
-texto1="sua vez! Sua mão é:"
-texto2="digite o número da carta."
---numrand = math.random(1,5)
+while #hand>0 do
 
-while #mao>0 do
-  print(texto1)
-  printmao(mao)
-  print(texto2)
+print("Your hand is:")
+printhand(hand)
+print("Select a card.")
 
-  num = tonumber(io.read())
+num = tonumber(io.read())
 
-  valido = num<=3 and num>0
-  if valido then
-    printcarta(mao[num])
-    mao[num]=nil
+valid = num<=3 and num>0
+  if valid then
+    printcard(hand[num])
+    hand[num]=nil
     
     n = num
-    while n <= #mao do
-      mao[n] = mao[n+1]
+    while n <= #hand do
+      hand[n] = hand[n+1]
       n = n+1
     end
       
-    print("Sua nova mao eh:")
-    printmao(mao)
+    print("Your new hand is:")
+    printhand(hand)
+    board[#board+1] = hand[num]
+    print("The board is:")
+    printboard(board)
   else 
-    print("Este numero nao eh valido!")
+    print("Select a valid card!")
   end
 end
