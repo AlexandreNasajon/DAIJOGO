@@ -1,19 +1,24 @@
 
 math.randomseed(os.time())
 
-function printcard(card)
-  print(">",card["type"],card["name"],card["power"],card["resistance"])
+function printcard(c)
+  print(">",c["type"],c["name"],c["power"],c["resistance"])
 end
-function printhand(hand)
+function printhand(h)
   i = 1
-  while i <= #hand do
-    printcard(hand[i])
+  while i <= #h do
+    printcard(h[i])
   
     i = i+1
   end  
 end
-function printboard(board)
-    print(board["board"])
+function printboard(b)
+    m = 1
+    while m <= #b do
+      printcard(b[m])
+   
+      m = m+1
+    end
 end
 
 card = {
@@ -32,16 +37,17 @@ board = {}
 
 while #hand>0 do
 
-print("Your hand is:")
-printhand(hand)
-print("Select a card.")
+  print("Your hand is:")
+  printhand(hand)
+  print("Select a card.")
 
-num = tonumber(io.read())
+  num = tonumber(io.read())
 
-valid = num<=3 and num>0
+  valid = num<=#hand and num>0
   if valid then
     printcard(hand[num])
-    hand[num]=nil
+    board[#board+1] = hand[num]
+    hand[num] = nil
     
     n = num
     while n <= #hand do
@@ -49,9 +55,7 @@ valid = num<=3 and num>0
       n = n+1
     end
       
-    print("Your new hand is:")
-    printhand(hand)
-    board[#board+1] = hand[num]
+   
     print("The board is:")
     printboard(board)
   else 
