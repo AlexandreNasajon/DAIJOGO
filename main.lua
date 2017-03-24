@@ -37,6 +37,8 @@ hand1 = {deck[math.random(1,#deck)],deck[math.random(1,#deck)],deck[math.random(
 hand2 = {deck[math.random(1,#deck)],deck[math.random(1,#deck)],deck[math.random(1,#deck)]}
 board1 = {}
 board2= {}
+grave1 = {}
+grave2 = {}
 life1 = 100
 life2 = 100
 t = 1 -- turno
@@ -49,31 +51,29 @@ while life1>0 do
     action = tonumber(io.read())
     
     if action == 1 then
-        while #hand>0 do
+        while #hand1>0 do
 
             print("Your hand is:")
-            printhand(hand)
+            printhand(hand1)
             print("Select a card.")
     
             num = tonumber(io.read())
 
-        valid = num<=#hand and num>0
-        if valid then
-            printcard(hand[num])
-            board[#board+1] = hand[num]
-            hand[num] = nil
+            valid = num<=#hand1 and num>0
+            if valid then
+                printcard(hand1[num])
+                board1[#board1+1] = hand1[num]
+                hand1[num] = nil
     
-        while num <= #hand do
-            hand[num] = hand[num+1]
-            num = num+1
+                    while num <= #hand1 do
+                        hand1[num] = hand1[num+1]
+                        num = num+1
+                    end
+            else 
+            print("Select a valid card!")        
+            
         end
-   
-    print("The board is:")
-    printboard(board)
-  else 
-    print("Select a valid card!")
-  end
-        
+    end
         
     if action == 2 then
         printboard(board)
@@ -85,5 +85,8 @@ while life1>0 do
         if valid then
             print("Select defender")
             printboard(board2)
+        
+        else
+        print("Select a valid action!")
 
 end
