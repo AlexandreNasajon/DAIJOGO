@@ -178,7 +178,7 @@ while t = 2 do --turno do player 2
             end
             
         elseif action == 3 then
-            t = 2 --faz o turno ir pro player 2
+            t = 1 --faz o turno ir pro player 1
         end
             
         else
