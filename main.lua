@@ -33,8 +33,33 @@ card = {
 }
 
 deck = {card[1],card[2],card[3],card[4],card[5],card[6],card[7],card[8],card[9]}
-hand = {deck[math.random(1,#deck)],deck[math.random(1,#deck)],deck[math.random(1,#deck)]}
-board = {}
+hand1 = {deck[math.random(1,#deck)],deck[math.random(1,#deck)],deck[math.random(1,#deck)]}
+hand2 = {deck[math.random(1,#deck)],deck[math.random(1,#deck)],deck[math.random(1,#deck)]}
+board1 = {}
+board2
+life1 = 100
+life2 = 100
+t = 1 -- turno
+
+while life>0 do
+    print("1 - Play card from hand")
+    print("2 - Attack with monster")
+    
+    action = tonumber(io.read())
+    
+    if action == 1 then
+        printhand(hand)
+        
+    if action == 2 then
+        printboard(board)
+        print("Select attacker")
+        attacker = tonumber(io.read())
+        
+        valid = attacker<=#board
+        
+        if valid then
+            print("Select defender")
+            printboard(board2)
 
 while #hand>0 do
 
