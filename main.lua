@@ -79,16 +79,16 @@ while t = 1 do --turno do player 1
         elseif action == 2 then
             print("Select attacker")
             printboard(board1)
-            attacker = tonumber(io.read())
+            attacker = board1[tonumber(io.read())]
             
             valid = attacker<=#board1
             
             if valid then
                 print("Select defender")
                 printboard(board2)
-                defender = tonumber(io.read())
+                defender = board2[tonumber(io.read())]
                 
-                valid = defender<=board2
+                valid = defender<=#board2
                 
                 if valid then
                     defender["resistance"] = defender["resistance"] - attacker["power"]
@@ -151,16 +151,16 @@ while t = 2 do --turno do player 2
         elseif action == 2 then
             print("Select attacker")
             printboard(board2)
-            attacker = tonumber(io.read())
+            attacker = board2[tonumber(io.read())]
             
             valid = attacker<=#board2
             
             if valid then
                 print("Select defender")
                 printboard(board1)
-                defender = tonumber(io.read())
+                defender = board1[tonumber(io.read())]
                 
-                valid = defender<=board1
+                valid = defender<=#board1
                 
                 if valid then
                     defender["resistance"] = defender["resistance"] - attacker["power"]
