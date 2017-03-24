@@ -36,19 +36,44 @@ deck = {card[1],card[2],card[3],card[4],card[5],card[6],card[7],card[8],card[9]}
 hand1 = {deck[math.random(1,#deck)],deck[math.random(1,#deck)],deck[math.random(1,#deck)]}
 hand2 = {deck[math.random(1,#deck)],deck[math.random(1,#deck)],deck[math.random(1,#deck)]}
 board1 = {}
-board2
+board2= {}
 life1 = 100
 life2 = 100
 t = 1 -- turno
 
-while life>0 do
+while life1>0 do
+    print("Player 1's turn")
     print("1 - Play card from hand")
     print("2 - Attack with monster")
     
     action = tonumber(io.read())
     
     if action == 1 then
-        printhand(hand)
+        while #hand>0 do
+
+            print("Your hand is:")
+            printhand(hand)
+            print("Select a card.")
+    
+            num = tonumber(io.read())
+
+        valid = num<=#hand and num>0
+        if valid then
+            printcard(hand[num])
+            board[#board+1] = hand[num]
+            hand[num] = nil
+    
+        while num <= #hand do
+            hand[num] = hand[num+1]
+            num = num+1
+        end
+   
+    print("The board is:")
+    printboard(board)
+  else 
+    print("Select a valid card!")
+  end
+        
         
     if action == 2 then
         printboard(board)
@@ -61,28 +86,4 @@ while life>0 do
             print("Select defender")
             printboard(board2)
 
-while #hand>0 do
-
-  print("Your hand is:")
-  printhand(hand)
-  print("Select a card.")
-
-  num = tonumber(io.read())
-
-  valid = num<=#hand and num>0
-  if valid then
-    printcard(hand[num])
-    board[#board+1] = hand[num]
-    hand[num] = nil
-    
-    while num <= #hand do
-      hand[num] = hand[num+1]
-      num = num+1
-    end
-   
-    print("The board is:")
-    printboard(board)
-  else 
-    print("Select a valid card!")
-  end
 end
