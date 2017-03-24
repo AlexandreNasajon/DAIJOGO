@@ -71,22 +71,43 @@ while life1>0 do
                     end
             else 
             print("Select a valid card!")        
-            
+            end
         end
-    end
-        
-    if action == 2 then
-        printboard(board)
+            
+    elseif action == 2 then
         print("Select attacker")
+        printboard(board1)
         attacker = tonumber(io.read())
         
-        valid = attacker<=#board
+        valid = attacker<=#board1
         
         if valid then
             print("Select defender")
             printboard(board2)
+            defender = tonumber(io.read())
+            
+            valid = defender<=board2
+            
+            if valid then
+                defender["resistance"] = defender["resistance"] - attacker["power"]
+                
+                if attacker["resistance"] <=0 then
+                    grave1[#grave1] = attacker
+                end
+                
+                if defender["resistance"] <=0 then
+                    grave2[#grave2] = defender                
+                end
+                
+            else 
+                print("Select a valid defender!")
+            end
+            
+        else
+            print("Select a valid attacker!")
+        end
         
         else
-        print("Select a valid action!")
-
+            print("Select a valid action!")
+        end
 end
