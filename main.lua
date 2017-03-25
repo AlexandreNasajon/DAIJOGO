@@ -32,16 +32,61 @@ card = {
   {["type"] = "monster",["name"] = "Kraken",["power"] = 35,["resistance"]=30}
 }
 
-deck = {card[1],card[2],card[3],card[4],card[5],card[6],card[7],card[8],card[9]}
+pool = {card[1],card[2],card[3],card[4],card[5],card[6],card[7],card[8],card[9]}
+deck = {D1,D2}
+deck[1] = {}
+deck[2] = {}
 hand = {H1,H2}
-hand[1] = {deck[math.random(1,#deck)],deck[math.random(1,#deck)],deck[math.random(1,#deck)]}
-hand[2] = {deck[math.random(1,#deck)],deck[math.random(1,#deck)],deck[math.random(1,#deck)]}
+hand[1] = {deck[1][math.random(1,#deck[1])],deck[math.random(1,#deck[1])],deck[math.random(1,#deck[1])]}
+hand[2] = {deck[2][math.random(1,#deck[2])],deck[math.random(1,#deck[2])],deck[math.random(1,#deck[2])]}
 board = {B1,B2}
+board[1] = {}
+board[2] = {}
 grave = {G1,G2}
+grave[1] = {}
+grave[2] = {}
 life = {L1,L2}
 life[1] = 100
 life[2] = 100
 t = 1 --turno
+
+while #deck[1]<7 do
+    print("Build a deck with 7 cards!")
+    print("Pick a card:")
+    print(
+        "1 -" pool[math.random(1,#pool)],
+        "2 -" pool[math.random(1,#pool)],
+        "3 -" pool[math.random(1,#pool)],
+        "4 -" pool[math.random(1,#pool)],
+        "5 -" pool[math.random(1,#pool)]
+    )
+    
+    action = tonumber(io.read())
+    
+    if action<6 and action>0 then
+        deck[1][#deck[1]] = 
+        
+    else
+        print("Pick a valid card!")
+    end
+   
+    
+    
+    
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 while t == 1 do --turno do player 1
             while life[1]>0 do
@@ -72,7 +117,7 @@ while t == 1 do --turno do player 1
                                                                     num = num+1
                                                             end
                                                             
-                                                else 
+                                                else
                                                 print("Select a valid card!")        
                                                 end
                                     end
