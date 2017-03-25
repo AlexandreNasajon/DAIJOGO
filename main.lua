@@ -71,11 +71,11 @@ while t == 1 do --turno do player 1
                                                                     hand[1][num] = hand[1][num+1]
                                                                     num = num+1
                                                             end
-                                                end                
-                                                end else print("Select a valid card!")        
+                                                            
+                                                else 
+                                                print("Select a valid card!")        
                                                 end
                                     end
-                        end
                         
                         elseif action == 2 then
                                     print("Select attacker")
@@ -106,11 +106,9 @@ while t == 1 do --turno do player 1
                                     else
                                         print("Select a valid attacker!")
                                     end
-                        end            
                             
                         elseif action == 3 then
                                     t = 2 --faz o turno ir pro player 2
-                        end
                             
                         else
                                     print("Select a valid action!")
@@ -183,7 +181,6 @@ while t == 2 do --turno do player 2
             
         elseif action == 3 then
             t = 1 --faz o turno ir pro player 1
-        end
             
         else
                 print("Select a valid action!")
