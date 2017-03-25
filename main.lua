@@ -50,21 +50,24 @@ life[1] = 100
 life[2] = 100
 t = 1 --turno
 
+draftpool = {
+        "1 -"..pool[math.random(1,#pool)],
+        "2 -"..pool[math.random(1,#pool)],
+        "3 -"..pool[math.random(1,#pool)],
+        "4 -"..pool[math.random(1,#pool)],
+        "5 -"..pool[math.random(1,#pool)]
+}
+
 while #deck[1]<7 do
+    print("Player 1's draft.")
     print("Build a deck with 7 cards!")
     print("Pick a card:")
-    print(
-        "1 -" pool[math.random(1,#pool)],
-        "2 -" pool[math.random(1,#pool)],
-        "3 -" pool[math.random(1,#pool)],
-        "4 -" pool[math.random(1,#pool)],
-        "5 -" pool[math.random(1,#pool)]
-    )
+    print(draftpool)
     
     action = tonumber(io.read())
     
     if action<6 and action>0 then
-        deck[1][#deck[1]] = 
+        deck[1][#deck[1]] = draftpool[action]
         
     else
         print("Pick a valid card!")
@@ -74,13 +77,6 @@ while #deck[1]<7 do
     
     
 end
-
-
-
-
-
-
-
 
 
 
