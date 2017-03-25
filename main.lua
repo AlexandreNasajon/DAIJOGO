@@ -33,18 +33,18 @@ card = {
 }
 
 deck = {card[1],card[2],card[3],card[4],card[5],card[6],card[7],card[8],card[9]}
-hand1 = {deck[math.random(1,#deck)],deck[math.random(1,#deck)],deck[math.random(1,#deck)]}
-hand2 = {deck[math.random(1,#deck)],deck[math.random(1,#deck)],deck[math.random(1,#deck)]}
-board1 = {}
-board2= {}
-grave1 = {}
-grave2 = {}
-life1 = 100
-life2 = 100
+hand = {H1,H2}
+hand[1] = {deck[math.random(1,#deck)],deck[math.random(1,#deck)],deck[math.random(1,#deck)]}
+hand[2] = {deck[math.random(1,#deck)],deck[math.random(1,#deck)],deck[math.random(1,#deck)]}
+board = {B1,B2}
+grave = {G1,G2}
+life = {L1,L2}
+life[1] = 100
+life[2] = 100
 t = 1 --turno
 
-while t = 1 do --turno do player 1
-    while life1>0 do
+while t == 1 do --turno do player 1
+    while life[1]>0 do
         print("Player 1's turn")
         print("1 - Play card from hand")
         print("2 - Attack with monster")
@@ -53,22 +53,22 @@ while t = 1 do --turno do player 1
         action = tonumber(io.read())
         
         if action == 1 then
-            while #hand1>0 do
+            while #hand[1]>0 do
 
                 print("Your hand is:")
-                printhand(hand1)
+                printhand(hand[1])
                 print("Select a card.")
         
                 num = tonumber(io.read())
 
-                valid = num<=#hand1 and num>0
+                valid = num<=#hand[1] and num>0
                 if valid then
-                    printcard(hand1[num])
-                    board1[#board1+1] = hand1[num]
-                    hand1[num] = nil
+                    printcard(hand[1][num])
+                    board[1][#board[1]+1] = hand[1][num]
+                    hand[1][num] = nil
         
-                        while num <= #hand1 do
-                            hand1[num] = hand1[num+1]
+                        while num <= #hand[1] do
+                            hand[1][num] = hand[1][num+1]
                             num = num+1
                         end
                 else 
@@ -78,23 +78,23 @@ while t = 1 do --turno do player 1
                 
         elseif action == 2 then
             print("Select attacker")
-            printboard(board1)
-            attacker = board1[tonumber(io.read())]
+            printboard(board[1])
+            attacker = board[1][tonumber(io.read())]
             
-            valid = attacker<=#board1
+            valid = attacker<=#board[1]
             
             if valid then
                 print("Select defender")
-                printboard(board2)
-                defender = board2[tonumber(io.read())]
+                printboard(board[2])
+                defender = board[2][tonumber(io.read())]
                 
-                valid = defender<=#board2
+                valid = defender<=#board[2]
                 
                 if valid then
                     defender["resistance"] = defender["resistance"] - attacker["power"]
                     
                     if defender["resistance"] <=0 then
-                        grave2[#grave2] = defender                
+                        grave[2][#grave[2]] = defender                
                     end
                     
                 else 
@@ -109,14 +109,15 @@ while t = 1 do --turno do player 1
             t = 2 --faz o turno ir pro player 2
         end
             
+        end
         else
                 print("Select a valid action!")
         end
     end
 end
 
-while t = 2 do --turno do player 2
-    while life2>0 do
+while t == 2 do --turno do player 2
+    while life[2]>0 do
         print("Player 2's turn")
         print("1 - Play card from hand")
         print("2 - Attack with monster")
@@ -125,22 +126,22 @@ while t = 2 do --turno do player 2
         action = tonumber(io.read())
         
         if action == 1 then
-            while #hand2>0 do
+            while #hand[2]>0 do
 
                 print("Your hand is:")
-                printhand(hand2)
+                printhand(hand[2])
                 print("Select a card.")
         
                 num = tonumber(io.read())
 
-                valid = num<=#hand2 and num>0
+                valid = num<=#hand[2] and num>0
                 if valid then
-                    printcard(hand2[num])
-                    board2[#board2+1] = hand2[num]
-                    hand2[num] = nil
+                    printcard(hand[2][num])
+                    board[2][#board[2]+1] = hand[2][num]
+                    hand[2][num] = nil
         
-                        while num <= #hand2 do
-                            hand2[num] = hand2[num+1]
+                        while num <= #hand[2] do
+                            hand[2][num] = hand[2][num+1]
                             num = num+1
                         end
                 else 
@@ -150,23 +151,23 @@ while t = 2 do --turno do player 2
                 
         elseif action == 2 then
             print("Select attacker")
-            printboard(board2)
-            attacker = board2[tonumber(io.read())]
+            printboard(board[2])
+            attacker = board[2][tonumber(io.read())]
             
-            valid = attacker<=#board2
+            valid = attacker<=#board[2]
             
             if valid then
                 print("Select defender")
-                printboard(board1)
-                defender = board1[tonumber(io.read())]
+                printboard(board[1])
+                defender = board[1][tonumber(io.read())]
                 
-                valid = defender<=#board1
+                valid = defender<=#board[1]
                 
                 if valid then
                     defender["resistance"] = defender["resistance"] - attacker["power"]
                     
                     if defender["resistance"] <=0 then
-                        grave1[#grave1] = defender                
+                        grave[1][#grave[1]] = defender                
                     end
                     
                 else 
