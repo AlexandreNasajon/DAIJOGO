@@ -161,8 +161,8 @@ t = 1
     while t == 1 do
         print("Player 1 turn")
         print("You draw a card")
-        drawcard(Player1)
-        print("1 - Play card from hand")
+        drawcard(Player1) -- tá comprando sempre que volta pra cá
+        print("1 - Play card from hand") -- tá podendo baixar várias, preciso limitar
         print("2 - Attack with monster")
         print("3 - End turn")
             
@@ -171,7 +171,7 @@ t = 1
         if option == 1 then
             print("Your hand is:")
             printhandboardorgrave(Player1["hand"])
-            print(#Player1["hand"]+1.." - Return")
+            print(1+#Player1["hand"].." - Return")
             
             opt = tonumber(io.read())
             
@@ -198,6 +198,59 @@ t = 1
             
         elseif option == 2 then
             
+            print("The board is:")
+                    printhandboardorgrave(Player1["board"])
+                    print("Select an attacker:")
+
+                    
+                    num = tonumber(io.read())
+                    
+                    attacker = Player1["board"][num]
+
+                    if num<=#Player1["board"] then
+                        
+                        print("Select a target.")
+                        print("1 - Opponent")
+                        if #Player2["board"]>0 then
+                        print("2 - Monsters")
+                        end
+                        
+                        target = tonumber(io.read())
+                        
+                        if target == 1 then
+                        Player2["life"] = Player2["life"] - attacker["power"]
+                        print("Player 2's life is now: "..Player2["life"])
+                        
+                        elseif target == 2 and #Player2["board"]>0 then
+                            printhandboardorgrave(Player2["board"])
+                            print("Select a defender.")
+                            num = tonumber(io.read())
+                            defender = Player2["board"][num]
+                            if num<=#Player2["board"] then
+                            defender["resistance"] = defender["resistance"] - attacker["power"]
+                            print(defender["name"].."'s resistance is now "..defender["resistance"])
+                            if defender["resistance"]<=0 then
+                                Player2["grave"][1+#PLayer2["grave"]] = defender
+                                Player2["board"][num] = nil
+                                print(defender["name"].." was destroyed as a result of battle. It was sent to the grave.")
+                                print("Player 2's grave is now: ")
+                                printhandboardorgrave(Player2["grave"])
+                                
+                            end
+                                
+                            else
+                                print("Select a defender!")
+                            end
+                        
+                        else
+                            print("Select a target!")
+                        end
+                        
+                        
+                    else
+                        print("Select an attacker!")
+                    end
+            
             
             
         elseif option == 3 then
@@ -213,8 +266,8 @@ t = 1
         while t == 2 do
             print("Player 2 turn")
             print("You draw a card")
-            drawcard(Player2)
-            print("1 - Play card from hand")
+            drawcard(Player2) -- tá comprando sempre que volta pra cá
+            print("1 - Play card from hand") -- tá podendo baixar várias, preciso limitar
             print("2 - Attack with monster")
             print("3 - End turn")
             
@@ -224,7 +277,7 @@ t = 1
             if option == 1 then
                 print("Your hand is:")
                 printhandboardorgrave(Player2["hand"])
-                print(#Player2["hand"]+1.." - Return")
+                print(1+#Player2["hand"].." - Return")
             
                 opt = tonumber(io.read())
             
@@ -250,7 +303,59 @@ t = 1
                 
             
             elseif option == 2 then
-            
+                
+                print("The board is:")
+                    printhandboardorgrave(Player2["board"])
+                    print("Select an attacker:")
+
+                    
+                    num = tonumber(io.read())
+                    
+                    attacker = Player2["board"][num]
+
+                    if num<=#Player2["board"] then
+                        
+                        print("Select a target.")
+                        print("1 - Opponent")
+                        if #Player1["board"]>0 then
+                        print("2 - Monsters")
+                        end
+                        
+                        target = tonumber(io.read())
+                        
+                        if target == 1 then
+                            Player1["life"] = Player1["life"] - attacker["power"]
+                            print("Player 1's life is now: "..Player1["life"])
+                        
+                        elseif target == 2 and #Player1["board"]>0 then
+                            printhandboardorgrave(Player1["board"])
+                            print("Select a defender.")
+                            num = tonumber(io.read())
+                            defender = Player1["board"][num]
+                            if num<=#Player1["board"] then
+                            defender["resistance"] = defender["resistance"] - attacker["power"]
+                            print(defender["name"].."'s resistance is now "..defender["resistance"])
+                            if defender["resistance"]<=0 then
+                                Player1["grave"][1+#PLayer1["grave"]] = defender
+                                Player1["board"][num] = nil
+                                print(defender["name"].." was destroyed as a result of battle. It was sent to the grave.")
+                                print("Player 2's grave is now: ")
+                                printhandboardorgrave(Player1["grave"])
+                                
+                            end
+                                
+                            else
+                                print("Select a defender!")
+                            end
+                        
+                        else
+                            print("Select a target!")
+                        end
+                        
+                        
+                    else
+                        print("Select an attacker!")
+                    end
             
             
             elseif option == 3 then
