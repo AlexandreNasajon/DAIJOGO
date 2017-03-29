@@ -171,6 +171,7 @@ t = 1
         if option == 1 then
             print("Your hand is:")
             printhandboardorgrave(Player1["hand"])
+            print(#Player1["hand"]+1.." - Return")
             
             opt = tonumber(io.read())
             
@@ -180,11 +181,16 @@ t = 1
                 printcard(Player1["hand"][opt])
                 Player1["board"][#Player1["board"]+1] = Player1["hand"][opt]
                 Player1["hand"][opt] = nil
+                print("The board is now:")
+                printhandboardorgrave(Player1["board"])
         
                     while opt <= #Player1["hand"] do
                         Player1["hand"][opt] = Player1["hand"][opt+1]
                         opt = opt+1
                     end
+                    
+            elseif opt == #Player1["hand"]+1 then
+                    
             else 
                 print("Select a valid card!")        
             end
@@ -218,6 +224,7 @@ t = 1
             if option == 1 then
                 print("Your hand is:")
                 printhandboardorgrave(Player2["hand"])
+                print(#Player2["hand"]+1.." - Return")
             
                 opt = tonumber(io.read())
             
@@ -227,14 +234,16 @@ t = 1
                     printcard(Player2["hand"][opt])
                     Player2["board"][#Player2["board"]+1] = Player2["hand"][opt]
                     Player1["hand"][opt] = nil
+                    print("The board is now:")
+                    printhandboardorgrave(Player2["board"])
         
-                        while opt <= #Player1["hand"] do
-                            Player1["hand"][opt] = Player1["hand"][opt+1]
+                        while opt <= #Player2["hand"] do
+                            Player2["hand"][opt] = Player2["hand"][opt+1]
                             opt = opt+1
                         end
                     
-                    
-                    
+                elseif opt == #Player2["hand"]+1 then
+                        
                 else 
                     print("Select a valid card!")        
                 end
