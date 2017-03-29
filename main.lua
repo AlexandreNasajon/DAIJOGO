@@ -1,230 +1,127 @@
 math.randomseed(os.time())
 
-function printcard(c)
-  print(">",c["type"],c["name"],c["power"],c["resistance"])
-end
-function printhand(h)
+function printhandboardorgrave(h)
     i = 1
+    print("#","Type","Name","Power","Resistance")
     while i <= #h do
-        printcard(h[i])
+        print(m,h[m]["type"],h[m]["name"],h[m]["power"],h[m]["resistance"])
   
         i = i+1
     end  
 end
-function printboard(b)
-    m = 1
-    while m <= #b do
-        printcard(b[m])
+
+function draft(pool)
+    
+    while #Player1["deck"]<7 do
+        print("Player 1's draft.")
+        print("Build a deck with 7 cards!")
+        print("Pick a card:")
+    
+        m = 1
+        while m <= 5 do
+            draftpool[#draftpool+1] = pool[math.random(1,#pool)]
+    
+            m = m+1
+        end
+    
+        i = 1
+        print("#","Type","Name","Power","Resistance")
+        while i <= 5 do
+            
+            print(i,draftpool[i]["type"],draftpool[i]["name"],draftpool[i]["power"],draftpool[i]["resistance"])
    
-        m = m+1
-    end
-end
-
-card = {
-  {["type"] = "monster",["name"] = "Demon",["power"] = 20,["resistance"]=20},
-  {["type"] = "monster",["name"] = "Mage",["power"] = 15,["resistance"]=30},
-  {["type"] = "monster",["name"] = "Knight",["power"] = 25,["resistance"]=15},
-  {["type"] = "monster",["name"] = "Witch",["power"] = 30,["resistance"]=15},
-  {["type"] = "monster",["name"] = "Wolf",["power"] = 15,["resistance"]=15},
-  {["type"] = "monster",["name"] = "Tiger",["power"] = 20,["resistance"]=15},
-  {["type"] = "monster",["name"] = "Angel",["power"] = 25,["resistance"]=25},
-  {["type"] = "monster",["name"] = "Dragon",["power"] = 40,["resistance"]=20},
-  {["type"] = "monster",["name"] = "Kraken",["power"] = 35,["resistance"]=30}
-}
-
-pool = {card[1],card[2],card[3],card[4],card[5],card[6],card[7],card[8],card[9]}
-deck = {D1,D2}
-deck[1] = {}
-deck[2] = {}
-hand = {H1,H2}
-hand[1] = {deck[1][math.random(1,#deck[1])],deck[math.random(1,#deck[1])],deck[math.random(1,#deck[1])]}
-hand[2] = {deck[2][math.random(1,#deck[2])],deck[math.random(1,#deck[2])],deck[math.random(1,#deck[2])]}
-board = {B1,B2}
-board[1] = {}
-board[2] = {}
-grave = {G1,G2}
-grave[1] = {}
-grave[2] = {}
-life = {L1,L2}
-life[1] = 100
-life[2] = 100
-t = 1 --turno
-
-draftpool = {
-        "1 -"..pool[math.random(1,#pool)],
-        "2 -"..pool[math.random(1,#pool)],
-        "3 -"..pool[math.random(1,#pool)],
-        "4 -"..pool[math.random(1,#pool)],
-        "5 -"..pool[math.random(1,#pool)]
-}
-
-while #deck[1]<7 do
-    print("Player 1's draft.")
-    print("Build a deck with 7 cards!")
-    print("Pick a card:")
-    print(draftpool)
-    
-    action = tonumber(io.read())
-    
-    if action<6 and action>0 then
-        deck[1][#deck[1]] = draftpool[action]
-        
-    else
-        print("Pick a valid card!")
-    end
-   
-    
-    
-    
-end
-
-
-
-
-
-
-
-while t == 1 do --turno do player 1
-            while life[1]>0 do
-                        print("Player 1's turn")
-                        print("1 - Play card from hand")
-                        print("2 - Attack with monster")
-                        print("3 - End turn")
-                        
-                        action = tonumber(io.read())
-                        
-                        if action == 1 then
-                                    while #hand[1]>0 do
-
-                                                print("Your hand is:")
-                                                printhand(hand[1])
-                                                print("Select a card.")
-                                        
-                                                num = tonumber(io.read())
-
-                                                valid = num<=#hand[1] and num>0
-                                                if valid then
-                                                            printcard(hand[1][num])
-                                                            board[1][#board[1]+1] = hand[1][num]
-                                                            hand[1][num] = nil
-                                                
-                                                            while num <= #hand[1] do
-                                                                    hand[1][num] = hand[1][num+1]
-                                                                    num = num+1
-                                                            end
-                                                            
-                                                else
-                                                print("Select a valid card!")        
-                                                end
-                                    end
-                        
-                        elseif action == 2 then
-                                    print("Select attacker")
-                                    printboard(board[1])
-                                    attacker = board[1][tonumber(io.read())]
-                                    
-                                    valid = attacker<=#board[1]
-                                    
-                                    if valid then
-                                        print("Select defender")
-                                        printboard(board[2])
-                                        defender = board[2][tonumber(io.read())]
-                                        
-                                        valid = defender<=#board[2]
-                                        
-                                        if valid then
-                                            defender["resistance"] = defender["resistance"] - attacker["power"]
-                                            
-                                            if defender["resistance"] <=0 then
-                                                grave[2][#grave[2]] = defender
-                                                defender = nil
-                                            end
-                                            
-                                        else 
-                                            print("Select a valid defender!")
-                                        end
-                                        
-                                    else
-                                        print("Select a valid attacker!")
-                                    end
-                            
-                        elseif action == 3 then
-                                    t = 2 --faz o turno ir pro player 2
-                            
-                        else
-                                    print("Select a valid action!")
-                        end
-            end
-end
-
-while t == 2 do --turno do player 2
-    while life[2]>0 do
-        print("Player 2's turn")
-        print("1 - Play card from hand")
-        print("2 - Attack with monster")
-        print("3 - End turn")
+        i = i+1
+        end
         
         action = tonumber(io.read())
+    
+        if action<6 and action>0 then
+            Player1["deck"][#Player1["deck"]+1] = draftpool[action]
+            print("You picked a "..draftpool[action]["name"].."!")
+            draftpool[1] = nil
+            draftpool[2] = nil
+            draftpool[3] = nil
+            draftpool[4] = nil
+            draftpool[5] = nil
         
-        if action == 1 then
-            while #hand[2]>0 do
-
-                print("Your hand is:")
-                printhand(hand[2])
-                print("Select a card.")
-        
-                num = tonumber(io.read())
-
-                valid = num<=#hand[2] and num>0
-                if valid then
-                    printcard(hand[2][num])
-                    board[2][#board[2]+1] = hand[2][num]
-                    hand[2][num] = nil
-        
-                        while num <= #hand[2] do
-                            hand[2][num] = hand[2][num+1]
-                            num = num+1
-                        end
-                else 
-                print("Select a valid card!")        
-                end
-            end
-                
-        elseif action == 2 then
-            print("Select attacker")
-            printboard(board[2])
-            attacker = board[2][tonumber(io.read())]
-            
-            valid = attacker<=#board[2]
-            
-            if valid then
-                print("Select defender")
-                printboard(board[1])
-                defender = board[1][tonumber(io.read())]
-                
-                valid = defender<=#board[1]
-                
-                if valid then
-                    defender["resistance"] = defender["resistance"] - attacker["power"]
-                    
-                    if defender["resistance"] <=0 then
-                        grave[1][#grave[1]] = defender
-                        defender = nil
-                    end
-                    
-                else 
-                    print("Select a valid defender!")
-                end
-                
-            else
-                print("Select a valid attacker!")
-            end
-            
-        elseif action == 3 then
-            t = 1 --faz o turno ir pro player 1
-            
         else
-                print("Select a valid action!")
+            print("Pick a valid card!")
         end
+    
+    
+    
     end
+    
+    while #Player2["deck"]<7 do
+        print("Player 2's draft.")
+        print("Build a deck with 7 cards!")
+        print("Pick a card:")
+    
+        m = 1
+        while m <= 5 do
+            draftpool[#draftpool+1] = pool[math.random(1,#pool)]
+    
+            m = m+1
+        end
+    
+        i = 1
+        print("#","Type","Name","Power","Resistance")
+        while i <= 5 do
+            
+            print(i,draftpool[i]["type"],draftpool[i]["name"],draftpool[i]["power"],draftpool[i]["resistance"])
+   
+        i = i+1
+        end
+        
+        action = tonumber(io.read())
+    
+        if action<6 and action>0 then
+            Player2["deck"][#Player2["deck"]+1] = draftpool[action]
+            print("You picked a "..draftpool[action]["name"].."!")
+            draftpool[1] = nil
+            draftpool[2] = nil
+            draftpool[3] = nil
+            draftpool[4] = nil
+            draftpool[5] = nil
+        
+        else
+            print("Pick a valid card!")
+        end
+    
+    end
+    
 end
+
+pool = {
+        {["type"] = "monster",["name"] = "Zombie",["power"] = 4,["resistance"]=5},
+        {["type"] = "monster",["name"] = "Demon",["power"] = 15,["resistance"]=24},
+        {["type"] = "monster",["name"] = "Knight",["power"] = 10,["resistance"]=19},
+        {["type"] = "monster",["name"] = "Witch",["power"] = 13,["resistance"]=22},
+        {["type"] = "monster",["name"] = "Wolf",["power"] = 4,["resistance"]=7},
+        {["type"] = "monster",["name"] = "Tiger",["power"] = 7,["resistance"]=9},
+        {["type"] = "monster",["name"] = "Angel",["power"] = 16,["resistance"]=25},
+        {["type"] = "monster",["name"] = "Dragon",["power"] = 17,["resistance"]=30},
+        {["type"] = "monster",["name"] = "Kraken",["power"] = 12,["resistance"]=27},
+}
+
+draftpool = {}
+
+Player1 = {
+    ["life"] = 100,
+    ["deck"] = {},
+    ["hand"] = {},
+    ["board"] = {},
+    ["grave"] = {}
+
+}
+
+Player2 = {
+    ["life"] = 100,
+    ["deck"] = {},
+    ["hand"] = {},
+    ["board"] = {},
+    ["grave"] = {}
+
+}
+
+draft(pool)
