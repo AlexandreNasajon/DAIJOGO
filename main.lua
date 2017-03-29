@@ -1,5 +1,10 @@
 math.randomseed(os.time())
 
+function printcard(c)
+        print("#","Type","Name","Power","Resistance")
+        print(c["type"],c["name"],c["power"],c["resistance"])
+end
+
 function printhandboardorgrave(h)
     i = 1
     print("#","Type","Name","Power","Resistance")
@@ -128,38 +133,63 @@ draft(pool)
 
 print("GAME START!")
 
+while Player1["life"] > 0 and Player2["life"] > 0 do
+
 t = 1     
 
-while t == 1 do
-    print("Player 1 turn")
-    print("1 - Play card from hand")
-    print("2 - Attack with monster")
-    print("3 - End turn")
-        
-    option = tonumber(io.read())
-        
-    if option == 3 then
-        
-        t = 2
-            
-    end
-        
-           
-
-    while t == 2 do
-        print("Player 2 turn")
+    while t == 1 do
+        print("Player 1 turn")
         print("1 - Play card from hand")
         print("2 - Attack with monster")
         print("3 - End turn")
-        
+            
         option = tonumber(io.read())
         
-        if option == 3 then
-        
-            t = 1
+        if option == 1 then
             
+            
+            
+        elseif option == 2 then
+            
+            
+            
+        elseif option == 3 then
+            
+            t = 2
+                
+        else 
+            print("Select a valid option!")
         end
-        
-    end -- while t == 2
-        
-end -- while t == 1
+            
+            
+
+        while t == 2 do
+            print("Player 2 turn")
+            print("1 - Play card from hand")
+            print("2 - Attack with monster")
+            print("3 - End turn")
+            
+            option = tonumber(io.read())
+            
+                
+            if option == 1 then
+            
+            
+            
+            elseif option == 2 then
+            
+            
+            
+            elseif option == 3 then
+            
+                t = 1
+                
+            else 
+                print("Select a valid option!")
+                
+            end
+            
+        end -- while t == 2
+            
+    end -- while t == 1
+end
