@@ -125,3 +125,41 @@ Player2 = {
 }
 
 draft(pool)
+
+print("GAME START!")
+
+t = 1     
+
+while t == 1 do
+    print("Player 1 turn")
+    print("1 - Play card from hand")
+    print("2 - Attack with monster")
+    print("3 - End turn")
+        
+    option = tonumber(io.read())
+        
+    if option == 3 then
+        
+        t = 2
+            
+    end
+        
+           
+
+    while t == 2 do
+        print("Player 2 turn")
+        print("1 - Play card from hand")
+        print("2 - Attack with monster")
+        print("3 - End turn")
+        
+        option = tonumber(io.read())
+        
+        if option == 3 then
+        
+            t = 1
+            
+        end
+        
+    end -- while t == 2
+        
+end -- while t == 1
