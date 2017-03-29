@@ -1,8 +1,16 @@
 math.randomseed(os.time())
 
 function printcard(c)
-        print("#","Type","Name","Power","Resistance")
+    
+    if c["type"] == "monster" then
+        print("Type","Name","Power","Resistance")
         print(c["type"],c["name"],c["power"],c["resistance"])
+        
+    elseif c["type"] == "spell" then
+        print("Type","Name","Effect")
+        print(c["type"],c["name"],c["effect"])
+        
+    end
 end
 
 function drawcard(p) -- player
@@ -141,6 +149,10 @@ print("GAME START!")
 
 drawcard(Player1)
 drawcard(Player1)
+drawcard(Player1)
+drawcard(Player2)
+drawcard(Player2)
+drawcard(Player2)
 
 while Player1["life"] > 0 and Player2["life"] > 0 do
 
@@ -148,6 +160,8 @@ t = 1
 
     while t == 1 do
         print("Player 1 turn")
+        print("You draw a card")
+        drawcard(Player1)
         print("1 - Play card from hand")
         print("2 - Attack with monster")
         print("3 - End turn")
@@ -157,8 +171,23 @@ t = 1
         if option == 1 then
             print("Your hand is:")
             printhandboardorgrave(Player1["hand"])
-            print("1 - Select a card")
-            print("2 - Return")
+            
+            opt = tonumber(io.read())
+            
+            valid = opt<=#Player1["hand"] and opt>0
+            
+            if valid then
+                printcard(Player1["hand"][opt])
+                Player1["board"][#Player1["board"]+1] = Player1["hand"][opt]
+                Player1["hand"][opt] = nil
+        
+                    while opt <= #Player1["hand"] do
+                        Player1["hand"][opt] = Player1["hand"][opt+1]
+                        opt = opt+1
+                    end
+            else 
+                print("Select a valid card!")        
+            end
             
             
         elseif option == 2 then
@@ -177,6 +206,8 @@ t = 1
 
         while t == 2 do
             print("Player 2 turn")
+            print("You draw a card")
+            drawcard(Player2)
             print("1 - Play card from hand")
             print("2 - Attack with monster")
             print("3 - End turn")
@@ -187,11 +218,27 @@ t = 1
             if option == 1 then
                 print("Your hand is:")
                 printhandboardorgrave(Player2["hand"])
-                print("1 - Select a card")
-                print("2 - Return")
             
+                opt = tonumber(io.read())
             
-            
+                valid = opt<=#Player2["hand"] and opt>0
+
+                if valid then
+                    printcard(Player2["hand"][opt])
+                    Player2["board"][#Player2["board"]+1] = Player2["hand"][opt]
+                    Player1["hand"][opt] = nil
+        
+                        while opt <= #Player1["hand"] do
+                            Player1["hand"][opt] = Player1["hand"][opt+1]
+                            opt = opt+1
+                        end
+                    
+                    
+                    
+                else 
+                    print("Select a valid card!")        
+                end
+                
             
             elseif option == 2 then
             
@@ -209,4 +256,4 @@ t = 1
         end -- while t == 2
             
     end -- while t == 1
-end
+end -- while Player1["life"] > 0 and Player2["life"] > 0 do
