@@ -5,11 +5,17 @@ function printcard(c)
         print(c["type"],c["name"],c["power"],c["resistance"])
 end
 
+function drawcard(p) -- player
+   
+    p["hand"][#p["hand"]+1] = p["deck"][math.random(1,#p["deck"])]
+    
+end
+
 function printhandboardorgrave(h)
     i = 1
     print("#","Type","Name","Power","Resistance")
     while i <= #h do
-        print(m,h[m]["type"],h[m]["name"],h[m]["power"],h[m]["resistance"])
+        print(i,h[i]["type"],h[i]["name"],h[i]["power"],h[i]["resistance"])
   
         i = i+1
     end  
@@ -55,7 +61,7 @@ function draft(pool)
     
     
     
-    end
+    end -- while #Player1["deck"]<7
     
     while #Player2["deck"]<7 do
         print("Player 2's draft.")
@@ -93,9 +99,9 @@ function draft(pool)
             print("Pick a valid card!")
         end
     
-    end
+    end -- while #Player2["deck"]<7
     
-end
+end -- function draft(pool)
 
 pool = {
         {["type"] = "monster",["name"] = "Zombie",["power"] = 4,["resistance"]=5},
@@ -133,6 +139,9 @@ draft(pool)
 
 print("GAME START!")
 
+drawcard(Player1)
+drawcard(Player1)
+
 while Player1["life"] > 0 and Player2["life"] > 0 do
 
 t = 1     
@@ -146,7 +155,10 @@ t = 1
         option = tonumber(io.read())
         
         if option == 1 then
-            
+            print("Your hand is:")
+            printhandboardorgrave(Player1["hand"])
+            print("1 - Select a card")
+            print("2 - Return")
             
             
         elseif option == 2 then
@@ -173,6 +185,11 @@ t = 1
             
                 
             if option == 1 then
+                print("Your hand is:")
+                printhandboardorgrave(Player2["hand"])
+                print("1 - Select a card")
+                print("2 - Return")
+            
             
             
             
