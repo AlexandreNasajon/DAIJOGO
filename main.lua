@@ -1,5 +1,25 @@
 math.randomseed(os.time())
 
+Player1 = {
+    ["life"] = 100,
+    ["deck"] = {},
+    ["hand"] = {},
+    ["board"] = {},
+    ["grave"] = {},
+    ["gold"] = 0
+
+}
+
+Player2 = {
+    ["life"] = 100,
+    ["deck"] = {},
+    ["hand"] = {},
+    ["board"] = {},
+    ["grave"] = {},
+    ["gold"] = 0
+
+}
+
 function printcard(c)
     
     if c["type"] == "monster" then
@@ -62,7 +82,7 @@ function draft(pool)
     
         if action<6 and action>0 then
             Player1["deck"][#Player1["deck"]+1] = draftpool[action]
-            print("You picked a "..draftpool[action]["name"].."!")
+            print("You picked "..draftpool[action]["name"].."!")
             draftpool[1] = nil
             draftpool[2] = nil
             draftpool[3] = nil
@@ -102,7 +122,7 @@ function draft(pool)
     
         if action<6 and action>0 then
             Player2["deck"][#Player2["deck"]+1] = draftpool[action]
-            print("You picked a "..draftpool[action]["name"].."!")
+            print("You picked "..draftpool[action]["name"].."!")
             draftpool[1] = nil
             draftpool[2] = nil
             draftpool[3] = nil
@@ -117,39 +137,43 @@ function draft(pool)
     
 end -- function draft(pool)
 
-pool = {
+pool = {---MONSTER
         {["cost"] = 1,["type"] = "monster",["name"] = "Zombie",["power"] = 4,["resistance"]=5},
-        {["cost"] = 1,["type"] = "monster",["name"] = "Demon",["power"] = 15,["resistance"]=24},
-        {["cost"] = 1,["type"] = "monster",["name"] = "Knight",["power"] = 10,["resistance"]=19},
-        {["cost"] = 1,["type"] = "monster",["name"] = "Witch",["power"] = 13,["resistance"]=22},
+        {["cost"] = 2,["type"] = "monster",["name"] = "Demon",["power"] = 15,["resistance"]=24},
+        {["cost"] = 1,["type"] = "monster",["name"] = "Knight",["power"] = 10,["resistance"]=15},
+        {["cost"] = 1,["type"] = "monster",["name"] = "Witch",["power"] = 11,["resistance"]=15},
         {["cost"] = 1,["type"] = "monster",["name"] = "Wolf",["power"] = 4,["resistance"]=7},
         {["cost"] = 1,["type"] = "monster",["name"] = "Tiger",["power"] = 7,["resistance"]=9},
-        {["cost"] = 1,["type"] = "monster",["name"] = "Angel",["power"] = 16,["resistance"]=25},
-        {["cost"] = 1,["type"] = "monster",["name"] = "Dragon",["power"] = 17,["resistance"]=30},
-        {["cost"] = 1,["type"] = "monster",["name"] = "Kraken",["power"] = 12,["resistance"]=27},
+        {["cost"] = 2,["type"] = "monster",["name"] = "Angel",["power"] = 16,["resistance"]=25},
+        {["cost"] = 2,["type"] = "monster",["name"] = "Dragon",["power"] = 17,["resistance"]=30},
+        {["cost"] = 1,["type"] = "monster",["name"] = "Mermaid",["power"] = 7,["resistance"]=12},
+        
+        ---SUPPORT
+        {["cost"] = 1,["type"] = "support",["name"] = "Greed",["effect"] = drawcard(Player1)}
+        --if t == 1 then
+
+      --  elseif t == 2 then
+         --   drawcard(Player2)
+        --    drawcard(Player2)
+       -- end
+      
+        
+       -- {["cost"] = 0,["type"] = "support",["name"] = "Lust",["effect"] = 
+        
+      --  },
+        
+      --  {["cost"] = 0,["type"] = "support",["name"] = "Gluttony",["effect"] = },
+        
+     --   {["cost"] = 0,["type"] = "support",["name"] = "Sloth",["effect"] = },
+        
+    --    {["cost"] = 0,["type"] = "support",["name"] = "Wrath",["effect"] = },
+        
+   --     {["cost"] = 0,["type"] = "support",["name"] = "Envy",["effect"] = },
+        
+   --     {["cost"] = 0,["type"] = "support",["name"] = "Pride",["effect"] = }
 }
 
 draftpool = {}
-
-Player1 = {
-    ["life"] = 100,
-    ["deck"] = {},
-    ["hand"] = {},
-    ["board"] = {},
-    ["grave"] = {},
-    ["gold"] = 0
-
-}
-
-Player2 = {
-    ["life"] = 100,
-    ["deck"] = {},
-    ["hand"] = {},
-    ["board"] = {},
-    ["grave"] = {},
-    ["gold"] = 0
-
-}
 
 draft(pool)
 
@@ -199,13 +223,13 @@ t = 1
                             Player1["hand"][opt] = Player1["hand"][opt+1]
                             opt = opt+1
                         end
-                        
+                        ------------    PROBLEMA -----------------
                 elseif Player1["hand"][opt]["type"] == "support" then
                     printcard(Player1["hand"][opt])
-                    -- aplicar efeito
-                    Player1["grave"][#Player1["grave"]+1] = Player1["hand"][opt]
+                    Player1["hand"][opt]["effect"]
+                    Player1["grave"][#Player1["grave"+1]] = Player1["hand"][opt]
                     Player1["hand"][opt] = nil
-                
+                --------------------- EU VOU MATAR ALGUEM  ---------------
                 end
                 
             elseif valid and Player1["hand"][opt]["cost"]>Player1["gold"] then
@@ -287,7 +311,7 @@ t = 1
         while t == 2 do
             print("Player 2 turn")
             print("Life: "..Player2["life"],"Gold: "..Player2["gold"])
-            print("1 - Play card from hand") -- tá podendo baixar várias, preciso limitar
+            print("1 - Play card from hand")
             print("2 - Attack with monster")
             print("3 - End turn")
             
