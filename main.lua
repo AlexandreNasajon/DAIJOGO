@@ -27,9 +27,9 @@ end
 
 function printhandboardorgrave(h)
     i = 1
-    print("#","Type","Name","Power","Resistance")
+    print("#","Cost","Type","Name","Power","Resistance")
     while i <= #h do
-        print(i,h[i]["type"],h[i]["name"],h[i]["power"],h[i]["resistance"])
+        print(i,h[i]["cost"],h[i]["type"],h[i]["name"],h[i]["power"],h[i]["resistance"])
   
         i = i+1
     end  
@@ -50,10 +50,10 @@ function draft(pool)
         end
     
         i = 1
-        print("#","Type","Name","Power","Resistance")
+        print("#","Cost","Type","Name","Power","Resistance")
         while i <= 5 do
             
-            print(i,draftpool[i]["type"],draftpool[i]["name"],draftpool[i]["power"],draftpool[i]["resistance"])
+            print(i,draftpool[i]["cost"],draftpool[i]["type"],draftpool[i]["name"],draftpool[i]["power"],draftpool[i]["resistance"])
    
         i = i+1
         end
@@ -90,10 +90,10 @@ function draft(pool)
         end
     
         i = 1
-        print("#","Type","Name","Power","Resistance")
+        print("#","Cost","Type","Name","Power","Resistance")
         while i <= 5 do
             
-            print(i,draftpool[i]["type"],draftpool[i]["name"],draftpool[i]["power"],draftpool[i]["resistance"])
+            print(i,draftpool[i]["cost"],draftpool[i]["type"],draftpool[i]["name"],draftpool[i]["power"],draftpool[i]["resistance"])
    
         i = i+1
         end
@@ -217,13 +217,11 @@ t = 1
                 print("Select a valid card!")        
             end
             
-            
         elseif option == 2 then
             
             print("The board is:")
                     printhandboardorgrave(Player1["board"])
                     print("Select an attacker:")
-
                     
                     num = tonumber(io.read())
                     
@@ -268,12 +266,9 @@ t = 1
                             print("Select a target!")
                         end
                         
-                        
                     else
                         print("Select an attacker!")
                     end
-            
-            
             
         elseif option == 3 then
             
@@ -339,14 +334,12 @@ t = 1
             else 
                 print("Select a valid card!")        
             end
-                
             
             elseif option == 2 then
                 
                 print("The board is:")
                     printhandboardorgrave(Player2["board"])
                     print("Select an attacker:")
-
                     
                     num = tonumber(io.read())
                     
@@ -391,11 +384,9 @@ t = 1
                             print("Select a target!")
                         end
                         
-                        
                     else
                         print("Select an attacker!")
                     end
-            
             
             elseif option == 3 then
             
