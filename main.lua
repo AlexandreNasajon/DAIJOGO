@@ -130,7 +130,9 @@ Player1 = {
     ["deck"] = {},
     ["hand"] = {},
     ["board"] = {},
-    ["grave"] = {}
+    ["grave"] = {},
+    ["magic"] = 0,
+    ["gold"] = 0
 
 }
 
@@ -139,7 +141,9 @@ Player2 = {
     ["deck"] = {},
     ["hand"] = {},
     ["board"] = {},
-    ["grave"] = {}
+    ["grave"] = {},
+    ["magic"] = 0,
+    ["gold"] = 0
 
 }
 
@@ -160,8 +164,6 @@ t = 1
 
     while t == 1 do
         print("Player 1 turn")
-        print("You draw a card")
-        drawcard(Player1) -- tá comprando sempre que volta pra cá
         print("1 - Play card from hand") -- tá podendo baixar várias, preciso limitar
         print("2 - Attack with monster")
         print("3 - End turn")
@@ -256,6 +258,8 @@ t = 1
         elseif option == 3 then
             
             t = 2
+            drawcard(Player2)
+            print("Player 2 draws a card")
                 
         else 
             print("Select a valid option!")
@@ -265,8 +269,6 @@ t = 1
 
         while t == 2 do
             print("Player 2 turn")
-            print("You draw a card")
-            drawcard(Player2) -- tá comprando sempre que volta pra cá
             print("1 - Play card from hand") -- tá podendo baixar várias, preciso limitar
             print("2 - Attack with monster")
             print("3 - End turn")
@@ -361,6 +363,8 @@ t = 1
             elseif option == 3 then
             
                 t = 1
+                drawcard(Player1)
+                print("Player 1 draws a card")
                 
             else 
                 print("Select a valid option!")
