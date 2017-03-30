@@ -429,3 +429,10 @@ t = 1
             
     end -- while t == 1
 end -- while Player1["life"] > 0 and Player2["life"] > 0 do
+    
+if Player1["life"]<1 then
+    print("Player 2 wins the game!")
+    
+elseif Player2["life"]<1 then
+    print("Player 1 wins the game!")
+end
