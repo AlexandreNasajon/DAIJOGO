@@ -154,7 +154,7 @@ function turn(t)
             if valid and Player[t]["hand"][opt]["cost"]<=Player[t]["gold"] then
                 Player[t]["gold"] = Player[t]["gold"] - Player[t]["hand"][opt]["cost"]
                 
-                if Player1["hand"][opt]["type"] == "monster" then
+                if Player[t]["hand"][opt]["type"] == "monster" then
                     printcard(Player[t]["hand"][opt])
                     Player[t]["board"][#Player[t]["board"]+1] = Player[t]["hand"][opt]
                     Player[t]["hand"][opt] = nil
@@ -165,6 +165,77 @@ function turn(t)
                             Player[t]["hand"][opt] = Player1["hand"][opt+1]
                             opt = opt+1
                         end
+                        
+                                  ------------    PROBLEMA -----------------
+                elseif Player[t]["hand"][opt]["type"] == "support" then
+                    printcard(Player[t]["hand"][opt])
+--                     Player1["hand"][opt]["effect"]
+                    Player[t]["grave"][#Player[t]["grave"+1]] = Player[t]["hand"][opt]
+                    Player[t]["hand"][opt] = nil
+                --------------------- EU VOU MATAR ALGUEM  ---------------
+                end
+                
+            elseif valid and Player[t]["hand"][opt]["cost"]>Player[t]["gold"] then
+                print("You don't have enough gold!")
+                    
+            elseif opt == #Player[t]["hand"]+1 then -- opção não válida
+                    
+            else 
+                print("Select a valid card!")        
+            end
+            
+            elseif option == 2 then
+            
+            print("The board is:")
+                    printhandboardorgrave(Player[t]["board"])
+                    print("Select an attacker:")
+                    
+                    num = tonumber(io.read())
+                    
+                    attacker = Player[t]["board"][num]
+
+                    if num<=#Player[t]["board"] then
+                        
+                        print("Select a target.")
+                        print("1 - Opponent")
+                        if #Player[y]["board"]>0 then
+                        print("2 - Monsters")
+                        end
+                        
+                        target = tonumber(io.read())
+                        
+                        if target == 1 then
+                        Player[y]["life"] = Player[y]["life"] - attacker["power"]
+                        print("Player"..y.."'s life is now: "..Player[y]["life"])
+                        
+                        elseif target == 2 and #Player[y]["board"]>0 then
+                            printhandboardorgrave(Player[y]["board"])
+                            print("Select a defender.")
+                            num = tonumber(io.read())
+                            defender = Player[y]["board"][num]
+                            if num<=#Player[y]["board"] then
+                            defender["resistance"] = defender["resistance"] - attacker["power"]
+                            print(defender["name"].."'s resistance is now "..defender["resistance"])
+                            if defender["resistance"]<=0 then
+                                Player[y]["grave"][#PLayer[y]["grave"]+1] = defender -- problema
+                                Player[y]["board"][num] = nil
+                                print(defender["name"].." was destroyed as a result of battle. It was sent to the grave.")
+                                print("Player"..y.."'s grave is now: ")
+                                printhandboardorgrave(Player[y]["grave"])
+                                
+                            end
+                                
+                            else
+                                print("Select a defender!")
+                            end
+                        
+                        else
+                            print("Select a target!")
+                        end
+                        
+                    else
+                        print("Select an attacker!")
+                    end
         
     
     
