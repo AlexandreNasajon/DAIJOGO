@@ -92,7 +92,7 @@ end
 function draft(Player)
     
         while #Player["deck"]<10 do
-            print("Player "..t.."'s draft.")
+            print("Player "..v.."'s draft.")
             print("Build a 10 card deck!")
         
             m = 1
@@ -243,6 +243,7 @@ function turn(t)
             print("Player "..y.." draws a card")
             getgold(Player[y])
             print("Player "..y.." receives 1 gold")
+            break 
             
         else 
             print("Select a valid option!")
@@ -261,14 +262,22 @@ function game()
         turn(t)
     end
     
+    if Player[1]["life"]<1 then
+        print("Player 2 wins the game!")
+    
+    elseif Player[2]["life"]<1 then
+        print("Player 1 wins the game!")
+    end
+
+    
 end -- function game()
     
 os.execute("clear")
 
-t = 1
-draft(Player[t])
-t = 2
-draft(Player[t])
+v = 1
+draft(Player[v])
+v = 2
+draft(Player[v])
 
 print("GAME START!")
 
@@ -281,3 +290,4 @@ drawcard(Player[2])
 drawcard(Player[2])
 
 game()
+
