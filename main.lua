@@ -23,6 +23,20 @@ Player = {
     }
 }
 
+pool = {---MONSTER
+        {["cost"] = 1,["type"] = "monster",["name"] = "Zombie",["power"] = 4,["resistance"]=5},
+        {["cost"] = 2,["type"] = "monster",["name"] = "Demon",["power"] = 15,["resistance"]=24},
+        {["cost"] = 1,["type"] = "monster",["name"] = "Knight",["power"] = 10,["resistance"]=15},
+        {["cost"] = 1,["type"] = "monster",["name"] = "Witch",["power"] = 11,["resistance"]=15},
+        {["cost"] = 1,["type"] = "monster",["name"] = "Wolf",["power"] = 4,["resistance"]=7},
+        {["cost"] = 1,["type"] = "monster",["name"] = "Tiger",["power"] = 7,["resistance"]=9},
+        {["cost"] = 2,["type"] = "monster",["name"] = "Angel",["power"] = 16,["resistance"]=25},
+        {["cost"] = 2,["type"] = "monster",["name"] = "Dragon",["power"] = 17,["resistance"]=30},
+        {["cost"] = 1,["type"] = "monster",["name"] = "Mermaid",["power"] = 7,["resistance"]=12}
+}
+
+draftpool = {}
+
 function printcard(c)
     
     if c["type"] == "monster" then
@@ -51,7 +65,7 @@ function getgold(p)
     
 end
 
-function printhandboardorgrave(h)
+function printzone(h)
     i = 1
     while i <= #h do
         if h[i]["type"] == "monster" then
@@ -92,22 +106,21 @@ function draft(Player)
             print("#","Cost","Type","Name","Power","Resistance")
             print("--------------------------------------------------------")
             while i <= 5 do
-                
-                print(i,draftpool[i]["cost"],draftpool[i]["type"],draftpool[i]["name"],draftpool[i]["power"],draftpool[i]["resistance"])
+                print(i,draftpool[i]["cost"],draftpool[i]["type"],draftpool[i]["name"],draftpool[i]["power"],draftpool[i]["resistance"]) -- problema attempt to index field '?' (a nil value)
     
             i = i+1
             end
             
-            action = tonumber(io.read())
             
-        
+            action = tonumber(io.read())
+                        
             if action == nil or action<1 or action>5 then
                 print("Pick a valid card!")
                 
             else
                 Player["deck"][#Player["deck"]+1] = draftpool[action]
                 print("You picked "..draftpool[action]["name"].."!")
-                print ("Your deck has "..#Player["deck"].." card(s) now. Pick "..10-#Player["deck"].." more!")
+                print("Your deck has "..#Player["deck"].." card(s) now. Pick "..10-#Player["deck"].." more!")
                 draftpool[1] = nil
                 draftpool[2] = nil
                 draftpool[3] = nil
@@ -115,25 +128,80 @@ function draft(Player)
                 draftpool[5] = nil
             end
         
-        end -- while #Player[t]["deck"]<10
+        end -- while #Player["deck"]<10
     
-end -- function draft(pool)
-    
-pool = {---MONSTER
-        {["cost"] = 1,["type"] = "monster",["name"] = "Zombie",["power"] = 4,["resistance"]=5},
-        {["cost"] = 2,["type"] = "monster",["name"] = "Demon",["power"] = 15,["resistance"]=24},
-        {["cost"] = 1,["type"] = "monster",["name"] = "Knight",["power"] = 10,["resistance"]=15},
-        {["cost"] = 1,["type"] = "monster",["name"] = "Witch",["power"] = 11,["resistance"]=15},
-        {["cost"] = 1,["type"] = "monster",["name"] = "Wolf",["power"] = 4,["resistance"]=7},
-        {["cost"] = 1,["type"] = "monster",["name"] = "Tiger",["power"] = 7,["resistance"]=9},
-        {["cost"] = 2,["type"] = "monster",["name"] = "Angel",["power"] = 16,["resistance"]=25},
-        {["cost"] = 2,["type"] = "monster",["name"] = "Dragon",["power"] = 17,["resistance"]=30},
-        {["cost"] = 1,["type"] = "monster",["name"] = "Mermaid",["power"] = 7,["resistance"]=12}
-}
+end -- function draft(Player)
 
-draftpool = {}
+function turn(t)
+    while t == 1 or t == 2 do
+        print("Player "..[t].." turn")
+        print("Life: "..Player[t]["life"],"Gold: "..Player[t]["gold"])
+        print("1 - Play card from hand")
+        print("2 - Attack with monster")
+        print("3 - End turn")
+        
+        option = tonumber(io.read())
+        
+        if option == 1 then
+            print("Your hand is:")
+            printhandboardorgrave(Player[t]["hand"])
+            print(1+#Player[t]["hand"].." - Return")
+            
+            opt = tonumber(io.read())
+            
+            valid = opt<=#Player[t]["hand"] and opt>0
+            
+            if valid and Player[t]["hand"][opt]["cost"]<=Player[t]["gold"] then
+                Player[t]["gold"] = Player[t]["gold"] - Player[t]["hand"][opt]["cost"]
+                
+                if Player1["hand"][opt]["type"] == "monster" then
+                    printcard(Player[t]["hand"][opt])
+                    Player[t]["board"][#Player[t]["board"]+1] = Player[t]["hand"][opt]
+                    Player[t]["hand"][opt] = nil
+                    print("The board is now:")
+                    printhandboardorgrave(Player[t]["board"])
+            
+                        while opt <= #Player[t]["hand"] do
+                            Player[t]["hand"][opt] = Player1["hand"][opt+1]
+                            opt = opt+1
+                        end
+        
+    
+    
+    end -- while t == 1 or t == 2 do
+end -- function turn(t)
+    
+    
+    
+    
+function game()
+    
+    while Player[1]["life"] > 0 and Player[2]["life"] > 0 do
+        t = 1 and y = 2
+        turn(t)
+        t = 2 and y = 1
+        turn(t)
+    end
+    
+end -- function game()
+    
+
+os.execute("clear")
 
 t = 1
 draft(Player[1])
 t = 2
 draft(Player[2])
+
+print("GAME START!")
+
+getgold(Player1)
+drawcard(Player1)
+drawcard(Player1)
+drawcard(Player1)
+drawcard(Player2)
+drawcard(Player2)
+drawcard(Player2)
+
+game()
+
