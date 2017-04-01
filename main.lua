@@ -75,11 +75,9 @@ function printhandboardorgrave(h)
     end  
 end
 
-function draft(pool)
+function draft(Player)
     
-    t = 1
-    while t == 1 or t == 2 do
-        while #Player[t]["deck"]<10 do
+        while #Player["deck"]<10 do
             print("Player "..t.."'s draft.")
             print("Build a 10 card deck!")
         
@@ -107,9 +105,9 @@ function draft(pool)
                 print("Pick a valid card!")
                 
             else
-                Player[t]["deck"][#Player[t]["deck"]+1] = draftpool[action]
+                Player["deck"][#Player["deck"]+1] = draftpool[action]
                 print("You picked "..draftpool[action]["name"].."!")
-                print ("Your deck has "..#Player[t]["deck"].." card(s) now. Pick "..10-#Player[t]["deck"].." more!")
+                print ("Your deck has "..#Player["deck"].." card(s) now. Pick "..10-#Player["deck"].." more!")
                 draftpool[1] = nil
                 draftpool[2] = nil
                 draftpool[3] = nil
@@ -117,15 +115,7 @@ function draft(pool)
                 draftpool[5] = nil
             end
         
-        end -- while #Player[t]["deck"]<3
-        
-        if #Player[t]["deck"] == 10 then
-            
-            t = 2
-        
-        end
-        
-    end -- while t == 1 or t == 2
+        end -- while #Player[t]["deck"]<10
     
 end -- function draft(pool)
     
@@ -143,4 +133,7 @@ pool = {---MONSTER
 
 draftpool = {}
 
-draft(pool)
+t = 1
+draft(Player[1])
+t = 2
+draft(Player[2])
