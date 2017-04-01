@@ -169,7 +169,7 @@ function turn(t)
                                   ------------    PROBLEMA -----------------
 --                 elseif Player[t]["hand"][opt]["type"] == "support" then
 --                     printcard(Player[t]["hand"][opt])
---                     Player1["hand"][opt]["effect"]
+--                     Player[t]["hand"][opt]["effect"]
 --                     Player[t]["grave"][#Player[t]["grave"+1]] = Player[t]["hand"][opt]
 --                     Player[t]["hand"][opt] = nil
                 --------------------- EU VOU MATAR ALGUEM  ---------------
@@ -211,8 +211,11 @@ function turn(t)
                         elseif target == 2 and #Player[y]["board"]>0 then
                             printhandboardorgrave(Player[y]["board"])
                             print("Select a defender.")
+                            
                             num = tonumber(io.read())
-                            defender = Player[y]["board"][num]
+                            
+                            defender = Player[y]["board"][num] -- tá pegando todos os do deck
+                            
                             if num<=#Player[y]["board"] then
                             defender["resistance"] = defender["resistance"] - attacker["power"]
                             print(defender["name"].."'s resistance is now "..defender["resistance"])
@@ -243,7 +246,7 @@ function turn(t)
             print("Player "..y.." draws a card")
             getgold(Player[y])
             print("Player "..y.." receives 1 gold")
-            break 
+            break -- eu sou um gênio
             
         else 
             print("Select a valid option!")
@@ -290,4 +293,3 @@ drawcard(Player[2])
 drawcard(Player[2])
 
 game()
-
