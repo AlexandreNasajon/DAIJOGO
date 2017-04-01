@@ -65,7 +65,7 @@ function getgold(p)
     
 end
 
-function printzone(h)
+function printhandboardorgrave(h)
     i = 1
     while i <= #h do
         if h[i]["type"] == "monster" then
@@ -134,7 +134,7 @@ end -- function draft(Player)
 
 function turn(t)
     while t == 1 or t == 2 do
-        print("Player "..[t].." turn")
+        print("Player "..t.." turn")
         print("Life: "..Player[t]["life"],"Gold: "..Player[t]["gold"])
         print("1 - Play card from hand")
         print("2 - Attack with monster")
@@ -162,16 +162,16 @@ function turn(t)
                     printhandboardorgrave(Player[t]["board"])
             
                         while opt <= #Player[t]["hand"] do
-                            Player[t]["hand"][opt] = Player1["hand"][opt+1]
+                            Player[t]["hand"][opt] = Player[t]["hand"][opt+1]
                             opt = opt+1
                         end
                         
                                   ------------    PROBLEMA -----------------
-                elseif Player[t]["hand"][opt]["type"] == "support" then
-                    printcard(Player[t]["hand"][opt])
+--                 elseif Player[t]["hand"][opt]["type"] == "support" then
+--                     printcard(Player[t]["hand"][opt])
 --                     Player1["hand"][opt]["effect"]
-                    Player[t]["grave"][#Player[t]["grave"+1]] = Player[t]["hand"][opt]
-                    Player[t]["hand"][opt] = nil
+--                     Player[t]["grave"][#Player[t]["grave"+1]] = Player[t]["hand"][opt]
+--                     Player[t]["hand"][opt] = nil
                 --------------------- EU VOU MATAR ALGUEM  ---------------
                 end
                 
@@ -184,7 +184,7 @@ function turn(t)
                 print("Select a valid card!")        
             end
             
-            elseif option == 2 then
+        elseif option == 2 then
             
             print("The board is:")
                     printhandboardorgrave(Player[t]["board"])
@@ -217,7 +217,7 @@ function turn(t)
                             defender["resistance"] = defender["resistance"] - attacker["power"]
                             print(defender["name"].."'s resistance is now "..defender["resistance"])
                             if defender["resistance"]<=0 then
-                                Player[y]["grave"][#PLayer[y]["grave"]+1] = defender -- problema
+                                Player[y]["grave"][#Player[y]["grave"]+1] = defender -- problema
                                 Player[y]["board"][num] = nil
                                 print(defender["name"].." was destroyed as a result of battle. It was sent to the grave.")
                                 print("Player"..y.."'s grave is now: ")
@@ -236,43 +236,48 @@ function turn(t)
                     else
                         print("Select an attacker!")
                     end
-        
-    
+                    
+        elseif option == 3 then
+            print("Turn ends.")
+            drawcard(Player[y])
+            print("Player "..y.." draws a card")
+            getgold(Player[y])
+            print("Player "..y.." receives 1 gold")
+            
+        else 
+            print("Select a valid option!")
+        end
     
     end -- while t == 1 or t == 2 do
+        
 end -- function turn(t)
-    
-    
-    
     
 function game()
     
     while Player[1]["life"] > 0 and Player[2]["life"] > 0 do
-        t = 1 and y = 2
+        t = 1  y = 2
         turn(t)
-        t = 2 and y = 1
+        t = 2  y = 1
         turn(t)
     end
     
 end -- function game()
     
-
 os.execute("clear")
 
 t = 1
-draft(Player[1])
+draft(Player[t])
 t = 2
-draft(Player[2])
+draft(Player[t])
 
 print("GAME START!")
 
-getgold(Player1)
-drawcard(Player1)
-drawcard(Player1)
-drawcard(Player1)
-drawcard(Player2)
-drawcard(Player2)
-drawcard(Player2)
+getgold(Player[1])
+drawcard(Player[1])
+drawcard(Player[1])
+drawcard(Player[1])
+drawcard(Player[2])
+drawcard(Player[2])
+drawcard(Player[2])
 
 game()
-
