@@ -9,7 +9,8 @@ Player = {
         ["board"] = {},
         ["grave"] = {},
         ["gold"] = 0,
-        ["abilities"] = {}
+        ["abilities"] = {},
+        ["storm"] = 0
 },
 
 {
@@ -19,37 +20,62 @@ Player = {
         ["board"] = {},
         ["grave"] = {},
         ["gold"] = 0,
-        ["abilities"] = {}
+        ["abilities"] = {},
+        ["storm"] = 0
     }
 }
 
-pool = {---MONSTER
-        {["cost"] = 1,["type"] = "monster",["name"] = "Zombie",["power"] = 4,["resistance"]=5},
-        {["cost"] = 2,["type"] = "monster",["name"] = "Demon",["power"] = 15,["resistance"]=24},
-        {["cost"] = 1,["type"] = "monster",["name"] = "Knight",["power"] = 10,["resistance"]=15},
-        {["cost"] = 1,["type"] = "monster",["name"] = "Witch",["power"] = 11,["resistance"]=15},
-        {["cost"] = 1,["type"] = "monster",["name"] = "Wolf",["power"] = 4,["resistance"]=7},
-        {["cost"] = 1,["type"] = "monster",["name"] = "Tiger",["power"] = 7,["resistance"]=9},
-        {["cost"] = 2,["type"] = "monster",["name"] = "Angel",["power"] = 16,["resistance"]=25},
-        {["cost"] = 2,["type"] = "monster",["name"] = "Dragon",["power"] = 17,["resistance"]=30},
-        {["cost"] = 1,["type"] = "monster",["name"] = "Mermaid",["power"] = 7,["resistance"]=12}
+pool = {---unit
+        {["cost"] = 2,["type"] = "unit",["name"] = "Lich",["power"] = 13,["life"]=26,["attacks"] = 1,["effect"] = "If summoned, add a card in your grave to your hand."},
+        {["cost"] = 1,["type"] = "unit",["name"] = "Eater",["power"] = 3,["life"]= 3,["attacks"] = 1,["effect"] = "If summoned, gains 3 power and 3 life for each unit in your grave."},
+        {["cost"] = 1,["type"] = "unit",["name"] = "Serpent",["power"] = 7,["life"]= 1,["attacks"] = 1,["effect"] = "If this card goes to your grave, you may pay 7 life to put it into your hand."}
+--         {["cost"] = 1,["type"] = "unit",["name"] = "",["power"] = ,["life"]=,["effect"] = ""},
+--         {["cost"] = 1,["type"] = "unit",["name"] = "",["power"] = ,["life"]=,["effect"] = ""},
+--         {["cost"] = 1,["type"] = "unit",["name"] = "",["power"] = ,["life"]=,["effect"] = ""},
+--         {["cost"] = 1,["type"] = "unit",["name"] = "",["power"] = ,["life"]=,["effect"] = ""}
+        
+
+--         {["cost"],["type"],["name"],["effect"]}
 }
 
 draftpool = {}
 
+
+function licheffect()
+        
+    if Player[t]["board"] == pool[1] then
+            
+        drawcard(Player[t])
+            
+    end
+end
+
+
+
+
+
+
+
+
 function printcard(c)
     
-    if c["type"] == "monster" then
-        print("Cost","Type","Name","Power","Resistance")
-        print(c["cost"],c["type"],c["name"],c["power"],c["resistance"])
+    if c["type"] == "unit" then
+        print("Name","Cost","Type","Power","Life","Attacks")
+        print(c["name"],c["cost"],c["type"],c["power"],c["life"],c["attacks"])
+        print("Effect:")
+        print(c["effect"])
         
     elseif c["type"] == "support" then
-        print("Cost","Type","Name","Effect")
-        print(c["cost"],c["type"],c["name"],c["effect"])
+        print("Name","Cost","Type")
+        print(c["name"],c["cost"],c["type"])
+        print("Effect:")
+        print(c["effect"])
         
     elseif c["type"] == "ability" then
-        print("Type","Name","Effect")
-        print(c["type"],c["name"],c["effect"])
+        print("Name","Type")
+        print(c["name"],c["type"])
+        print("Effect:")
+        print(c["effect"])
     end
 end
 
@@ -68,21 +94,21 @@ end
 function printhandboardorgrave(h)
     i = 1
     while i <= #h do
-        if h[i]["type"] == "monster" then
-            print("#","Cost","Type","Name","Power","Resistance")
-            print(i,h[i]["cost"],h[i]["type"],h[i]["name"],h[i]["power"],h[i]["resistance"])
+        if h[i]["type"] == "unit" then
+            print("#","Name","Cost","Type","Power","Life")
+            print(i,h[i]["name"],h[i]["cost"],h[i]["type"],h[i]["power"],h[i]["life"])
             
         i = i+1
             
         elseif h[i]["type"] == "support" then
-            print("Cost","Type","Name","Effect")
-            print(h[i]["cost"],h[i]["type"],h[i]["name"],h[i]["effect"])
+            print("Name","Cost","Type","Effect")
+            print(h[i]["name"],h[i]["cost"],h[i]["type"],h[i]["effect"])
             
         i = i+1
             
         elseif h[i]["type"] == "ability" then
-            print("Type","Name","Effect")
-            print(h[i]["type"],h[i]["name"],h[i]["effect"])
+            print("Name","Type","Effect")
+            print(h[i]["name"],h[i]["type"],h[i]["effect"])
   
         i = i+1
         end
@@ -91,7 +117,7 @@ end
 
 function draft(Player)
     
-        while #Player["deck"]<10 do
+        while #Player["deck"]<2 do
             print("Player "..v.."'s draft.")
             print("Build a 10 card deck!")
         
@@ -103,10 +129,10 @@ function draft(Player)
             end
         
             i = 1
-            print("#","Cost","Type","Name","Power","Resistance")
-            print("--------------------------------------------------------")
+            print("#","Name","Cost","Type","Power","Life")
+            print("-----------------------------------------------------")
             while i <= 5 do
-                print(i,draftpool[i]["cost"],draftpool[i]["type"],draftpool[i]["name"],draftpool[i]["power"],draftpool[i]["resistance"]) -- problema attempt to index field '?' (a nil value)
+                print(i,draftpool[i]["name"],draftpool[i]["cost"],draftpool[i]["type"],draftpool[i]["power"],draftpool[i]["life"]) -- problema attempt to index field '?' (a nil value)
     
             i = i+1
             end
@@ -145,23 +171,61 @@ function turn(t)
         option = tonumber(io.read())
         
         while option == 1 do
+            print("Your hand is:")
             printhandboardorgrave(Player[t]["hand"])
-            print("1 - View card")
-            print("2 - Play card")
-            print("3 - Return")
+            print(1+#Player[t]["hand"].." - Return")
+            print("Select a card.")
             
             option1 = tonumber(io.read())
             
-            while option1 == 1 do
+            while option1<=#Player[t]["hand"] and option1>0 do
+                print("1 - View card")
+                print("2 - Play card")
+                print("3 - Return")
                 
-            while option1 == 2 do
+                option11 = tonumber(io.read())
                 
-            while option1 == 3 do
+                while option11 == 1 do
+                    printcard(Player[t]["hand"][option1])
+                    print("1 - Return")
+                    
+                    option111 = tonumber(io.read())
+                    
+                    if option111 == 1 then
+                        break
+                        
+                    else
+                        print("Select a valid option!")
+                    end
+                end
+                    
+                if option11 == 2 and Player[t]["hand"][option1]["cost"]<=Player[t]["gold"] then
+                        print("You play "..Player[t]["hand"][option1]["name"]..".")
+                        Player[t]["board"][1+#Player[t]["board"]] = Player[t]["hand"][option1]
+                        Player[t]["hand"][option1] = nil
+                        
+                        while option1 <= #Player[t]["hand"] do
+                            Player[t]["hand"][option1] = Player[t]["hand"][option1+1]
+                            option1 = option1+1
+                        end
+                    
+                elseif option11 == 3 then
+                    break
+                    
+                else
+                    print("Select a valid option!")
+                end
+                
+            end
+                
+            if option1 == 1+#Player[t]["hand"] then
                 break
                 
             else
                 print("Select a valid option!")
             end
+            
+        end
             
         while option == 2 do
             print("1 - Your board")
@@ -176,20 +240,24 @@ function turn(t)
                 print("1 - View card")
                 print("2 - Play card")
                 print("3 - Return")
+            end
             
             while option2 == 2 do
                 print("Opponent's board:")
                 printhandboardorgrave(Player[y]["board"])
                 print("1 - View card")
                 print("2 - Return")
+            end
                 
-            while option2 == 3 do
+            if option2 == 3 then
                 break
                 
-            else
+                
+            elseif option2>3 and option2<1 then
                 print("Select a valid option!")
             end
             
+        end
             
             
         while option == 3 do
@@ -199,12 +267,18 @@ function turn(t)
             
             option3 = tonumber(io.read())
             
+        end
+            
         while option == 4 do
             print("1 - Your abilities")
             print("2 - Opponent's abilities")
             print("3 - Return")
             
-        while option == 5 do
+            option4 = tonumber(io.read())
+            
+        end
+            
+        if option == 5 then
             print("Turn ends.")
             drawcard(Player[y])
             print("Player "..y.." draws a card")
@@ -212,7 +286,7 @@ function turn(t)
             print("Player "..y.." receives 1 gold")
             break -- eu sou um gênio
             
-        else
+        elseif option>5 and option<1 then
             print("Select a valid option!")
         end
     end -- while
