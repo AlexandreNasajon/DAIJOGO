@@ -224,7 +224,7 @@ function turn(t)
             
         end
             
-        while option == 2 do --------------------------------BOARD----------------------------------
+        while option == 2 do --------------------------------YOUR BOARD----------------------------------
             print("1 - Your board")
             print("2 - Opponent's board")
             print("3 - Return")
@@ -245,10 +245,41 @@ function turn(t)
                     
                     option211 = tonumber(io.read())
                     
-                    if option211 == 1 then
+                    while option211 == 1 do ----------------------------ATTACK----------------------------------------
                         
+                        attacker = Player[t]["board"][option21]
+                            
+                        print("Select a target.")
+                        print("1 - Opponent")
+                        if #Player[y]["board"]>0 then
+                        print("2 - Unit")
+                        print("3 - Return")
+                        else
+                        print("2 - Return")
+                        end
                         
-                    elseif option211 == 2 then
+                        target = tonumber(io.read())
+                        
+                        if target == 1 then
+                        Player[y]["life"] = Player[y]["life"] - attacker["power"]
+                        print("Player"..y.."'s life is now: "..Player[y]["life"])
+                        
+                        elseif target == 2 and #Player[y]["board"]>0 then
+                            printhandboardorgrave(Player[y]["board"])
+                            print("Select a defender.")
+                            
+                        elseif target == 3 and #Player[y]["board"]>0 then
+                            break
+                            
+                        elseif target == 2 and #Player[y]["board"]<=0 then
+                            break
+                            
+                        else
+                            print("Select a valid option!")
+                        end
+                    end
+                        
+                    if option211 == 2 then ------------------------RETURN-------------------------------------
                         break
                         
                     else
@@ -257,7 +288,7 @@ function turn(t)
                     
                 end
                 
-                if option21 == 1+#Player[t]["board"] then
+                if option21 == 1+#Player[t]["board"] then -----------------------RETURN----------------------------
                     break
                     
                 else
@@ -266,7 +297,7 @@ function turn(t)
                     
             end
             
-            while option2 == 2 do
+            while option2 == 2 do --------------------------OPPONENT BOARD-----------------------------------
                 print("Opponent's board:")
                 printhandboardorgrave(Player[y]["board"])
                 print("1 - View card")
