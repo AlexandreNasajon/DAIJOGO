@@ -41,20 +41,14 @@ pool = {---unit
 draftpool = {}
 
 
-function licheffect()
-        
-    if Player[t]["board"] == pool[1] then
-            
-        drawcard(Player[t])
-            
-    end
-end
-
-
-
-
-
-
+-- function licheffect()
+--         
+--     if Player[t]["board"] == pool[1] then
+--             
+--         drawcard(Player[t])
+--             
+--     end
+-- end
 
 
 function printcard(c)
@@ -101,14 +95,14 @@ function printhandboardorgrave(h)
         i = i+1
             
         elseif h[i]["type"] == "support" then
-            print("Name","Cost","Type","Effect")
-            print(h[i]["name"],h[i]["cost"],h[i]["type"],h[i]["effect"])
+            print("#","Name","Cost","Type","Effect")
+            print(i,h[i]["name"],h[i]["cost"],h[i]["type"],h[i]["effect"])
             
         i = i+1
             
         elseif h[i]["type"] == "ability" then
-            print("Name","Type","Effect")
-            print(h[i]["name"],h[i]["type"],h[i]["effect"])
+            print("#","Name","Type","Effect")
+            print(i,h[i]["name"],h[i]["type"],h[i]["effect"])
   
         i = i+1
         end
@@ -130,7 +124,7 @@ function draft(Player)
         
             i = 1
             print("#","Name","Cost","Type","Power","Life")
-            print("-----------------------------------------------------")
+            print("--------------------------------------------")
             while i <= 5 do
                 print(i,draftpool[i]["name"],draftpool[i]["cost"],draftpool[i]["type"],draftpool[i]["power"],draftpool[i]["life"]) -- problema attempt to index field '?' (a nil value)
     
@@ -170,7 +164,7 @@ function turn(t)
         
         option = tonumber(io.read())
         
-        while option == 1 do
+        while option == 1 do -------------------------HAND-------------------------------------
             print("Your hand is:")
             printhandboardorgrave(Player[t]["hand"])
             print(1+#Player[t]["hand"].." - Return")
@@ -208,6 +202,9 @@ function turn(t)
                             Player[t]["hand"][option1] = Player[t]["hand"][option1+1]
                             option1 = option1+1
                         end
+                        
+                elseif option11 == 2 and Player[t]["hand"][option1]["cost"]>Player[t]["gold"] then
+                    print("You don't have enough gold!")
                     
                 elseif option11 == 3 then
                     break
@@ -227,7 +224,7 @@ function turn(t)
             
         end
             
-        while option == 2 do
+        while option == 2 do --------------------------------BOARD----------------------------------
             print("1 - Your board")
             print("2 - Opponent's board")
             print("3 - Return")
@@ -237,9 +234,36 @@ function turn(t)
             while option2 == 1 do
                 print("Your board:")
                 printhandboardorgrave(Player[t]["board"])
-                print("1 - View card")
-                print("2 - Play card")
-                print("3 - Return")
+                print(1+#Player[t]["board"].." - Return")
+                
+                option21 = tonumber(io.read())
+                
+                while option21<=#Player[t]["board"] and option21>0 do
+                    printcard(Player[t]["board"][option21])
+                    print("1 - Attack")
+                    print("2 - Return")
+                    
+                    option211 = tonumber(io.read())
+                    
+                    if option211 == 1 then
+                        
+                        
+                    elseif option211 == 2 then
+                        break
+                        
+                    else
+                        print("Select a valid option!")
+                    end
+                    
+                end
+                
+                if option21 == 1+#Player[t]["board"] then
+                    break
+                    
+                else
+                    print("Select a valid option!")
+                end
+                    
             end
             
             while option2 == 2 do
@@ -247,6 +271,9 @@ function turn(t)
                 printhandboardorgrave(Player[y]["board"])
                 print("1 - View card")
                 print("2 - Return")
+                
+                option22 = tonumber(io.read())
+                
             end
                 
             if option2 == 3 then
