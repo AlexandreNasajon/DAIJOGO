@@ -25,6 +25,9 @@ Player = {
     }
 }
 
+--Player.1.life = 100
+--Player.1.deck = {}
+
 pool = {---unit
         {["cost"] = 2,["type"] = "unit",["name"] = "Lich",["power"] = 13,["life"]=26,["attacks"] = 1,["effect"] = "If summoned, add a card in your grave to your hand."},
         {["cost"] = 1,["type"] = "unit",["name"] = "Eater",["power"] = 3,["life"]= 3,["attacks"] = 1,["effect"] = "If summoned, gains 3 power and 3 life for each unit in your grave."},
