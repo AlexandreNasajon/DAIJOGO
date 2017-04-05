@@ -279,7 +279,14 @@ turn = function(t)
                                                         
                             while valid do
                                  
-                                                                 
+                            defender["life"] = defender["life"] - attacker["power"]
+                                   print(defender["name"].."'s life is now "..defender["life"])
+                                   if defender["life"]<=0 then
+                                   Player[y]["grave"][#Player[y]["grave"]+1] = defender -- problema
+                                   Player[y]["board"][opt] = nil
+                                   print(defender["name"].." was destroyed as a result of battle. It was sent to the grave.")
+                                   print("Player"..y.."'s grave is now: ")
+                                   printhandboardorgrave(Player[y]["grave"]) 
                                                                 
                             end
                                                         
