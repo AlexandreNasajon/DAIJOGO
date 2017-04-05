@@ -240,17 +240,19 @@ turn = function(t)
                 print(1+#Player[t]["board"].." - Return")
                 
                 option21 = tonumber(io.read())
+                                
+                local attacker = Player[t]["board"][option21]
+                                
+                local valid = attacker<=#Player[t]["board"]
                 
-                while option21<=#Player[t]["board"] and option21>0 do
+                while valid do
                     printcard(Player[t]["board"][option21])
                     print("1 - Attack")
                     print("2 - Return")
                     
                     option211 = tonumber(io.read())
                     
-                    while option211 == 1 do ----------------------------ATTACK----------------------------------------
-                        
-                        local attacker = Player[t]["board"][option21]
+                    while option211 == 1 and attacker["attacks"]>0 do ----------------------------ATTACK----------------------------------------
                             
                         print("Select a target.")
                         print("1 - Opponent")
@@ -286,7 +288,8 @@ turn = function(t)
                                    Player[y]["board"][opt] = nil
                                    print(defender["name"].." was destroyed as a result of battle. It was sent to the grave.")
                                    print("Player"..y.."'s grave is now: ")
-                                   printhandboardorgrave(Player[y]["grave"]) 
+                                   printhandboardorgrave(Player[y]["grave"])
+                                   attacker["attacks"] = attacker["attacks"] - 1
                                                                 
                             end
                                                         
