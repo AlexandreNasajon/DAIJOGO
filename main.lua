@@ -250,7 +250,7 @@ turn = function(t)
                     
                     while option211 == 1 do ----------------------------ATTACK----------------------------------------
                         
-                        attacker = Player[t]["board"][option21]
+                        local attacker = Player[t]["board"][option21]
                             
                         print("Select a target.")
                         print("1 - Opponent")
@@ -261,7 +261,7 @@ turn = function(t)
                         print("2 - Return")
                         end
                         
-                        target = tonumber(io.read())
+                        local target = tonumber(io.read())
                         
                         if target == 1 then
                         Player[y]["life"] = Player[y]["life"] - attacker["power"]
@@ -271,11 +271,21 @@ turn = function(t)
                             printhandboardorgrave(Player[y]["board"])
                             print("Select a defender.")
                                                         
-                            local defender = Player[y]["board"][tonumber(io.read())]
+                            local opt = tonumber(io.read())
                                                         
-                            
+                            local valid = opt<=#Player[y]["board"] and opt>0                            
+
+                            local defender = Player[y]["board"][opt]                          
                                                         
+                            while valid do
+                                 
+                                                                 
+                                                                
+                            end
                                                         
+                            while ~valid do
+                                 print("Select a valid defender!")
+                            end                                                                  
                             
                         elseif target == 3 and #Player[y]["board"]>0 then
                             break
