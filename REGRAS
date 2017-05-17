@@ -4,6 +4,8 @@ CARD GAME eh um jogo desenvolvido por Alexandre Nasajon, com o objetivo de trein
   O objetivo do jogo CARD GAME eh vencer uma partida contra seu oponente.
   Cada jogador começa o jogo com 10 pontos de vida e aquele que perder todos os seus pontos de vida perde o jogo.
   O oponente do jogador que perder o jogo eh o vencedor.
+  O jogo se chama CARD GAME porque eh um jogo que usa elementos chamados "card"s.
+    Cada card possui um nome, um custo, um tipo e um poder. Mais sera explicado adiante.
   
 2 - Começando o Jogo
   Os jogadores devem escolher entre si quem será o Jogador 1 e quem ser o Jogador 2, digitando seus nomes assim que o jogo pedir.
@@ -15,9 +17,22 @@ CARD GAME eh um jogo desenvolvido por Alexandre Nasajon, com o objetivo de trein
   
   3 - Zonas do Jogo
     3.1 - Deck
+      Cada jogador possui seu próprio deck.
+      O deck eh formado por uma coleção de cards.
+      Um jogador comprar um card é ele pegar uma cópia aleatória de um card de seu próprio deck e a colocar em sua mão.
+      
     3.2 - Mão
+      Cada jogador começa o jogo com três cards na mao.
+      Cada jogador so pode ver quais cards estao na sua propria mao, nao podendo ver os cards na mao do oponente.
+      Cada jogador pode jogar cards de sua mao e coloca-las no proprio campo.
+      
     3.3 - Campo
+      Cada jogador tem um campo, onde ficam os cards jogados por ele.
+      Cards no campo podem atacar (ver 4.2).
+      Cards no campo podem ser destruídos (ver 4.2).
+      
     3.4 - Cemiterio
+      Cada jogador tem um cemiterio, onde ficam seus cards destruidos.
     
   4 - O Turno do Jogador
     4.1 - Jogar um card
