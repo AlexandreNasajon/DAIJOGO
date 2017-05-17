@@ -43,7 +43,8 @@ Funcoes.turno = function(t)
         print("Vida: "..Jogador[t].vida,"Ouro: "..Jogador[t].ouro)
         print("1 - Jogar um card")
         print("2 - Atacar com uma unidade")
-        print("3 - Fim do turno")
+        print("3 - Ver cemitério")
+        print("4 - Fim do turno")
         
         local option = tonumber(io.read())
         
@@ -133,16 +134,19 @@ Funcoes.turno = function(t)
                                     Jogador[y].cemiterio[#Jogador[y].cemiterio+1] = defensor
                                     Jogador[y].campo[num2] = nil
                                     print(defensor.nome.." foi destruído.")
+                                    break
                                 elseif atacante.poder == defensor.poder then
                                     Jogador[y].cemiterio[#Jogador[y].cemiterio+1] = defensor
                                     Jogador[y].campo[num2] = nil
                                     Jogador[t].cemiterio[#Jogador[t].cemiterio+1] = atacante
                                     Jogador[t].campo[num] = nil
-                                    print(atacante.nome.." e "..defensor.nome.."foram destruídos.")
+                                    print(atacante.nome.." e "..defensor.nome.." foram destruídos.")
+                                    break
                                 elseif atacante.poder < defensor.poder then
                                     Jogador[t].cemiterio[#Jogador[t].cemiterio+1] = defensor
                                     Jogador[t].campo[num] = nil
                                     print(atacante.nome.." foi destruído.")
+                                    break
                                 end
                                 
                             else
@@ -160,8 +164,22 @@ Funcoes.turno = function(t)
                     end
             end
         end
+        
+        while option == 3 do
+            print("Seu cemitério é:")
+            print("0 - Retornar")
+            Funcoes.printzona(Jogador[t].cemiterio)
             
-        if option == 3 then
+            local opti = tonumber(io.read())
+            
+            if opti == 0 then 
+                break
+            else
+                print("Você não pode fazer nada por eles :'(")
+            end
+        end
+        
+        if option == 4 then
             print("Fim do turno.")
             Funcoes.draw(Jogador[y])
             Funcoes.getgold(Jogador[y])
@@ -169,7 +187,7 @@ Funcoes.turno = function(t)
             Funcoes.getstamina(Jogador[y])
             break
             
-        elseif option ~= 1 and option ~= 2 and option ~= 3 then
+        elseif option ~= 1 and option ~= 2 and option ~= 3 and option~= 4 then
             print("Selecione uma opção válida!")
         end
     end
