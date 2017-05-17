@@ -1,7 +1,7 @@
 local Cards = {}
 
 Cards.Soldado = {
-    nome = "Soldier",
+    nome = "Soldado",
     poder = 2,
     custo = 1,
     tipo = "Unidade"
