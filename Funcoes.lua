@@ -17,6 +17,12 @@ Funcoes.getgold = function(Jogador)
     
 end
 
+---------RECEBER STAMINA------------
+Funcoes.getstamina = function(Jogador)
+
+    Jogador.stamina = Jogador.stamina +1
+end
+
 ------------PRINT ZONA----------
 Funcoes.printzona = function(zona)
 
@@ -77,6 +83,10 @@ Funcoes.turno = function(t)
         end
             
         while option == 2 do
+            if Jogador[t].stamina < 1 then
+                print("Você não tem mais energia para atacar!")
+                break
+            else
             print("Selecione o atacante:")
                     print("0 - Retornar")
                     Funcoes.printzona(Jogador[t].campo)
@@ -105,7 +115,9 @@ Funcoes.turno = function(t)
                         elseif alvo == 1 then
                         Jogador[y].vida = Jogador[y].vida - atacante.poder
                         print("A vida do jogador "..Jogador[y].nome.." é agora "..Jogador[y].vida..".")
+                        Jogador[t].stamina = Jogador[t].stamina - 1
 --                         atacante.stamina = atacante.stamina - 1
+                            break
                         
                         elseif alvo == 2 and #Jogador[y].campo > 0 then
                             print("Selecione o alvo:")
@@ -146,14 +158,15 @@ Funcoes.turno = function(t)
                     else
                         print("Selecione o atacante!")
                     end
+            end
         end
             
         if option == 3 then
             print("Fim do turno.")
             Funcoes.draw(Jogador[y])
-            print("Jogador "..Jogador[y].nome.." compra um card.")
             Funcoes.getgold(Jogador[y])
-            print("Jogador "..Jogador[y].nome.." recebe 1 ouro.")
+            print("Jogador "..Jogador[y].nome.." compra um card e recebe 1 ouro.")
+            Funcoes.getstamina(Jogador[y])
             break
             
         elseif option ~= 1 and option ~= 2 and option ~= 3 then
@@ -179,6 +192,7 @@ Funcoes.jogo = function()
     Funcoes.draw(Jogador[2])
     Funcoes.draw(Jogador[2])
     Funcoes.getgold(Jogador[1])
+    Funcoes.getstamina(Jogador[1])
     
     while Jogador[1].vida > 0 and Jogador[2].vida > 0 do
         t = 1  y = 2
