@@ -12,7 +12,14 @@ Cards.Milicia = {
     poder = 1,
     custo = 0,
     tipo = "Unidade",
-    stamina = 1,
+    stamina = 1
+}
+Cards.Elfo = {
+    nome = "Elfo",
+    poder = 1,
+    custo = 1,
+    tipo = "Unidade",
+    stamina = 1
 }
         
 return Cards
