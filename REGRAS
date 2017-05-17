@@ -38,6 +38,9 @@ CARD GAME eh um jogo desenvolvido por Alexandre Nasajon, com o objetivo de trein
     
   4 - O Turno do Jogador
     CARD GAME eh um jogo de turnos, isto significa que cada jogador tem sua vez de realizar suas açoes dentro do jogo.
+    Cada jogador deve realizar seu turno , alternando entre ambos os jogadores, uma vez cada.
+    O jogo lembra aos jogadores de quem eh a vez de jogar.
+    Os jogadores devem se alternar desta maneira ate algum vencer.
     O Jogador 1 começa o jogo sendo o primeiro a realizar seu turno, mas ele nao compra um card nesse primeiro turno do jogo.
     
     4.1 - Jogar um card
