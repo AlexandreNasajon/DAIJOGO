@@ -7,7 +7,8 @@ Jogador[1] = {
     deck = {},
     mao = {},
     campo = {},
-    cemiterio = {}
+    cemiterio = {},
+    stamina = 0
 }
 
 Jogador[2] = {
@@ -16,7 +17,8 @@ Jogador[2] = {
     deck = {},
     mao = {},
     campo = {},
-    cemiterio = {}
+    cemiterio = {},
+    stamina = 0
 }
 
 return Jogador
