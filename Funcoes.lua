@@ -72,10 +72,80 @@ Funcoes.turno = function(t)
             else 
                 print("Selecione um card válido!")        
             end
+        end
             
+        while option == 2 do
+            print("Selecione o atacante:")
+                    Funcoes.printzona(Jogador[t].campo)
+                    
+                    num = tonumber(io.read())
+                    
+                    atacante = Jogador[t].campo.num
+
+                    if num <= #Jogador[t].campo then
+                        
+                        print("Selecione o alvo:")
+                        print("0 - Retornar")
+                        print("1 - Oponente")
+                        if #Jogador[y].campo > 0 then
+                        print("2 - Unidades")
+                        end
+                        
+                        alvo = tonumber(io.read())
+                        
+                        if alvo == 0 then
+                            break
+                        
+                        elseif alvo == 1 then
+                        Jogador[y].vida = Jogador[y].vida - atacante.poder
+                        print("A vida do jogador"..Jogador[y].nome.." é agora: "..Jogador[y].vida..".")
+                        
+                        elseif alvo == 2 and #Jogador[y].campo > 0 then
+                            print("Selecione o alvo:")
+                            print("0 - Retornar")
+                            Funcoes.printzona(Jogador[y].campo)
+                            
+                            num2 = tonumber(io.read())
+                            
+                            defensor = Jogador[y].campo.num2
+                            
+                            if num2 <= #Jogador[y].campo then
+                                if atacante.poder > defensor.poder then
+                                    Jogador[y].cemiterio[#Jogador[y].cemiterio+1] = defensor
+                                    Jogador[y].campo.num2 = nil
+                                    print(defensor.nome.." foi destruído.")
+                                elseif atacante.poder == defensor.poder then
+                                    Jogador[y].cemiterio[#Jogador[y].cemiterio+1] = defensor
+                                    Jogador[y].campo.num2 = nil
+                                    Jogador[t].cemiterio[#Jogador[t].cemiterio+1] = atacante
+                                    Jogador[t].campo.num = nil
+                                    print(atacante.nome.." e "..defensor.nome.."foram destruídos.")
+                                elseif atacante.poder < defensor.poder then
+                                    Jogador[t].cemiterio[#Jogador[t].cemiterio+1] = defensor
+                                    Jogador[t].campo.num = nil
+                                    print(atacante.nome.." foi destruído.")
+                                end
+                                
+                            else
+                                print("Selecione o defensor!")
+                            end
+                        
+                        else
+                            print("Selecione o alvo!")
+                        end
+                        
+                    else
+                        print("Selecione o atacante!")
+                    end
+        end
             
-        elseif option == 2 then
-        elseif option == 3 then
+        if option == 3 then
+            print("Fim do turno.")
+            Funcoes.draw(Jogador[y])
+            print("Jogador "..Jogador[y].nome.." compra um card.")
+            Funcoes.getgold(Jogador[y])
+            print("Jogador "..Jogador[y].nome.." recebe 1 ouro.")
+            break
         else
             print("Selecione uma opção válida!")
         end
