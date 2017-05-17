@@ -45,26 +45,26 @@ Funcoes.turno = function(t)
             Funcoes.printzona(Jogador[t].mao)
             
             opt = tonumber(io.read())
+
+            valid = opt <= #Jogador[t].mao and opt > 0
             
-            valid = opt<=#Jogador[t].mao and opt>0
-            
-            if valid and Jogador[t].mao.opt.custo <= Jogador[t].ouro then
-                Jogador[t].ouro = Jogador[t].ouro - Jogador[t].mao.opt.custo
+            if valid and Jogador[t].mao[opt].custo <= Jogador[t].ouro then
+                Jogador[t].ouro = Jogador[t].ouro - Jogador[t].mao[opt].custo
                 
-                if Jogador[t].mao.opt.tpo == "Unidade" then
-                    Jogador[t].campo[#Jogador[t].campo+1] = Jogador[t].mao.opt
-                    Jogador[t].mao.opt = nil
+                if Jogador[t].mao[opt].tipo == "Unidade" then
+                    Jogador[t].campo[#Jogador[t].campo+1] = Jogador[t].mao[opt]
+                    Jogador[t].mao[opt] = nil
                     print("Seu campo agora é:")
                     Funcoes.printzona(Jogador[t].campo)
             
                         while opt <= #Jogador[t].mao do
-                            Jogador[t].mao.opt = Jogador[t].mao.opt+1
+                            Jogador[t].mao[opt] = Jogador[t].mao[opt+1]
                             opt = opt+1
                         end
 
                 end
                 
-            elseif valid and Jogador[t].mao.opt.custo > Jogador[t].ouro then
+            elseif valid and Jogador[t].mao[opt].custo > Jogador[t].ouro then
                 print("Você não tem ouro suficiente!")
                     
             elseif opt == 0 then
