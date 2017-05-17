@@ -32,21 +32,23 @@ end
 Funcoes.turno = function(t)
 
     while t == 1 or t == 2 do
-       
+        
         print("É o turno do jogador "..Jogador[t].nome.."!")
         print("Vida: "..Jogador[t].vida,"Ouro: "..Jogador[t].ouro)
         print("1 - Jogar um card")
         print("2 - Atacar com uma unidade")
         print("3 - Fim do turno")
-        option = tonumber(io.read())
+        
+        local option = tonumber(io.read())
+        
         if option == 1 then
             print("Sua mão é:")
             print("0 - Retornar")
             Funcoes.printzona(Jogador[t].mao)
             
-            opt = tonumber(io.read())
+            local opt = tonumber(io.read())
 
-            valid = opt <= #Jogador[t].mao and opt > 0
+            local valid = opt <= #Jogador[t].mao and opt > 0
             
             if valid and Jogador[t].mao[opt].custo <= Jogador[t].ouro then
                 Jogador[t].ouro = Jogador[t].ouro - Jogador[t].mao[opt].custo
@@ -76,13 +78,17 @@ Funcoes.turno = function(t)
             
         while option == 2 do
             print("Selecione o atacante:")
+                    print("0 - Retornar")
                     Funcoes.printzona(Jogador[t].campo)
                     
-                    num = tonumber(io.read())
+                    local num = tonumber(io.read())
                     
-                    atacante = Jogador[t].campo.num
+                    local atacante = Jogador[t].campo[num]
+                    
+                    if num == 0 then
+                        break
 
-                    if num <= #Jogador[t].campo then
+                    elseif num ~= 0 and num <= #Jogador[t].campo and atacante.stamina > 0 then
                         
                         print("Selecione o alvo:")
                         print("0 - Retornar")
@@ -91,38 +97,39 @@ Funcoes.turno = function(t)
                         print("2 - Unidades")
                         end
                         
-                        alvo = tonumber(io.read())
+                        local alvo = tonumber(io.read())
                         
                         if alvo == 0 then
                             break
                         
                         elseif alvo == 1 then
                         Jogador[y].vida = Jogador[y].vida - atacante.poder
-                        print("A vida do jogador"..Jogador[y].nome.." é agora: "..Jogador[y].vida..".")
+                        print("A vida do jogador "..Jogador[y].nome.." é agora "..Jogador[y].vida..".")
+--                         atacante.stamina = atacante.stamina - 1
                         
                         elseif alvo == 2 and #Jogador[y].campo > 0 then
                             print("Selecione o alvo:")
                             print("0 - Retornar")
                             Funcoes.printzona(Jogador[y].campo)
                             
-                            num2 = tonumber(io.read())
+                            local num2 = tonumber(io.read())
                             
-                            defensor = Jogador[y].campo.num2
+                            local defensor = Jogador[y].campo[num2]
                             
                             if num2 <= #Jogador[y].campo then
                                 if atacante.poder > defensor.poder then
                                     Jogador[y].cemiterio[#Jogador[y].cemiterio+1] = defensor
-                                    Jogador[y].campo.num2 = nil
+                                    Jogador[y].campo[num2] = nil
                                     print(defensor.nome.." foi destruído.")
                                 elseif atacante.poder == defensor.poder then
                                     Jogador[y].cemiterio[#Jogador[y].cemiterio+1] = defensor
-                                    Jogador[y].campo.num2 = nil
+                                    Jogador[y].campo[num2] = nil
                                     Jogador[t].cemiterio[#Jogador[t].cemiterio+1] = atacante
-                                    Jogador[t].campo.num = nil
+                                    Jogador[t].campo[num] = nil
                                     print(atacante.nome.." e "..defensor.nome.."foram destruídos.")
                                 elseif atacante.poder < defensor.poder then
                                     Jogador[t].cemiterio[#Jogador[t].cemiterio+1] = defensor
-                                    Jogador[t].campo.num = nil
+                                    Jogador[t].campo[num] = nil
                                     print(atacante.nome.." foi destruído.")
                                 end
                                 
@@ -133,7 +140,9 @@ Funcoes.turno = function(t)
                         else
                             print("Selecione o alvo!")
                         end
-                        
+                    
+                    elseif num ~= 0 and num <= #Jogador[t].campo and atacante.stamina < 1 then
+                        print("Selecione uma unidade que ainda possa atacar!")
                     else
                         print("Selecione o atacante!")
                     end
@@ -146,10 +155,10 @@ Funcoes.turno = function(t)
             Funcoes.getgold(Jogador[y])
             print("Jogador "..Jogador[y].nome.." recebe 1 ouro.")
             break
-        else
+            
+        elseif option ~= 1 and option ~= 2 and option ~= 3 then
             print("Selecione uma opção válida!")
         end
-        
     end
 end
         
@@ -174,17 +183,20 @@ Funcoes.jogo = function()
     while Jogador[1].vida > 0 and Jogador[2].vida > 0 do
         t = 1  y = 2
         Funcoes.turno(t)
+        if Jogador[1].vida <1 then
+            print(Jogador[2].nome.." venceu o jogo!")
+        elseif Jogador[2].vida <1 then
+            print(Jogador[1].nome.." venceu o jogo!")
+            break
+        end
         t = 2  y = 1
         Funcoes.turno(t)
+        if Jogador[1].vida <1 then
+            print(Jogador[2].nome.." venceu o jogo!")
+        elseif Jogador[2].vida <1 then
+            print(Jogador[1].nome.." venceu o jogo!")
+        end
     end
-    
-    if Jogador[1].vida <1 then
-        print(Jogador[2].nome.." venceu o jogo!")
-    
-    elseif Jogador[2].vida <1 then
-        print(Jogador[1].nome.." venceu o jogo!")
-    end
-    
 end
 
 return Funcoes
