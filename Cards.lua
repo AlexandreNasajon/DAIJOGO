@@ -195,6 +195,33 @@ efeito = function(Jogador1,Jogador2)
     print(Jogador1.nome.." comprou dois cards.")
 end
 }
+Cards.Brainstorm = {
+    nome = "Brainstorm",
+    poder = nil,
+    custo = 1,
+    tipo = "Suporte",
+    stamina = nil,
+    descricao = "Compre X cards; X = storm.",
+efeito = function(Jogador1,Jogador2)
+    i = Jogador1.storm
+    while i > 0 do
+        Funcoes.draw(Jogador1)
+        i = i-1
+    end
+end    
+}
+Cards.Firestorm = {
+    nome = "Firestorm",
+    poder = nil,
+    custo = 1,
+    tipo = "Suporte",
+    stamina = nil,
+    descricao = "Causa X de dano ao oponente; X = storm.",
+efeito = function(Jogador1,Jogador2)
+    Funcoes.dano(Jogador2,Jogador1.storm)
+    print(Jogador2.nome.." perdeu "..Jogador1.storm.." de vida.")
+end
+}
 Cards.Espiar = {
     nome = "Espiar",
     poder = nil,
@@ -202,16 +229,13 @@ Cards.Espiar = {
     tipo = "Suporte",
     stamina = nil,
     descricao = "Storm; Olhe a mão de seu oponente.",
-efeito = function(Cards.Espiar,Jogador1,Jogador2)
+efeito = function(Jogador1,Jogador2)
     Jogador1.storm = Jogador1.storm+1
     print(Jogador1.nome.." aumentou seu storm em 1.")
     Funcoes.printzona(Jogador2.mao)
-    print("0 - Retornar")
+    print("Digite qualquer coisa para retornar.")
     input = tonumber(io.read())
-    if input == 0 then
-            break
-    else
-        print("VOCÊ SÓ PODE RETORNAR!")
+    if input then 
     end
 end
 }
