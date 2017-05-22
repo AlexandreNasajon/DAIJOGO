@@ -32,10 +32,11 @@ end
             return false
         end
     end
-----------COMPRAR CARTA--------------
-Funcoes.draw = function(Jogador) -- player
-    card = Jogador.deck[math.random(1,#Jogador.deck)]
-    Jogador.mao[#Jogador.mao+1] = card
+------------DRAW----------------
+Funcoes.draw = function(Jogador1)
+  local card = Jogador1.deck[math.random(1,#Jogador1.deck)]
+  Jogador1.mao[#Jogador1.mao+1] = card
+  card.self = #Jogador1.mao
 end
 
 ----------RECEBER OURO-------------
@@ -44,9 +45,9 @@ Funcoes.getgold = function(Jogador)
 end
 
 ---------RECEBER STAMINA------------
-Funcoes.getstamina = function(Jogador)
+Funcoes.getstamina = function(card)
 
-    Jogador.stamina = Jogador.stamina +1
+    card.stamina = card.stamina +1
 end
 
 ------------PRINT ZONA----------
@@ -63,8 +64,8 @@ end
 -----------DESTRUIR------------NAO TÁ DESTRUINDO
 Funcoes.destruir = function(card,Jogador1,Jogador2)
     Jogador1.cemiterio[#Jogador1.cemiterio+1] = card
-    Jogador1.campo.card = Jogador1.campo.i
-    Jogador1.campo.i = nil
+    Jogador1.campo.card = nil
+    card.self = #Jogador1.cemiterio
     while i <= #Jogador1.campo do
         Jogador1.campo[i] = Jogador1.campo[i+1]
         i = i+1
@@ -103,6 +104,7 @@ Funcoes.invocar = function(card,Jogador1,Jogador2)
     if card.tipo == "Unidade" then
         Jogador1.campo[#Jogador1.campo+1] = card
         card.zona = Jogador1.campo
+        card.self = #Jogador1.campo
         print(card.nome.." foi invocado.")
         if card.efeito then
             card.efeito(Jogador1,Jogador2)
@@ -139,7 +141,6 @@ Funcoes.fimdoturno = function(Jogador1,Jogador2)
             Funcoes.draw(Jogador2)
             Funcoes.getgold(Jogador2)
             print("Jogador "..Jogador2.nome.." compra um card e recebe 1 ouro.")
-            Funcoes.getstamina(Jogador2)
 end
 ------------TURNO---------------
 Funcoes.turno = function(t)
@@ -197,45 +198,46 @@ Funcoes.turno = function(t)
         end
             
         while option == 2 do
-            if Jogador[t].stamina > 0 then
             print("Selecione o atacante:")
+            print("0 - Retornar")
+            Funcoes.printzona(Jogador[t].campo)
+                    
+            local num = tonumber(io.read())
+            if num ~= nil and num ~= 0 and num <= #Jogador[t].campo and Jogador[t].campo[num].stamina > 0 then
+                while num ~= nil and num ~= 0 and num <= #Jogador[t].campo and Jogador[t].campo[num].stamina > 0 do
+                    
+                    local atacante = Jogador[t].campo[num]
+                    
+                    print("Selecione o alvo:")
                     print("0 - Retornar")
-                    Funcoes.printzona(Jogador[t].campo)
-                    
-                    local num = tonumber(io.read())
-                    
-                    while num ~= nil and num ~= 0 and num <= #Jogador[t].campo do
-                        local atacante = Jogador[t].campo[num]
-                        print("Selecione o alvo:")
-                        print("0 - Retornar")
-                        print("1 - Oponente")
-                        if #Jogador[y].campo > 0 then
-                        print("2 - Unidades")
-                        end
-                        
-                        local alvo = tonumber(io.read())
-                        
-                        if alvo == 0 then
-                            break
-                        
-                        elseif alvo == 1 then
+                    print("1 - Oponente")
+                    if #Jogador[y].campo > 0 then
+                    print("2 - Unidades")
+                    end
+                            
+                    local alvo = tonumber(io.read())
+                            
+                    if alvo == 0 then
+                        break
+                            
+                    elseif alvo == 1 then
                         Jogador[y].vida = Jogador[y].vida - atacante.poder
                         print("A vida do jogador "..Jogador[y].nome.." é agora "..Jogador[y].vida..".")
-                        Jogador[t].stamina = Jogador[t].stamina - 1
---                         atacante.stamina = atacante.stamina - 1
-                            break
-                        end
+                        atacante.stamina = atacante.stamina - 1
+    --                        atacante.stamina = atacante.stamina - 1
+                        break
+                    end
+                            
+                    while alvo == 2 and #Jogador[y].campo > 0 do
+                        print("Selecione o alvo:")
+                        print("0 - Retornar")
+                        Funcoes.printzona(Jogador[y].campo)
                         
-                        while alvo == 2 and #Jogador[y].campo > 0 do
-                            print("Selecione o alvo:")
-                            print("0 - Retornar")
-                            Funcoes.printzona(Jogador[y].campo)
-                            
-                            local num2 = tonumber(io.read())
-                            
+                        local num2 = tonumber(io.read())
+                                
                             if num2 == 0 then
                                 break
-                            
+                                
                             elseif num2 <= #Jogador[y].campo then
                                 local defensor = Jogador[y].campo[num2]
                                 Funcoes.combate(atacante,defensor,Jogador[t],Jogador[y])
@@ -243,22 +245,19 @@ Funcoes.turno = function(t)
                             else
                                 print("SELECIONE UM ALVO VÁLIDO! --'")
                             end
-                        end
-                        
-                        if alvo ~= 0 and alvo ~= 1 and alvo ~= 2 then
+                    end
+                            
+                    if alvo ~= 0 and alvo ~= 1 and alvo ~= 2 then
                             print("SELECIONE UM ALVO VÁLIDO! >.<")
-                        end
                     end
+                end
                     
-                    if num == 0 then
-                        break
-                    else
-                        print("SELECIONE O ATACANTE! ò.ó")
-                    end
-                    
-            elseif Jogador[t].stamina < 1 then
-                print("VOCÊ JÁ ATACOU NESTE TURNO! >:(")
-                break
+            elseif num == 0 then
+                    break
+            elseif Jogador[t].campo[num].stamina <= 0 then
+                print("ESTA UNIDADE NÃO TEM MAIS ENERGIA PARA ATACAR! :'(")
+            else
+                print("SELECIONE O ATACANTE! ò.ó")
             end
         end
         
@@ -303,7 +302,6 @@ Funcoes.jogo = function()
     Funcoes.draw(Jogador[2])
     Funcoes.draw(Jogador[2])
     Funcoes.getgold(Jogador[1])
-    Funcoes.getstamina(Jogador[1])
     
     while Jogador[1].vida > 0 and Jogador[2].vida > 0 do
         t = 1  y = 2
