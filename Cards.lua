@@ -31,7 +31,15 @@ Cards.Espiar = {
     descricao = "Storm; Olhe a mão de seu oponente.",
 efeito = function(Cards.Espiar,Jogador1,Jogador2)
     Jogador1.storm = Jogador1.storm+1
+    print(Jogador1.nome.." aumentou seu storm em 1.")
     Funcoes.printzona(Jogador2.mao)
+    print("0 - Retornar")
+    input = tonumber(io.read())
+    if input == 0 then
+            break
+    else
+        print("VOCÊ SÓ PODE RETORNAR!")
+    end
 end
 }
         
