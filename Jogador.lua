@@ -8,7 +8,7 @@ Jogador[1] = {
     mao = {},
     campo = {},
     cemiterio = {},
-    stamina = 0
+    storm = 0
 }
 
 Jogador[2] = {
@@ -18,7 +18,7 @@ Jogador[2] = {
     mao = {},
     campo = {},
     cemiterio = {},
-    stamina = 0
+    storm = 0
 }
 
 return Jogador
