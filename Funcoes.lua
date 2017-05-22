@@ -36,7 +36,7 @@ end
 Funcoes.draw = function(Jogador1)
   local card = Jogador1.deck[math.random(1,#Jogador1.deck)]
   Jogador1.mao[#Jogador1.mao+1] = card
-  card.self = #Jogador1.mao
+--   card.self = #Jogador1.mao
 end
 
 ----------RECEBER OURO-------------
@@ -135,12 +135,23 @@ end
 Funcoes.getlife = function(alvo,quantidade)
     alvo.vida = alvo.vida + quantidade
 end
+----------STORM-------------
+Funcoes.storm = function(Jogador1,quantidade)
+    Jogador1.storm = Jogador1.storm+quantidade
+    print(Jogador1.nome.." aumentou seu storm em "..quantidade..".")
+end
 -----------FIM DO TURNO------------nao testada
 Funcoes.fimdoturno = function(Jogador1,Jogador2)
             print("Fim do turno de "..Jogador1.nome..".")
+            Jogador1.storm = 0
             Funcoes.draw(Jogador2)
             Funcoes.getgold(Jogador2)
             print("Jogador "..Jogador2.nome.." compra um card e recebe 1 ouro.")
+            i = #Jogador2.campo
+            while i > 0 do
+                Jogador2.campo[i].stamina = 1
+                i = i-1
+            end
 end
 ------------TURNO---------------
 Funcoes.turno = function(t)
@@ -148,7 +159,7 @@ Funcoes.turno = function(t)
     while t == 1 or t == 2 do
         
         print("É o turno do jogador "..Jogador[t].nome.."!")
-        print("Vida: "..Jogador[t].vida,"Ouro: "..Jogador[t].ouro)
+        print("Vida: "..Jogador[t].vida,"Ouro: "..Jogador[t].ouro,"Storm: "..Jogador[t].storm)
         print("1 - Jogar um card")
         print("2 - Atacar com uma unidade")
         print("3 - Ver cemitério")
@@ -165,7 +176,7 @@ Funcoes.turno = function(t)
             
             if opt == nil then
                 print("SELECIONE UMA OPÇÃO VÁLIDA!")
-                break --é pra fazer de outro jeito
+                break
             end
 
             local valid = opt <= #Jogador[t].mao and opt > 0
@@ -254,7 +265,7 @@ Funcoes.turno = function(t)
                     
             elseif num == 0 then
                     break
-            elseif Jogador[t].campo[num].stamina <= 0 then
+            elseif num ~= nil and Jogador[t].campo[num].stamina <= 0 then
                 print("ESTA UNIDADE NÃO TEM MAIS ENERGIA PARA ATACAR! :'(")
             else
                 print("SELECIONE O ATACANTE! ò.ó")
