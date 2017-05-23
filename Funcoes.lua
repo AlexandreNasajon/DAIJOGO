@@ -32,11 +32,12 @@ end
             return false
         end
     end
-------------DRAW----------------
+------------DRAW----------------nao tá diferenciando 
 Funcoes.draw = function(Jogador1)
-  local card = Jogador1.deck[math.random(1,#Jogador1.deck)]
-  Jogador1.mao[#Jogador1.mao+1] = card
---   card.self = #Jogador1.mao
+    Jogador1.self = Jogador1.self+1
+    local i = Jogador1.self
+    local card = {i = Jogador1.deck[math.random(1,#Jogador1.deck)]}
+    Jogador1.mao[#Jogador1.mao+1] = card.i
 end
 
 ----------RECEBER OURO-------------
@@ -104,7 +105,6 @@ Funcoes.invocar = function(card,Jogador1,Jogador2)
     if card.tipo == "Unidade" then
         Jogador1.campo[#Jogador1.campo+1] = card
         card.zona = Jogador1.campo
-        card.self = #Jogador1.campo
         print(card.nome.." foi invocado.")
         if card.efeito then
             card.efeito(Jogador1,Jogador2)
@@ -235,7 +235,6 @@ Funcoes.turno = function(t)
                         Jogador[y].vida = Jogador[y].vida - atacante.poder
                         print("A vida do jogador "..Jogador[y].nome.." é agora "..Jogador[y].vida..".")
                         atacante.stamina = atacante.stamina - 1
-    --                        atacante.stamina = atacante.stamina - 1
                         break
                     end
                             
