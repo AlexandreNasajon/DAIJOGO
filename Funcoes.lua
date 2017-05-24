@@ -32,12 +32,52 @@ end
             return false
         end
     end
+-----------SHUFFLE DECK----------------NAO FUNCIONA
+Funcoes.shuffle  = function(Jogador1)
+    local deckfim = {}
+    local i = 1
+    while i < #Jogador1.deck do
+        card = math.random(1,#Jogador1.deck)
+        deckfim.i = Jogador1.deck.card
+        Jogador1.deck.card = nil
+        i = i+1
+    end
+    Jogador1.deck = deckfim
+    return Jogador1.deck
+end
+
+--------outro shuffle---------FUNCIONA
+Funcoes.shuffle2 = function(a)
+	local c = #a
+	for i = 1, c do
+		local ndx0 = math.random( 1, c )
+		a[ ndx0 ], a[ i ] = a[ i ], a[ ndx0 ]
+	end
+	return a
+end
+------------DIFERENCIAR---------
+Funcoes.dif = function(card)
+    local b = {}
+    for k,v in pairs(card) do
+        b[k] = v
+        return b
+    end
+end
+-----------FIND-------------
+Funcoes.find = function(a,n)
+    local i = 1
+    while i <= #a do
+        if a[i] == n then
+            return i
+        else
+            i = i+1
+        end
+    end
+end
 ------------DRAW----------------nao tá diferenciando 
 Funcoes.draw = function(Jogador1)
-    Jogador1.self = Jogador1.self+1
-    local i = Jogador1.self
-    local card = {i = Jogador1.deck[math.random(1,#Jogador1.deck)]}
-    Jogador1.mao[#Jogador1.mao+1] = card.i
+    Jogador1.mao[#Jogador1.mao+1] = Jogador1.deck[#Jogador1.deck]
+    Jogador1.deck[#Jogador1.deck] = nil
 end
 
 ----------RECEBER OURO-------------
@@ -54,7 +94,7 @@ end
 ------------PRINT ZONA----------
 Funcoes.printzona = function(zona)
 
-    i = 1
+    local i = 1
     print("#","Nome","Custo","Tipo","Poder")
     while i <= #zona do
         print(i,zona[i].nome,zona[i].custo,zona[i].tipo,zona[i].poder)
@@ -63,17 +103,20 @@ Funcoes.printzona = function(zona)
 end
 
 -----------DESTRUIR------------NAO TÁ DESTRUINDO
-Funcoes.destruir = function(card,Jogador1,Jogador2)
-    Jogador1.cemiterio[#Jogador1.cemiterio+1] = card
-    Jogador1.campo.card = nil
-    card.self = #Jogador1.cemiterio
-    while i <= #Jogador1.campo do
-        Jogador1.campo[i] = Jogador1.campo[i+1]
-        i = i+1
+Funcoes.destruir = function(card,Jogador,oponente)
+    Jogador.cemiterio[#Jogador.cemiterio+1] = card
+    Jogador.campo[Funcoes.find(Jogador.campo,card)] = nil
+    local j = 1
+    while j <= #Jogador.campo do
+        Jogador.campo[j] = Jogador.campo[j+1]
+        j = j+1
     end
     print(card.nome.." foi destruído.")
     if card.efeito then
-        card.efeito(Jogador1,Jogador2)
+        if card.efeito == true then
+        card.efeito(Jogador,oponente)
+        else
+        end
     end
 end
 
@@ -81,22 +124,20 @@ end
 Funcoes.combate = function(atacante,defensor,Jogador1,Jogador2)
 
     if atacante.poder > defensor.poder then
-        Funcoes.destruir(defensor,Jogador2)
+        Funcoes.destruir(defensor,Jogador2,Jogador1)
     elseif atacante.poder == defensor.poder then
-        Funcoes.destruir(defensor,Jogador2)
-        Funcoes.destruir(atacante,Jogador1)
+        Funcoes.destruir(defensor,Jogador2,Jogador1)
+        Funcoes.destruir(atacante,Jogador1,Jogador2)
     elseif atacante.poder < defensor.poder then
-        Funcoes.destruir(atacante,Jogador1)
+        Funcoes.destruir(atacante,Jogador1,Jogador2)
     end
 end
 
 -----------CONJURAR--------não testada
 Funcoes.conjurar = function(card,Jogador1,Jogador2)
     if card.tipo == "Suporte" then
-        Jogador1.campo[#Jogador1.campo+1] = card
         card.efeito(Jogador1,Jogador2)
         Jogador1.cemiterio[#Jogador1.cemiterio+1] = card
-        Jogador1.campo[#Jogador1.campo] = nil
     end
 end
 
@@ -144,9 +185,14 @@ end
 Funcoes.fimdoturno = function(Jogador1,Jogador2)
             print("Fim do turno de "..Jogador1.nome..".")
             Jogador1.storm = 0
-            Funcoes.draw(Jogador2)
+            if #Jogador2.deck > 0 then
+                Funcoes.draw(Jogador2)
+                print(Jogador2.nome.." compra um card.")
+            else
+                print(Jogador2.nome.." não tem mais cards no deck.")
+            end
             Funcoes.getgold(Jogador2)
-            print("Jogador "..Jogador2.nome.." compra um card e recebe 1 ouro.")
+            print("Jogador "..Jogador2.nome.." recebe 1 de ouro.")
             i = #Jogador2.campo
             while i > 0 do
                 Jogador2.campo[i].stamina = 1
@@ -264,6 +310,8 @@ Funcoes.turno = function(t)
                     
             elseif num == 0 then
                     break
+            elseif num ~= nil and num > #Jogador[t].campo then
+                print("SELECIONE O ATACANTE! ò.ó")
             elseif num ~= nil and Jogador[t].campo[num].stamina <= 0 then
                 print("ESTA UNIDADE NÃO TEM MAIS ENERGIA PARA ATACAR! :'(")
             else
@@ -305,6 +353,8 @@ Funcoes.jogo = function()
     Jogador[2].nome = io.read()
     print("Então o Jogador 2 se chama "..Jogador[2].nome.."!")
     print("Imagino que vocês leram o manual, certo? Certo! Então boa sorte!")
+    Funcoes.shuffle2(Jogador[1].deck)
+    Funcoes.shuffle2(Jogador[2].deck)
     Funcoes.draw(Jogador[1])
     Funcoes.draw(Jogador[1])
     Funcoes.draw(Jogador[1])
