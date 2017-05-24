@@ -74,6 +74,14 @@ Funcoes.find = function(a,n)
         end
     end
 end
+----------FIND2--------------
+Funcoes.find2 = function(a,n)
+    for k,v in pairs(a) do
+        if v == n then
+        return k
+        end
+    end
+end
 ------------DRAW----------------nao tá diferenciando 
 Funcoes.draw = function(Jogador1)
     Jogador1.mao[#Jogador1.mao+1] = Jogador1.deck[#Jogador1.deck]
