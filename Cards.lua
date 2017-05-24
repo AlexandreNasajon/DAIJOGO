@@ -29,9 +29,25 @@ efeito = function(Jogador1,Jogador2)
     Funcoes.ifsummoned(Cards.Elfo,Jogador1)
     if true then
         Jogador1.deck[#Jogador1.deck+1] = Cards.Remendar
+        Funcoes.shuffle2(Jogador1.deck)
         print("O card Remendar foi adicionado ao deck de "..Jogador1.nome..".")
     end
 end    
+}
+Cards.RedAristocrat = {
+    nome = "Red Arist.",
+    poder = 1,
+    custo = 1,
+    tipo = "Unidade",
+    stamina = 1,
+    zona = deck,
+efeito = function(Jogador1,Jogador2)
+    Funcoes.habilidade(Cards.RedAristocrat)
+    if Funcoes.habilidade(Cards.RedAristocrat) == true then
+        Funcoes.dano(Jogador2,2)
+        print(Jogador2.nome.." recebeu 3 de dano.")
+    end
+end
 }
 Cards.Healer = {
     nome = "Healer",
@@ -64,6 +80,7 @@ efeito = function(Jogador1,Jogador2)
     Funcoes.ifdies(Cards.Golem,Jogador1)
     if true then
         Funcoes.draw(Jogador1)
+        print(Jogador1.nome.." comprou um card.")
     end
 end
 }
@@ -104,12 +121,14 @@ Cards.Furia = {
     tipo = "Suporte",
     stamina = nil,
     zona = deck,
-    descricao = "Aumenta o poder de uma unidade em 1.",
+    descricao = "Storm +1; Aumenta o poder de uma unidade em 1.",
 efeito = function(Jogador1,Jogador2)
+    Jogador1.storm = Jogador1.storm+1
+    print(Jogador1.nome.." aumentou seu storm em 1.")
     print("Selecione uma unidade:")
     Funcoes.printzona(Jogador1.campo)
     local opcao = tonumber(io.read())
-    if opcao <= #Jogador1.campo then
+    if opcao <= #Jogador1.campo and opcao > 0 then
         local card = Jogador1.campo[opcao]
         card.poder = card.poder+1
         print(card.nome.." ganhou 1 de poder.")
@@ -118,14 +137,27 @@ efeito = function(Jogador1,Jogador2)
     end
 end
 }
+Cards.Stormear = {
+    nome = "Stormear",
+    poder = nil,
+    custo = 0,
+    tipo = "Suporte",
+    stamina = nil,
+    descricao = "Storm +2.",
+efeito = function(Jogador1,Jogador2)
+    Funcoes.storm(Jogador1,2)
+end
+}
 Cards.Remendar = {
     nome = "Remendar",
     poder = nil,
     custo = 0,
     tipo = "Suporte",
     stamina = nil,
-    descricao = "Compre um card e ganha 1 de vida.",
+    descricao = "Storm +1; Compre um card e ganhe 1 de vida.",
 efeito = function(Jogador1,Jogador2)
+    Jogador1.storm = Jogador1.storm+1
+    print(Jogador1.nome.." aumentou seu storm em 1.")
     Funcoes.draw(Jogador1)
     Funcoes.getlife(Jogador1,1)
     print(Jogador1.nome.." comprou um card e ganhou 1 de vida.")
@@ -149,8 +181,10 @@ Cards.Bolt = {
     custo = 0,
     tipo = "Suporte",
     stamina = nil,
-    descricao = "Causa 2 de dano ao oponente.",
+    descricao = "Storm +1; Causa 2 de dano ao oponente.",
 efeito = function(Jogador1,Jogador2)
+    Jogador1.storm = Jogador1.storm+1
+    print(Jogador1.nome.." aumentou seu storm em 1.")
     Funcoes.dano(Jogador2,2)
     print(Jogador2.nome.." perdeu 2 de vida.")
 end
@@ -161,8 +195,10 @@ Cards.Cooperar = {
     custo = 1,
     tipo = "Suporte",
     stamina = nil,
-    descricao = "Cada jogador compra um card e você ganha 2 de vida.",
+    descricao = "Storm +1; Cada jogador compra um card.",
 efeito = function(Jogador1,Jogador2)
+    Jogador1.storm = Jogador1.storm+1
+    print(Jogador1.nome.." aumentou seu storm em 1.")
     Funcoes.draw(Jogador1)
     Funcoes.draw(Jogador2)
     Funcoes.getlife(Jogador1,2)
@@ -175,8 +211,10 @@ Cards.Drenar = {
     tipo = "Suporte",
     stamina = nil,
     zona = deck,
-    descricao = "Ganhe 1 de vida e causa 1 de dano ao oponente.",
+    descricao = "Storm +1; Ganhe 1 de vida e causa 1 de dano ao oponente.",
 efeito = function(Jogador1,Jogador2)
+    Jogador1.storm = Jogador1.storm+1
+    print(Jogador1.nome.." aumentou seu storm em 1.")
     Funcoes.getlife(Jogador1,1)
     Funcoes.dano(Jogador2,1)
 end
@@ -228,7 +266,7 @@ Cards.Espiar = {
     custo = 0,
     tipo = "Suporte",
     stamina = nil,
-    descricao = "Storm; Olhe a mão de seu oponente.",
+    descricao = "Storm +1; Olhe a mão de seu oponente.",
 efeito = function(Jogador1,Jogador2)
     Jogador1.storm = Jogador1.storm+1
     print(Jogador1.nome.." aumentou seu storm em 1.")
