@@ -189,6 +189,25 @@ Funcoes.storm = function(Jogador1,quantidade)
     Jogador1.storm = Jogador1.storm+quantidade
     print(Jogador1.nome.." aumentou seu storm em "..quantidade..".")
 end
+---------HABILIDADE-----------
+Funcoes.habilidade = function(card)
+    print("Ativar a habilidade?")
+    print("1 - Sim")
+    print("2 - Não")
+    c = tonumber(io.read())
+    if c == 1 then
+        if card.stamina > 0 then
+            card.stamina = card.stamina-1
+            return true
+        else 
+            print("ESTA UNIDADE NÃO TEM MAIS ENERGIA!")
+            return false
+        end
+    else
+        print("Você não ativou a habilidade.")
+        return false
+    end
+end
 ----------ATACAR COM UMA UNIDADE------------
 Funcoes.atacar = function(Jogador1,Jogador2)
     print("Selecione o atacante:")
@@ -234,7 +253,7 @@ Funcoes.atacar = function(Jogador1,Jogador2)
                     elseif num2 <= #Jogador2.campo then
                         local defensor = Jogador2.campo[num2]
                         Funcoes.combate(atacante,defensor,Jogador1,Jogador2)
-                        return
+                        return --NAO TÁ BREAKANDO
                     else
                         print("SELECIONE UM ALVO VÁLIDO! --'")
                     end
@@ -246,7 +265,7 @@ Funcoes.atacar = function(Jogador1,Jogador2)
         end
             
     elseif num == 0 then
-            return
+            return --NAO TÁ BREAKANDO
     elseif num ~= nil and num > #Jogador1.campo then
         print("SELECIONE O ATACANTE! ò.ó")
     elseif num ~= nil and Jogador1.campo[num].stamina <= 0 then
