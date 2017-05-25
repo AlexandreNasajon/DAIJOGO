@@ -299,9 +299,9 @@ Funcoes.turno = function(t)
         
         print("É o turno do jogador "..Jogador[t].nome.."!")
         print("Vida: "..Jogador[t].vida,"Ouro: "..Jogador[t].ouro,"Storm: "..Jogador[t].storm)
-        print("1 - Jogar um card")
-        print("2 - Atacar com uma unidade")
-        print("3 - Ver cemitério")
+        print("1 - Mão")
+        print("2 - Campo")
+        print("3 - Cemitério")
         print("4 - Fim do turno")
         
         local option = tonumber(io.read())
@@ -321,6 +321,21 @@ Funcoes.turno = function(t)
             local valid = opt <= #Jogador[t].mao and opt > 0
             
             local card = Jogador[t].mao[opt]
+			
+	    while valid do
+		print("0 - Retornar")
+		print("1 - Detalhes")
+		print("2 - Jogar")
+		local opcao = tonumber(io.read())
+		if opcao == 0 then
+			break
+		end
+		while opcao == 1 do
+			print("0 - Retornar")
+			Funcoes.printcard(card)
+	    		local option = tonumber(io.read())
+			
+	    end
             
             if valid and card.custo <= Jogador[t].ouro then
                 Jogador[t].ouro = Jogador[t].ouro - card.custo
