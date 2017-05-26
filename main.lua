@@ -2,6 +2,7 @@ math.randomseed(os.time())
 local Funcoes = require("Funcoes")
 local Jogador = require("Jogador")
 local Cards = require("Cards")
+
 Jogador[1].pool = {Cards.Elfo,Cards.Elfo,Cards.Elfo,Cards.Elfo,Cards.Elfo,Cards.Elfo,Cards.Elfo,Cards.Elfo,
     Cards.Stormear,Cards.Stormear,Cards.Stormear,
     Cards.Ganancia,Cards.Ganancia,Cards.Ganancia,
@@ -12,7 +13,14 @@ Jogador[1].pool = {Cards.Elfo,Cards.Elfo,Cards.Elfo,Cards.Elfo,Cards.Elfo,Cards.
     Cards.Firestorm
 }
 
-Jogador[2].pool = {Cards.Troll,Cards.Troll,Cards.Troll,Cards.Furia,Cards.Furia,Cards.Furia}
+Jogador[2].pool = {Cards.Troll,Cards.Troll,Cards.Troll,Cards.Troll,Cards.Troll,
+    Cards.Furia,Cards.Furia,Cards.Furia,
+    Cards.Impulso,Cards.Impulso,
+    Cards.Ganancia,Cards.Ganancia,
+    Cards.Healer,Cards.Healer,
+    Cards.Drenar,Cards.Drenar,
+    Cards.Lembrar,Cards.Reviver
+}
 
 
 tempcard = {}
@@ -32,6 +40,9 @@ for k,v in pairs(Jogador[2].pool) do
     Jogador[2].deck[#Jogador[2].deck+1] = tempcard
     tempcard = {}
 end
+
+Jogador[1].cemiterio = {Cards.Soldado}
+Jogador[2].cemiterio = {Cards.Soldado}
 
 
 Funcoes.jogo()
