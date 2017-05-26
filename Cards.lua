@@ -2,37 +2,19 @@ local Jogador = require("Jogador")
 local Funcoes = require("Funcoes")
 local Cards = {}
 
-Cards.Soldado = {
-    nome = "Soldado",
-    poder = 2,
-    custo = 1,
-    tipo = "Unidade",
-    stamina = 1,
-    zona = deck
-}
-Cards.Milicia = {
-    nome = "Milícia",
-    poder = 1,
-    custo = 0,
-    tipo = "Unidade",
-    stamina = 1,
-    zona = deck
-}
 Cards.Elfo = {
     nome = "Elfo",
     poder = 9,
     custo = 1,
     tipo = "Unidade",
     stamina = 1,
-    zona = deck,
-efeito = function(Jogador1,Jogador2)
-    Funcoes.ifsummoned(Cards.Elfo,Jogador1)
-    if true then
+    descricao = "Quando invocado, adicione um card 'Remendar' ao seu deck.",
+    efeito = {ifsummoned = function(Jogador1,Jogador2)
         Jogador1.deck[#Jogador1.deck+1] = Cards.Remendar
         Funcoes.shuffle2(Jogador1.deck)
-        print("O card Remendar foi adicionado ao deck de "..Jogador1.nome..".")
+        print("Um card 'Remendar' foi adicionado ao deck de "..Jogador1.nome..".")
     end
-end    
+}
 }
 Cards.Anjo = {
     nome = "Anjo",
@@ -40,32 +22,53 @@ Cards.Anjo = {
     custo = 2,
     tipo = "Unidade",
     stamina = 1,
-    zona = deck,
-efeito = function(Jogador1,Jogador2)
-    Funcoes.ifsummoned(Cards.Anjo,Jogador1)
-    if true then
+    descricao = "Quando invocado, adicione três cards 'Remendar' ao seu deck.",
+    efeito = {ifsummoned = function(Jogador1,Jogador2)
         Jogador1.deck[#Jogador1.deck+1] = Cards.Remendar
         Jogador1.deck[#Jogador1.deck+1] = Cards.Remendar
         Jogador1.deck[#Jogador1.deck+1] = Cards.Remendar
         Funcoes.shuffle2(Jogador1.deck)
-        print("Três cards Remendar foram adicionado ao deck de "..Jogador1.nome..".")
+        print("Três cards 'Remendar' foram adicionados ao deck de "..Jogador1.nome..".")
     end
-end    
 }
-Cards.RedAristocrat = {
+}
+Cards.Demonio = {
+    nome = "Demonio",
+    poder = 17,
+    custo = 2,
+    tipo = "Unidade",
+    stamina = 1,
+    descricao = "Quando invocado, compre dois cards e perca 20 de vida.",
+    efeito = {ifsummoned = function(Jogador1,Jogador2)
+        Funcoes.draw(Jogador1)
+        Funcoes.draw(Jogador1)
+        Funcoes.dano(Jogador1,20)
+        print(Jogador1.nome.." comprou dois cards e perdeu 20 de vida.")
+    end
+}
+}
+Cards.RedAistocrat = {
     nome = "Red Arist.",
     poder = 1,
     custo = 1,
     tipo = "Unidade",
     stamina = 1,
-    zona = deck,
-efeito = function(Jogador1,Jogador2)
-    Funcoes.habilidade(Cards.RedAristocrat)
-    if Funcoes.habilidade(Cards.RedAristocrat) == true then
-        Funcoes.dano(Jogador2,2)
-        print(Jogador2.nome.." recebeu 3 de dano.")
+    descricao = "Habilidade: sacrifique uma unidade para causar 15 de dano ao oponente.",
+    efeito = {habilidade = function(Jogador1,Jogador2)
+        print("Sacrifique uma unidade:")
+        Funcoes.printzona(Jogador1.campo)
+        local opcao = tonumber(io.read())
+        if opcao ~= nil and opcao <= #Jogador1.campo then
+            Funcoes.destruir(Jogador1.campo[opcao],Jogador1,Jogador2)
+            Funcoes.dano(Jogador2,15)
+            print(Jogador1.campo[opcao][nome].." foi sacrificado.")
+            print(Jogador2.nome.." recebeu 15 de dano.")
+            Cards.RedAristocrat.stamina = Cards.RedAristocrat.stamina-1
+        else
+            print("Nenhuma unidade foi sacrificada, então nenhum dano foi causado.")
+        end
     end
-end
+}
 }
 Cards.Healer = {
     nome = "Healer",
@@ -73,15 +76,14 @@ Cards.Healer = {
     custo = 1,
     tipo = "Unidade",
     stamina = 1,
-    zona = deck,
-efeito = function(Jogador1,Jogador2)
-    Funcoes.ifsummoned(Cards.Healer,Jogador1)
-    if true then
+    descricao = "Quando invocado, ganhe 14 de vida.",
+    efeito = {ifsummoned = function(Jogador1,Jogador2)
         Funcoes.getlife(Jogador1,14)
         print(Jogador1.nome.." ganhou 14 de vida.")
     end
-end
 }
+}
+------------------------------------------------------------------------------------------------------------------NENHUMA CARTA ABAIXO DAQUI TÁ PRONTA------------------------------------------------------
 Cards.Golem = {
     nome = "Golem",
     poder = 2,
@@ -90,13 +92,11 @@ Cards.Golem = {
     stamina = 1,
     zona = deck,
 efeito = function(Jogador1,Jogador2)
-    Funcoes.ifsummoned(Cards.Golem,Jogador1)
-    if true then
+    if Funcoes.ifsummoned(Cards.Golem,Jogador1,Jogador2) == true then
         Funcoes.getlife(Jogador1,2)
         print(Jogador1.nome.." ganhou 2 de vida.")
     end
-    Funcoes.ifdies(Cards.Golem,Jogador1)
-    if true then
+    if Funcoes.ifdies(Cards.Golem,Jogador1,Jogador2) == true then
         Funcoes.draw(Jogador1)
         print(Jogador1.nome.." comprou um card.")
     end
