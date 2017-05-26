@@ -216,38 +216,36 @@ Funcoes.turno = function(t)
             if opt == nil then
                 print("SELECIONE UMA OPÇÃO VÁLIDA!")
                 break
-            end
-            
-            local card = Jogador[t].mao[opt]
-            
-            if opt <= #Jogador[t].mao and opt > 0 then
-                Funcoes.printcard(card)
-                print("0 Retornar")
-                print("1 - Jogar")
-                
-                opcao = tonumber(io.read())
-                
-                if opcao == nil then
-                    print("SELECIONE UMA OPÇÃO VÁLIDA!")
-                    break
-                
-                elseif opcao == 0 then
-                    break
-                    
-                elseif opcao == 1 then
-                    Funcoes.jogar(Jogador[t].mao[opt],Jogador[t],Jogador[y])
-                    while opt <= #Jogador[t].mao do
-                        Jogador[t].mao[opt] = Jogador[t].mao[opt+1]
-                        opt = opt+1
-                    end
-                else
-                    print("SELECIONE UMA OPÇÃO VÁLIDA!")
-                end
-                    
             elseif opt == 0 then
                     break
-            else 
-                print("SELECIONE UM CARD VÁLIDO! :'(")        
+            elseif opt <= #Jogador[t].mao and opt > 0 then
+                while opt <= #Jogador[t].mao and opt > 0 do
+                    local card = Jogador[t].mao[opt]
+                    Funcoes.printcard(card)
+                    print("0 - Retornar")
+                    print("1 - Jogar")
+                    
+                    opcao = tonumber(io.read())
+                    
+                    if opcao == nil then
+                        print("SELECIONE UMA OPÇÃO VÁLIDA!")
+                    
+                    elseif opcao == 0 then
+                        opt = 0
+                        break
+                        
+                    elseif opcao == 1 then
+                        Funcoes.jogar(Jogador[t].mao[opt],Jogador[t],Jogador[y])
+                        while opt <= #Jogador[t].mao do
+                            Jogador[t].mao[opt] = Jogador[t].mao[opt+1]
+                            opt = opt+1
+                        end
+                    else
+                        print("SELECIONE UMA OPÇÃO VÁLIDA!")
+                    end
+                end
+            else
+                print("SELECIONE UMA OPÇÃO VÁLIDA!")
             end
         end
 ------------------CAMPOS-------------------
