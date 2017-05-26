@@ -55,13 +55,19 @@ Funcoes.shuffle2 = function(a)
 	end
 	return a
 end
-------------DIFERENCIAR---------
-Funcoes.dif = function(card)
-    local b = {}
+------------COPIAR---------
+Funcoes.copiar = function(card,b)
     for k,v in pairs(card) do
         b[k] = v
-        return b
     end
+    return b
+end
+-----------BOTAR POOL NO DECK-----------
+Funcoes.pooltodeck = function(pool,deck)
+    for k,v in pairs(pool) do
+        deck[k] = Funcoes.copiar(pool[k],deck[k])
+    end
+    return deck
 end
 -----------FIND-------------
 Funcoes.find = function(a,n)
@@ -110,7 +116,7 @@ Funcoes.printzona = function(zona)
     end    
 end
 
------------DESTRUIR------------NAO TÁ DESTRUINDO
+-----------DESTRUIR------------
 Funcoes.destruir = function(card,Jogador,oponente)
     Jogador.cemiterio[#Jogador.cemiterio+1] = card
     Jogador.campo[Funcoes.find(Jogador.campo,card)] = nil
@@ -299,9 +305,9 @@ Funcoes.turno = function(t)
         
         print("É o turno do jogador "..Jogador[t].nome.."!")
         print("Vida: "..Jogador[t].vida,"Ouro: "..Jogador[t].ouro,"Storm: "..Jogador[t].storm)
-        print("1 - Mão")
-        print("2 - Campo")
-        print("3 - Cemitério")
+        print("1 - Jogar um card")
+        print("2 - Atacar com uma unidade")
+        print("3 - Ver cemitério")
         print("4 - Fim do turno")
         
         local option = tonumber(io.read())
@@ -321,21 +327,6 @@ Funcoes.turno = function(t)
             local valid = opt <= #Jogador[t].mao and opt > 0
             
             local card = Jogador[t].mao[opt]
-			
-	    while valid do
-		print("0 - Retornar")
-		print("1 - Detalhes")
-		print("2 - Jogar")
-		local opcao = tonumber(io.read())
-		if opcao == 0 then
-			break
-		end
-		while opcao == 1 do
-			print("0 - Retornar")
-			Funcoes.printcard(card)
-	    		local option = tonumber(io.read())
-			
-	    end
             
             if valid and card.custo <= Jogador[t].ouro then
                 Jogador[t].ouro = Jogador[t].ouro - card.custo
@@ -363,7 +354,70 @@ Funcoes.turno = function(t)
         end
             
         while option == 2 do
-            Funcoes.atacar(Jogador[t],Jogador[y])
+            print("Selecione o atacante:")
+            print("0 - Retornar")
+            Funcoes.printzona(Jogador[t].campo)
+                    
+            local num = tonumber(io.read())
+            
+            if num ~= nil and num ~= 0 and num <= #Jogador[t].campo and Jogador[t].campo[num].stamina > 0 then
+                while num ~= nil and num ~= 0 and num <= #Jogador[t].campo and Jogador[t].campo[num].stamina > 0 do
+                    
+                    local atacante = Jogador[t].campo[num]
+                    
+                    print("Selecione o alvo:")
+                    print("0 - Retornar")
+                    print("1 - Oponente")
+                    if #Jogador[y].campo > 0 then
+                    print("2 - Unidades")
+                    end
+                            
+                    local alvo = tonumber(io.read())
+                            
+                    if alvo == 0 then
+                        break
+                            
+                    elseif alvo == 1 then
+                        Jogador[y].vida = Jogador[y].vida - atacante.poder
+                        print("A vida do jogador "..Jogador[y].nome.." é agora "..Jogador[y].vida..".")
+                        atacante.stamina = atacante.stamina - 1
+                        break
+                    end
+                            
+                    while alvo == 2 and #Jogador[y].campo > 0 do
+                        print("Selecione o alvo:")
+                        print("0 - Retornar")
+                        Funcoes.printzona(Jogador[y].campo)
+                        
+                        local num2 = tonumber(io.read())
+                                
+                            if num2 == 0 then
+                                break
+                                
+                            elseif num2 <= #Jogador[y].campo then
+                                local defensor = Jogador[y].campo[num2]
+                                Funcoes.combate(atacante,defensor,Jogador[t],Jogador[y])
+                                break
+                            else
+                                print("SELECIONE UM ALVO VÁLIDO! --'")
+                            end
+                    end
+                            
+                    if alvo ~= 0 and alvo ~= 1 and alvo ~= 2 then
+                            print("SELECIONE UM ALVO VÁLIDO! >.<")
+                    end
+                end
+                    
+            elseif num == 0 then
+                    break
+            elseif num ~= nil and num > #Jogador[t].campo then
+                print("SELECIONE O ATACANTE! ò.ó")
+            elseif num ~= nil and Jogador[t].campo[num].stamina <= 0 then
+                print("ESTA UNIDADE NÃO TEM MAIS ENERGIA PARA ATACAR! :'(")
+            else
+                print("SELECIONE O ATACANTE! ò.ó")
+            end
+
         end
         
         while option == 3 do
