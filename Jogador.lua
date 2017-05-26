@@ -2,23 +2,25 @@ local Jogador = {}
 
 
 Jogador[1] = {
-    vida = 10,
+    vida = 100,
     ouro = 0,
     deck = {},
     mao = {},
     campo = {},
     cemiterio = {},
-    storm = 0
+    storm = 0,
+    self = 0
 }
 
 Jogador[2] = {
-    vida = 10,
+    vida = 100,
     ouro = 0,
     deck = {},
     mao = {},
     campo = {},
     cemiterio = {},
-    storm = 0
+    storm = 0,
+    self = 0
 }
 
 return Jogador
