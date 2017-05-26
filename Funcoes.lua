@@ -1,37 +1,6 @@
 local Jogador = require("Jogador")
 local Funcoes = {}
 
-
-Funcoes.mudarzona = function(card,destino)
-
-    if card.zona == deck then
-        
-    elseif card.zona == mao then
-    
-    elseif card.zona == campo then
-    
-    elseif card.zona == cemiterio then
-    
-    end
-
-end
--------------CONDIÇÕES----------------
-    --------IF SUMMONED-------------        
-    Funcoes.ifsummoned = function(card,Jogador1,Jogador2)
-        if Jogador1.campo.card then
-            return true
-        else
-            return false
-        end
-    end
-    --------IF DIES-----------------
-    Funcoes.ifdies = function(card,Jogador1,Jogador2)
-        if Jogador1.cemiterio.card then
-            return true
-        else
-            return false
-        end
-    end
 -----------SHUFFLE DECK----------------NAO FUNCIONA
 Funcoes.shuffle  = function(Jogador1)
     local deckfim = {}
@@ -62,13 +31,6 @@ Funcoes.copiar = function(card,b)
     end
     return b
 end
------------BOTAR POOL NO DECK-----------
-Funcoes.pooltodeck = function(pool,deck)
-    for k,v in pairs(pool) do
-        deck[k] = Funcoes.copiar(pool[k],deck[k])
-    end
-    return deck
-end
 -----------FIND-------------
 Funcoes.find = function(a,n)
     local i = 1
@@ -88,7 +50,7 @@ Funcoes.find2 = function(a,n)
         end
     end
 end
-------------DRAW----------------nao tá diferenciando 
+------------DRAW----------------
 Funcoes.draw = function(Jogador1)
     Jogador1.mao[#Jogador1.mao+1] = Jogador1.deck[#Jogador1.deck]
     Jogador1.deck[#Jogador1.deck] = nil
@@ -115,7 +77,16 @@ Funcoes.printzona = function(zona)
         i = i+1
     end    
 end
-
+----------- PRINT CARD---------
+Funcoes.printcard = function(card)
+    print("Nome: "..card.nome)
+    print("Custo: "..card.custo)
+    print("Tipo: "..card.tipo)
+    if card.poder then
+        print("Poder: "..card.poder)
+    end
+    print("Descrição: "..card.descricao)
+end
 -----------DESTRUIR------------
 Funcoes.destruir = function(card,Jogador,oponente)
     Jogador.cemiterio[#Jogador.cemiterio+1] = card
@@ -127,13 +98,12 @@ Funcoes.destruir = function(card,Jogador,oponente)
     end
     print(card.nome.." foi destruído.")
     if card.efeito then
-        if card.efeito == true then
-        card.efeito(Jogador,oponente)
+        if card.efeito.ifdies then
+        card.efeito.ifdies(Jogador,oponente)
         else
         end
     end
 end
-
 -----------COMBATE-------------testar mais
 Funcoes.combate = function(atacante,defensor,Jogador1,Jogador2)
 
@@ -161,8 +131,8 @@ Funcoes.invocar = function(card,Jogador1,Jogador2)
         Jogador1.campo[#Jogador1.campo+1] = card
         card.zona = Jogador1.campo
         print(card.nome.." foi invocado.")
-        if card.efeito then
-            card.efeito(Jogador1,Jogador2)
+        if card.efeito.ifsummoned then
+            card.efeito.ifsummoned(Jogador1,Jogador2)
         end
     end
 end
@@ -197,87 +167,11 @@ Funcoes.storm = function(Jogador1,quantidade)
 end
 ---------HABILIDADE-----------
 Funcoes.habilidade = function(card)
-    print("Ativar a habilidade?")
-    print("1 - Sim")
-    print("2 - Não")
-    c = tonumber(io.read())
-    if c == 1 then
-        if card.stamina > 0 then
-            card.stamina = card.stamina-1
-            return true
-        else 
-            print("ESTA UNIDADE NÃO TEM MAIS ENERGIA!")
-            return false
-        end
-    else
-        print("Você não ativou a habilidade.")
-        return false
-    end
-end
-----------ATACAR COM UMA UNIDADE------------
-Funcoes.atacar = function(Jogador1,Jogador2)
-    print("Selecione o atacante:")
-    print("0 - Retornar")
-    Funcoes.printzona(Jogador1.campo)
-            
-    local num = tonumber(io.read())
-    
-    if num ~= nil and num ~= 0 and num <= #Jogador1.campo and Jogador1.campo[num].stamina > 0 then
-        while num ~= nil and num ~= 0 and num <= #Jogador1.campo and Jogador1.campo[num].stamina > 0 do
-            
-            local atacante = Jogador1.campo[num]
-            
-            print("Selecione o alvo:")
-            print("0 - Retornar")
-            print("1 - Oponente")
-            if #Jogador2.campo > 0 then
-            print("2 - Unidades")
-            end
-                    
-            local alvo = tonumber(io.read())
-                    
-            if alvo == 0 then
-                break
-                    
-            elseif alvo == 1 then
-                Jogador2.vida = Jogador2.vida - atacante.poder
-                print("A vida do jogador "..Jogador2.nome.." é agora "..Jogador2.vida..".")
-                atacante.stamina = atacante.stamina - 1
-                break
-            end
-                    
-            while alvo == 2 and #Jogador2.campo > 0 do
-                print("Selecione o alvo:")
-                print("0 - Retornar")
-                Funcoes.printzona(Jogador2.campo)
-                
-                local num2 = tonumber(io.read())
-                        
-                    if num2 == 0 then
-                        break
-                        
-                    elseif num2 <= #Jogador2.campo then
-                        local defensor = Jogador2.campo[num2]
-                        Funcoes.combate(atacante,defensor,Jogador1,Jogador2)
-                        return --NAO TÁ BREAKANDO
-                    else
-                        print("SELECIONE UM ALVO VÁLIDO! --'")
-                    end
-            end
-                    
-            if alvo ~= 0 and alvo ~= 1 and alvo ~= 2 then
-                    print("SELECIONE UM ALVO VÁLIDO! >.<")
-            end
-        end
-            
-    elseif num == 0 then
-            return --NAO TÁ BREAKANDO
-    elseif num ~= nil and num > #Jogador1.campo then
-        print("SELECIONE O ATACANTE! ò.ó")
-    elseif num ~= nil and Jogador1.campo[num].stamina <= 0 then
-        print("ESTA UNIDADE NÃO TEM MAIS ENERGIA PARA ATACAR! :'(")
-    else
-        print("SELECIONE O ATACANTE! ò.ó")
+    if card.stamina > 0 then
+        card.stamina = card.stamina-1
+        card.efeito()
+    else 
+        print("ESTA UNIDADE NÃO TEM MAIS ENERGIA!")
     end
 end
 -----------FIM DO TURNO------------nao testada
