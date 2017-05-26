@@ -49,7 +49,7 @@ Cards.Demonio = {
 }
 Cards.RedAistocrat = {
     nome = "Red Arist.",
-    poder = 1,
+    poder = 12,
     custo = 1,
     tipo = "Unidade",
     stamina = 1,
@@ -72,7 +72,7 @@ Cards.RedAistocrat = {
 }
 Cards.Healer = {
     nome = "Healer",
-    poder = 12,
+    poder = 14,
     custo = 1,
     tipo = "Unidade",
     stamina = 1,
@@ -83,24 +83,22 @@ Cards.Healer = {
     end
 }
 }
-------------------------------------------------------------------------------------------------------------------NENHUMA CARTA ABAIXO DAQUI TÁ PRONTA------------------------------------------------------
 Cards.Golem = {
     nome = "Golem",
-    poder = 2,
+    poder = 16,
     custo = 2,
     tipo = "Unidade",
     stamina = 1,
-    zona = deck,
-efeito = function(Jogador1,Jogador2)
-    if Funcoes.ifsummoned(Cards.Golem,Jogador1,Jogador2) == true then
+    descricao = "Quando invocado, ganhe 10 de vida. Quando destruído, compre um card."
+efeito = {ifsummoned = function(Jogador1,Jogador2)
         Funcoes.getlife(Jogador1,2)
         print(Jogador1.nome.." ganhou 2 de vida.")
-    end
-    if Funcoes.ifdies(Cards.Golem,Jogador1,Jogador2) == true then
+    end,
+    ifdies = function(Jogador1,Jogador2)
         Funcoes.draw(Jogador1)
         print(Jogador1.nome.." comprou um card.")
     end
-end
+}
 }
 Cards.Troll = {
     nome = "Troll",
@@ -108,15 +106,13 @@ Cards.Troll = {
     custo = 1,
     tipo = "Unidade",
     stamina = 1,
-    zona = deck,
-efeito = function(Jogador1,Jogador2)
-    Funcoes.ifsummoned(Cards.Troll,Jogador1,Jogador2)
-    if true then
+    descricao = "Quando invocado, compre um card e perca 10 de vida.",
+efeito = {ifsummoned = function(Jogador1,Jogador2)
         Funcoes.draw(Jogador1)
         Funcoes.dano(Jogador1,10)
         print(Jogador1.nome.." comprou um card e perdeu 10 de vida.")
-    end
-end    
+    end  
+}
 }
 Cards.Impulso= {
     nome = "Impulso",
@@ -124,7 +120,6 @@ Cards.Impulso= {
     custo = 0,
     tipo = "Suporte",
     stamina = nil,
-    zona = deck,
     descricao = "Compre dois cards e você perde 20 de vida.",
 efeito = function(Jogador1,Jogador2)
     Funcoes.draw(Jogador1)
@@ -139,7 +134,6 @@ Cards.Furia = {
     custo = 0,
     tipo = "Suporte",
     stamina = nil,
-    zona = deck,
     descricao = "Storm +1; Aumenta o poder de uma unidade em 3.",
 efeito = function(Jogador1,Jogador2)
     Jogador1.storm = Jogador1.storm+1
@@ -162,10 +156,9 @@ Cards.Stormear = {
     custo = 0,
     tipo = "Suporte",
     stamina = nil,
-    descricao = "Storm +2.",
+    descricao = "Storm +3.",
 efeito = function(Jogador1,Jogador2)
-    Funcoes.storm(Jogador1,2)
-    print(Jogador1.nome.." aumentou seu storm em 2.")
+    Funcoes.storm(Jogador1,3)
 end
 }
 Cards.Remendar = {
@@ -230,7 +223,6 @@ Cards.Drenar = {
     custo = 0,
     tipo = "Suporte",
     stamina = nil,
-    zona = deck,
     descricao = "Storm +1; Ganhe 10 de vida e causa 10 de dano ao oponente.",
 efeito = function(Jogador1,Jogador2)
     Jogador1.storm = Jogador1.storm+1
@@ -246,7 +238,6 @@ Cards.Pote = {
     custo = 1,
     tipo = "Suporte",
     stamina = nil,
-    zona = deck,
     descricao = "Compre dois cards.",
 efeito = function(Jogador1,Jogador2)
     Funcoes.draw(Jogador1)
@@ -318,7 +309,7 @@ efeito = function(Jogador1,Jogador2)
            Jogador1.cemiterio[opcao] = nil
            h = true
        else
-           print("SELECIONE UMA OPÇÃO VÁLIDA! *__*")
+           print("SELECIONE UMA OPÇÃO VÁLIDA!")
        end
     end
 end
@@ -347,7 +338,7 @@ efeito = function(Jogador1,Jogador2)
             end
             h = true
         else
-                print("SELECIONE UMA OPÇÃO VÁLIDA!")
+            print("SELECIONE UMA OPÇÃO VÁLIDA!")
         end
     end
 end
