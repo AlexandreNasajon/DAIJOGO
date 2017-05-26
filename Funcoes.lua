@@ -199,13 +199,13 @@ Funcoes.turno = function(t)
         
         print("É o turno do jogador "..Jogador[t].nome.."!")
         print("Vida: "..Jogador[t].vida,"Ouro: "..Jogador[t].ouro,"Storm: "..Jogador[t].storm)
-        print("1 - Jogar um card")
-        print("2 - Atacar com uma unidade")
-        print("3 - Ver cemitério")
+        print("1 - Mão")
+        print("2 - Campo")
+        print("3 - Cemitério")
         print("4 - Fim do turno")
         
         local option = tonumber(io.read())
-        
+----------SUA MÃO---------------------------------------------
         while option == 1 do
             print("Sua mão é:")
             print("0 - Retornar")
@@ -217,28 +217,32 @@ Funcoes.turno = function(t)
                 print("SELECIONE UMA OPÇÃO VÁLIDA!")
                 break
             end
-
-            local valid = opt <= #Jogador[t].mao and opt > 0
             
             local card = Jogador[t].mao[opt]
             
-            if valid and card.custo <= Jogador[t].ouro then
-                Jogador[t].ouro = Jogador[t].ouro - card.custo
+            if opt <= #Jogador[t].mao and opt > 0 then
+                Funcoes.printcard(card)
+                print("0 Retornar")
+                print("1 - Jogar")
                 
-                if Jogador[t].mao[opt].tipo == "Unidade" then
-                    Funcoes.invocar(card,Jogador[t],Jogador[y])
-            
-                elseif Jogador[t].mao[opt].tipo == "Suporte" then
-                    Funcoes.conjurar(card,Jogador[t],Jogador[y])
+                opcao = tonumber(io.read())
+                
+                if opcao == nil then
+                    print("SELECIONE UMA OPÇÃO VÁLIDA!")
+                    break
+                
+                elseif opcao == 0 then
+                    break
+                    
+                elseif opcao == 1 then
+                    Funcoes.jogar(Jogador[t].mao[opt],Jogador[t],Jogador[y])
+                    while opt <= #Jogador[t].mao do
+                        Jogador[t].mao[opt] = Jogador[t].mao[opt+1]
+                        opt = opt+1
+                    end
+                else
+                    print("SELECIONE UMA OPÇÃO VÁLIDA!")
                 end
-                
-                while opt <= #Jogador[t].mao do
-                            Jogador[t].mao[opt] = Jogador[t].mao[opt+1]
-                            opt = opt+1
-                end
-                
-            elseif valid and Jogador[t].mao[opt].custo > Jogador[t].ouro then
-                print("Você não tem ouro suficiente!")
                     
             elseif opt == 0 then
                     break
@@ -246,72 +250,151 @@ Funcoes.turno = function(t)
                 print("SELECIONE UM CARD VÁLIDO! :'(")        
             end
         end
-            
+------------------CAMPOS-------------------
         while option == 2 do
-            print("Selecione o atacante:")
+            print("Selecione o campo:")
             print("0 - Retornar")
-            Funcoes.printzona(Jogador[t].campo)
+            print("1 - Seu campo")
+            print("2 - Campo do oponente")
                     
             local num = tonumber(io.read())
             
-            if num ~= nil and num ~= 0 and num <= #Jogador[t].campo and Jogador[t].campo[num].stamina > 0 then
-                while num ~= nil and num ~= 0 and num <= #Jogador[t].campo and Jogador[t].campo[num].stamina > 0 do
-                    
-                    local atacante = Jogador[t].campo[num]
-                    
-                    print("Selecione o alvo:")
+            if num == nil then
+                print("ESSA NÃO É UMA OPÇÃO VÁLIDA!")
+                break
+            elseif num == 0 then
+                break
+            end
+                
+            while num == 1 do
+                print("Seu campo:")
+                print("0 - Retornar")
+                Funcoes.printzona(Jogador[t].campo)
+                local opcao = tonumber(io.read())
+                if opcao == nil then
+                    print("ESSA NÃO É UMA OPÇÃO VÁLIDA!")
+                    break
+                elseif opcao == 0 then
+                    break
+                elseif opcao <= #Jogador[t].campo then
+                    local card = Jogador[t].campo[opcao]
+                    Funcoes.printcard(card)
                     print("0 - Retornar")
-                    print("1 - Oponente")
-                    if #Jogador[y].campo > 0 then
-                    print("2 - Unidades")
+                    print("1 - Atacar")
+                    if card.efeito.habilidade then
+                        print("2 - Ativar habilidade")
                     end
-                            
-                    local alvo = tonumber(io.read())
-                            
-                    if alvo == 0 then
+                    local decisao = tonumber(io.read())
+                    if decisao == nil then
+                        print("ESSA NÃO É UMA OPÇÃO VÁLIDA!")
                         break
-                            
-                    elseif alvo == 1 then
-                        Jogador[y].vida = Jogador[y].vida - atacante.poder
-                        print("A vida do jogador "..Jogador[y].nome.." é agora "..Jogador[y].vida..".")
-                        atacante.stamina = atacante.stamina - 1
+                    elseif decisao == 0 then
                         break
-                    end
-                            
-                    while alvo == 2 and #Jogador[y].campo > 0 do
-                        print("Selecione o alvo:")
-                        print("0 - Retornar")
-                        Funcoes.printzona(Jogador[y].campo)
-                        
-                        local num2 = tonumber(io.read())
-                                
-                            if num2 == 0 then
-                                break
-                                
-                            elseif num2 <= #Jogador[y].campo then
-                                local defensor = Jogador[y].campo[num2]
-                                Funcoes.combate(atacante,defensor,Jogador[t],Jogador[y])
-                                break
-                            else
-                                print("SELECIONE UM ALVO VÁLIDO! --'")
+-----------------------------ATAQUE---------------------------------------------------------------------
+                    elseif decisao == 1 then
+                        while decisao == 1 do
+                            local atacante = card
+                            print("Selecione o alvo:")
+                            print("0 - Retornar")
+                            print("1 - Oponente")
+                            if #Jogador[y].campo > 0 then
+                                print("2 - Unidades")
                             end
-                    end
+                                    
+                            local alvo = tonumber(io.read())
                             
-                    if alvo ~= 0 and alvo ~= 1 and alvo ~= 2 then
-                            print("SELECIONE UM ALVO VÁLIDO! >.<")
+                            if alvo == nil then
+                                print("ESSA NÃO É UMA OPÇÃO VÁLIDA!")
+                                decisao = 0
+                                break
+                            elseif alvo == 0 then
+                                decisao = 0
+                                break
+                                    
+                            elseif alvo == 1 then
+                                if atacante.stamina > 0 then
+                                    Jogador[y].vida = Jogador[y].vida - atacante.poder
+                                    print("A vida do jogador "..Jogador[y].nome.." é agora "..Jogador[y].vida..".")
+                                    atacante.stamina = atacante.stamina - 1
+                                    decisao = 0
+                                else
+                                    print("ESTA UNIDADE NÃO TEM MAIS ENERGIA PARA ATACAR! :'(")
+                                    decisao = 0
+                                    break
+                                end
+                            end
+                                    
+                            while alvo == 2 and #Jogador[y].campo > 0 do
+                                print("Selecione o alvo:")
+                                print("0 - Retornar")
+                                Funcoes.printzona(Jogador[y].campo)
+                                
+                                local num2 = tonumber(io.read())
+                                        
+                                if num2 == nil then
+                                    print("ESSA NÃO É UMA OPÇÃO VÁLIDA!")
+                                    decisao = 0
+                                    break
+                                elseif num2 == 0 then
+                                    decisao = 0
+                                    break
+                                        
+                                elseif num2 <= #Jogador[y].campo then
+                                    local defensor = Jogador[y].campo[num2]
+                                    Funcoes.combate(atacante,defensor,Jogador[t],Jogador[y])
+                                    decisao = 0
+                                    break
+                                else
+                                    print("ESSA NÃO É UMA OPÇÃO VÁLIDA!")
+                                    decisao = 0
+                                    break
+                                end
+                            end
+                                    
+                            if alvo ~= nil and alvo ~= 0 and alvo ~= 1 and alvo ~= 2 then
+                                    print("ESSA NÃO É UMA OPÇÃO VÁLIDA!")
+                                    break
+                            end
+                            decisao = 0
+                        end
+-------------------------------HABILIDADE------------------------------------------------------------------------------------------
+                    elseif decisao == 2 and card.efeito.habilidade then
+                        card.efeito.habilidade(Jogador[t],Jogador[y])
+                        card.stamina = card.stamina-1
+                    else
+                        print("ESSA NÃO É UMA OPÇÃO VÁLIDA!")
+                        break
+                    end
+                else
+                    print("ESSA NÃO É UMA OPÇÃO VÁLIDA!")
+                    break
+                end
+            end
+                
+            while num == 2 do
+                print("Campo do oponente:")
+                print("0 - Retornar")
+                Funcoes.printzona(Jogador[y].campo)
+                local opcao = tonumber(io.read())
+                if opcao == nil then
+                    print("ESSA NÃO É UMA OPÇÃO VÁLIDA!")
+                    break
+                elseif opcao == 0 then
+                    break
+                elseif opcao <= #Jogador[y].campo then
+                    Funcoes.printcard(Jogador[y].campo[opcao])
+                    print("Qualquer comando - Retornar")
+                    local option = tonumber(io.read())
+                    if option then
+                        break
                     end
                 end
-                    
-            elseif num == 0 then
-                    break
-            elseif num ~= nil and num > #Jogador[t].campo then
-                print("SELECIONE O ATACANTE! ò.ó")
-            elseif num ~= nil and Jogador[t].campo[num].stamina <= 0 then
-                print("ESTA UNIDADE NÃO TEM MAIS ENERGIA PARA ATACAR! :'(")
-            else
-                print("SELECIONE O ATACANTE! ò.ó")
             end
 
+            if num ~= nil and num ~= 0 and num ~= 1 and num ~= 2 then
+                print("ESSA NÃO É UMA OPÇÃO VÁLIDA!")
+                break
+            end
         end
         
         while option == 3 do
