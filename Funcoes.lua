@@ -138,7 +138,7 @@ Funcoes.invocar = function(card,Jogador1,Jogador2)
 end
 
 ----------JOGAR-----------nao testada
-Funcoes.jogar = function(card,Jogador,Jogador2)
+Funcoes.jogar = function(card,Jogador1,Jogador2)
         
     if card.custo <= Jogador1.ouro then
         Jogador1.ouro = Jogador1.ouro - card.custo
