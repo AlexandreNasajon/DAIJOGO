@@ -51,9 +51,9 @@ Funcoes.find2 = function(a,n)
     end
 end
 ------------DRAW----------------
-Funcoes.draw = function(Jogador1)
-    Jogador1.mao[#Jogador1.mao+1] = Jogador1.deck[#Jogador1.deck]
-    Jogador1.deck[#Jogador1.deck] = nil
+Funcoes.draw = function(j)
+    j.mao[#j.mao+1] = j.deck[#j.deck]
+    j.deck[#j.deck] = nil
 end
 
 ----------RECEBER OURO-------------
@@ -66,12 +66,33 @@ Funcoes.getstamina = function(card)
 
     card.stamina = card.stamina +1
 end
-
+--------DISCARD--------------
+Funcoes.discard = function(Jogador1)
+    local h = false
+    while h == false do
+        print("Descarte um card:")
+        Funcoes.printzona(Jogador1.mao)
+        local opcao = tonumber(io.read())
+        if opcao ~= nil and opcao <= #Jogador1.mao and opcao > 0 then
+            Jogador1.cemiterio[#Jogador1.cemiterio+1] = Jogador1.mao[opcao]
+            while opcao <= #Jogador[t].mao do
+                Jogador[t].mao[opcao] = Jogador[t].mao[opcao+1]
+                opcao = opcao+1
+            end
+            h = true
+        else
+            print("VOCÊ DEVE DESCARTAR UM CARD!")
+        end
+    end
+    if Jogador1.cemiterio[#Jogador1.cemiterio].efeito.ifdiscarded then
+        Jogador1.cemiterio[#Jogador1.cemiterio].efeito.ifdiscarded(Jogador1,Jogador2)
+    end
+end
 ------------PRINT ZONA----------
 Funcoes.printzona = function(zona)
 
     local i = 1
-    print("#","Nome","Custo","Tipo","Poder")
+    print("#","Nome     ","Custo","Tipo","Poder")
     while i <= #zona do
         print(i,zona[i].nome,zona[i].custo,zona[i].tipo,zona[i].poder)
         i = i+1
@@ -90,7 +111,7 @@ end
 -----------DESTRUIR------------
 Funcoes.destruir = function(card,Jogador,oponente)
     Jogador.cemiterio[#Jogador.cemiterio+1] = card
-    Jogador.campo[Funcoes.find(Jogador.campo,card)] = nil
+    Jogador.campo[Funcoes.find(Jogador.campo,card)] = nil --NAO SEI SE PRECISA DESSA LINHA
     local j = 1
     while j <= #Jogador.campo do
         Jogador.campo[j] = Jogador.campo[j+1]
@@ -99,7 +120,7 @@ Funcoes.destruir = function(card,Jogador,oponente)
     print(card.nome.." foi destruído.")
     if card.efeito then
         if card.efeito.ifdies then
-        card.efeito.ifdies(Jogador,oponente)
+            card.efeito.ifdies(Jogador,oponente)
         else
         end
     end
@@ -139,16 +160,10 @@ end
 
 ----------JOGAR-----------nao testada
 Funcoes.jogar = function(card,Jogador1,Jogador2)
-        
-    if card.custo <= Jogador1.ouro then
-        Jogador1.ouro = Jogador1.ouro - card.custo
-        if card.tipo == "Unidade" then
-            Funcoes.invocar(card,Jogador1)
-        elseif card.tipo == "Suporte" then
-            Funcoes.conjurar(card,Jogador1)
-        end
-    elseif card.custo > Jogador1.ouro then
-        print("Você não tem ouro suficiente!")
+    if card.tipo == "Unidade" then
+        Funcoes.invocar(card,Jogador1,Jogador2)
+    elseif card.tipo == "Suporte" then
+        Funcoes.conjurar(card,Jogador1,Jogador2)
     end
 end
 
@@ -234,12 +249,16 @@ Funcoes.turno = function(t)
                         opt = 0
                         break
                         
-                    elseif opcao == 1 then
+                    elseif opcao == 1 and Jogador[t].ouro >= Jogador[t].mao[opt].custo then
+                        Jogador[t].ouro = Jogador[t].ouro - Jogador[t].mao[opt].custo
                         Funcoes.jogar(Jogador[t].mao[opt],Jogador[t],Jogador[y])
-                        while opt <= #Jogador[t].mao do
-                            Jogador[t].mao[opt] = Jogador[t].mao[opt+1]
-                            opt = opt+1
-                        end
+                            while opt <= #Jogador[t].mao do
+                                Jogador[t].mao[opt] = Jogador[t].mao[opt+1]
+                                opt = opt+1
+                            end
+                            
+                    elseif opcao == 1 and Jogador[t].ouro < Jogador[t].mao[opt].custo then
+                        print("VOCÊ NÃO TEM OURO SUFICIENTE! >:x")
                     else
                         print("SELECIONE UMA OPÇÃO VÁLIDA!")
                     end
@@ -315,6 +334,7 @@ Funcoes.turno = function(t)
                                     print("A vida do jogador "..Jogador[y].nome.." é agora "..Jogador[y].vida..".")
                                     atacante.stamina = atacante.stamina - 1
                                     decisao = 0
+                                    break
                                 else
                                     print("ESTA UNIDADE NÃO TEM MAIS ENERGIA PARA ATACAR! :'(")
                                     decisao = 0
@@ -356,9 +376,13 @@ Funcoes.turno = function(t)
                             decisao = 0
                         end
 -------------------------------HABILIDADE------------------------------------------------------------------------------------------
-                    elseif decisao == 2 and card.efeito.habilidade then
+                    elseif decisao == 2 and card.efeito.habilidade and card.stamina > 0 then
                         card.efeito.habilidade(Jogador[t],Jogador[y])
                         card.stamina = card.stamina-1
+                        break
+                    elseif decisao == 2 and card.efeito.habilidade and card.stamina < 1 then
+                        print("ESTA UNIDADE NÃO TEM MAIS ENERGIA!")
+                        break
                     else
                         print("ESSA NÃO É UMA OPÇÃO VÁLIDA!")
                         break
@@ -421,14 +445,7 @@ end
         
 ------------JOGO----------------
 Funcoes.jogo = function()
-    os.execute("clear")
-    print("Qual é o nome do Jogador 1?")
-    Jogador[1].nome = io.read()
-    print("Então o Jogador 1 se chama "..Jogador[1].nome.."!")
-    print("E qual o nome do Jogador 2?")
-    Jogador[2].nome = io.read()
-    print("Então o Jogador 2 se chama "..Jogador[2].nome.."!")
-    print("Imagino que vocês leram o manual, certo? Certo! Então boa sorte!")
+
     Funcoes.shuffle2(Jogador[1].deck)
     Funcoes.shuffle2(Jogador[2].deck)
     Funcoes.draw(Jogador[1])
