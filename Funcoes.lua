@@ -111,8 +111,7 @@ end
 -----------DESTRUIR------------
 Funcoes.destruir = function(card,Jogador,oponente)
     Jogador.cemiterio[#Jogador.cemiterio+1] = card
-    Jogador.campo[Funcoes.find(Jogador.campo,card)] = nil --NAO SEI SE PRECISA DESSA LINHA
-    local j = 1
+    local j = Funcoes.find(Jogador.campo,card)
     while j <= #Jogador.campo do
         Jogador.campo[j] = Jogador.campo[j+1]
         j = j+1
