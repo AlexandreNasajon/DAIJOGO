@@ -8,11 +8,12 @@ Cards.Elfo = {
     custo = 1,
     tipo = "Unidade",
     stamina = 1,
-    descricao = "Quando invocado, adicione um card 'Remendar' ao seu deck.",
+    descricao = "Quando invocado, adicione dois cards 'Remendar' ao seu deck.",
     efeito = {ifsummoned = function(Jogador1,Jogador2)
         Jogador1.deck[#Jogador1.deck+1] = Cards.Remendar
+        Jogador1.deck[#Jogador1.deck+1] = Cards.Remendar
         Funcoes.shuffle2(Jogador1.deck)
-        print("Um card 'Remendar' foi adicionado ao deck de "..Jogador1.nome..".")
+        print("Dois cards 'Remendar' foram adicionados ao deck de "..Jogador1.nome..".")
     end
 }
 }
@@ -46,9 +47,10 @@ Cards.Coveiro = {
     efeito = {ifsummoned = function(Jogador1,Jogador2)
     h = false
     while h == false do
+        print("Adicione até uma unidade do seu cemitério à sua mão:")
             Funcoes.printzona(Jogador1.cemiterio)
             opcao = tonumber(io.read())
-            if opcao ~= nil and opcao <= #Jogador1.cemiterio and opcao > 0 and Jogador1.cemiterio[opcao][tipo] == "Unidade" then
+            if opcao ~= nil and opcao <= #Jogador1.cemiterio and opcao > 0 and Jogador1.cemiterio[opcao].tipo == "Unidade" then
                 Jogador1.mao[#Jogador1.mao+1] = Jogador1.cemiterio[opcao]
                 while opcao <= #Jogador1.cemiterio do
                     Jogador1.cemiterio[opcao] = Jogador1.cemiterio[opcao+1]
@@ -73,9 +75,10 @@ Cards.Arqueologo = {
     efeito = {ifsummoned = function(Jogador1,Jogador2)
     h = false
     while h == false do
+        print("Adicione até um suporte do seu cemitério à sua mão:")
             Funcoes.printzona(Jogador1.cemiterio)
             opcao = tonumber(io.read())
-            if opcao ~= nil and opcao <= #Jogador1.cemiterio and opcao > 0 and Jogador1.cemiterio[opcao][tipo] == "Suporte" then
+            if opcao ~= nil and opcao <= #Jogador1.cemiterio and opcao > 0 and Jogador1.cemiterio[opcao].tipo == "Suporte" then
                 Jogador1.mao[#Jogador1.mao+1] = Jogador1.cemiterio[opcao]
                 while opcao <= #Jogador1.cemiterio do
                     Jogador1.cemiterio[opcao] = Jogador1.cemiterio[opcao+1]
@@ -83,7 +86,7 @@ Cards.Arqueologo = {
                 end
                 h = true
             else
-                print("Nenhuma unidade foi adicionada à sua mão.")
+                print("Nenhum suporte foi adicionada à sua mão.")
                 h = true
             end
     end
