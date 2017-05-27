@@ -92,8 +92,8 @@ Cards.Arqueologo = {
 }
 Cards.StormTitan = {
     nome = "Storm Titan",
-    poder = 10,
-    custo = 1,
+    poder = 17,
+    custo = 3,
     tipo = "Unidade",
     stamina = 1,
     descricao = "Quando invocado, adicione os cards 'Brainstorm', 'Firestorm' e 'Lifestorm' à sua mão.",
@@ -120,13 +120,13 @@ Cards.StormTitan = {
 }
 Cards.Stormdude = {
     nome = "Stormdude ",
-    poder = 13,
+    poder = 11,
     custo = 1,
     tipo = "Unidade",
     stamina = 1,
-    descricao = "Quando invocado, Storm +3.",
+    descricao = "Quando invocado, Storm +1.",
     efeito = {ifsummoned = function(Jogador1,Jogador2)
-        Funcoes.storm(Jogador1,3)
+        Funcoes.storm(Jogador1,1)
     end
 }
 }
@@ -396,7 +396,7 @@ Cards.Investida = {
     custo = 0,
     tipo = "Suporte",
     stamina = nil,
-    descricao = "Storm +1; Uma unidade pode atacar uma vez adicional neste turno.",
+    descricao = "Storm +1; Uma unidade recebe energia adicional para atacar ou ativar uma habilidade neste turno.",
 efeito = function(Jogador1,Jogador2)
     Jogador1.storm = Jogador1.storm+1
     print(Jogador1.nome.." aumentou seu storm em 1.")
@@ -406,7 +406,7 @@ efeito = function(Jogador1,Jogador2)
     if opcao <= #Jogador1.campo and opcao > 0 then
         local card = Jogador1.campo[opcao]
         card.stamina = card.stamina+1
-        print(card.nome.." pode atacar uma vez adicional neste turno.")
+        print(card.nome.." recebeu energia adicional.")
     else
         print("SELECIONE UMA OPÇÃO VÁLIDA!")
     end
@@ -418,9 +418,9 @@ Cards.Stormear = {
     custo = 0,
     tipo = "Suporte",
     stamina = nil,
-    descricao = "Storm +3.",
+    descricao = "Storm +2.",
 efeito = function(Jogador1,Jogador2)
-    Funcoes.storm(Jogador1,3)
+    Funcoes.storm(Jogador1,2)
 end
 }
 Cards.Remendar = {
@@ -470,10 +470,10 @@ Cards.Cooperar = {
     custo = 1,
     tipo = "Suporte",
     stamina = nil,
-    descricao = "Storm +2; Cada jogador compra um card.",
+    descricao = "Storm +1; Cada jogador compra um card.",
 efeito = function(Jogador1,Jogador2)
     Jogador1.storm = Jogador1.storm+1
-    print(Jogador1.nome.." aumentou seu storm em 2.")
+    print(Jogador1.nome.." aumentou seu storm em 1.")
     Funcoes.draw(Jogador1)
     Funcoes.draw(Jogador2)
     print("Cada jogador comprou um card.")
