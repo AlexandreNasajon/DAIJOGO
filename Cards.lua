@@ -2,6 +2,29 @@ local Jogador = require("Jogador")
 local Funcoes = require("Funcoes")
 local Cards = {}
 
+Cards.Dragao = {
+    nome = "Dragão    ",
+    poder = 25,
+    custo = 3,
+    tipo = "Unidade",
+    stamina = 1,
+    descricao = "Quando invocado, sacrifique uma unidade.",
+    efeito = {ifsummoned = function(Jogador1,Jogador2)
+        local h = false
+        while h == false do
+            print("Sacrifique uma unidade:")
+            Funcoes.printzona(Jogador1.campo)
+            local opcao = tonumber(io.read())
+            if opcao ~= nil and opcao <= #Jogador1.campo then
+                Funcoes.destruir(Jogador1.campo[opcao],Jogador1,Jogador2)
+                h = true
+            else
+                print("VOCÊ DEVE SACRIFICAR UMA UNIDADE!")
+            end
+        end
+    end
+}
+}
 Cards.Elfo = {
     nome = "Elfo      ",
     poder = 9,
@@ -102,21 +125,15 @@ Cards.StormTitan = {
     descricao = "Quando invocado, adicione os cards 'Brainstorm', 'Firestorm' e 'Lifestorm' à sua mão.",
     efeito = {ifsummoned = function(Jogador1,Jogador2)
         tempcard = {}
-        for k,v in pairs(Cards.Brainstorm) do
-            tempcard = Funcoes.copiar(v,tempcard)
-            Jogador1.mao[#Jogador1.mao+1] = tempcard
-            tempcard = {}
-        end
-        for k,v in pairs(Cards.Firestorm) do
-            tempcard = Funcoes.copiar(v,tempcard)
-            Jogador1.mao[#Jogador1.mao+1] = tempcard
-            tempcard = {}
-        end
-        for k,v in pairs(Cards.Lifestorm) do
-            tempcard = Funcoes.copiar(v,tempcard)
-            Jogador1.mao[#Jogador1.mao+1] = tempcard
-            tempcard = {}
-        end
+        tempcard = Funcoes.copiar(Cards.Brainstorm,tempcard)--tá dando bad
+        Jogador1.mao[#Jogador1.mao+1] = tempcard
+        tempcard = {}
+        tempcard = Funcoes.copiar(Cards.Firestorm,tempcard)
+        Jogador1.mao[#Jogador1.mao+1] = tempcard
+        tempcard = {}
+        tempcard = Funcoes.copiar(Cards.Lifestorm,tempcard)
+        Jogador1.mao[#Jogador1.mao+1] = tempcard
+        tempcard = {}
         print("Os cards 'Brainstorm','Firestorm' e 'Lifestorm' foram adicionados à mão de "..Jogador1.nome..".")
     end
 }
@@ -451,6 +468,19 @@ Cards.Ganancia = {
 efeito = function(Jogador1,Jogador2)
     Funcoes.getgold(Jogador1)
     print(Jogador1.nome.." recebeu 1 de ouro.")
+end
+}
+Cards.VenderAlma = {
+    nome = "Vender Alma",
+    poder = nil,
+    custo = 0,
+    tipo = "Suporte",
+    stamina = nil,
+    descricao = "Receba 2 de ouro e perca 20 de vida.",
+efeito = function(Jogador1,Jogador2)
+    Funcoes.getgold(Jogador1)
+    Funcoes.dano(Jogador1,20)
+    print(Jogador1.nome.." recebeu 1 de ouro e perdeu 20 de vida.")
 end
 }
 Cards.Bolt = {
