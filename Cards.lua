@@ -2,6 +2,68 @@ local Jogador = require("Jogador")
 local Funcoes = require("Funcoes")
 local Cards = {}
 
+Cards.AlmaGuia = {
+    nome = "ALma Guia",
+    poder = 11,
+    custo = 1,
+    tipo = "Unidade",
+    stamina = 1,
+    descricao = "Quando destruído, procure em seu deck por um card de unidade com poder menor ou igual a 10 e adicione-o à sua mão, depois seu deck é embaralhado.",
+    efeito = {ifdies = function(Jogador1,Jogador2)
+    local h = false
+        while h == false do
+            print("Selecione uma unidade com poder menor ou igual a 10:")
+            print("0 - Nenhuma")
+            Funcoes.printzona(Jogador1.deck)
+            local opcao = tonumber(io.read())
+            if opcao ~= nil and opcao == 0 then
+                h = true
+            elseif opcao ~= nil and opcao <= #Jogador1.deck and Jogador1.deck[opcao].poder < 11 then
+                Jogador1.mao[#Jogador1.mao+1] = Jogador1.deck[opcao]
+                while opcao <= #Jogador1.deck do
+                    Jogador1.deck[opcao] = Jogador1.deck[opcao+1]
+                    opcao = opcao+1
+                end
+                h = true
+            else
+                print("SELECIONE UMA OPÇÃO VÁLIDA!")
+            end
+        end
+        Funcoes.shuffle2(Jogador1.deck)
+    end
+}
+}
+Cards.Recrutador = {
+    nome = "Recrutador",
+    poder = 12,
+    custo = 2,
+    tipo = "Unidade",
+    stamina = 1,
+    descricao = "Quando invocado, procure em seu deck por um card de unidade com custo menor ou igual a 1 e adicione-o à sua mão, depois seu deck é embaralhado.",
+    efeito = {ifsummoned = function(Jogador1,Jogador2)
+    local h = false
+        while h == false do
+            print("Selecione uma unidade com custo menor ou igual a 1:")
+            print("0 - Nenhuma")
+            Funcoes.printzona(Jogador1.deck)
+            local opcao = tonumber(io.read())
+            if opcao ~= nil and opcao == 0 then
+                h = true
+            elseif opcao ~= nil and opcao <= #Jogador1.deck and Jogador1.deck[opcao].custo < 2 then
+                Jogador1.mao[#Jogador1.mao+1] = Jogador1.deck[opcao]
+                while opcao <= #Jogador1.deck do
+                    Jogador1.deck[opcao] = Jogador1.deck[opcao+1]
+                    opcao = opcao+1
+                end
+                h = true
+            else
+                print("SELECIONE UMA OPÇÃO VÁLIDA!")
+            end
+        end
+        Funcoes.shuffle2(Jogador1.deck)
+    end
+}
+}
 Cards.Dragao = {
     nome = "Dragão    ",
     poder = 25,
@@ -33,8 +95,11 @@ Cards.Elfo = {
     stamina = 1,
     descricao = "Quando invocado, adicione dois cards 'Remendar' ao seu deck.",
     efeito = {ifsummoned = function(Jogador1,Jogador2)
-        Jogador1.deck[#Jogador1.deck+1] = Cards.Remendar
-        Jogador1.deck[#Jogador1.deck+1] = Cards.Remendar
+        tempcard = {}
+        tempcard = Funcoes.copiar(Cards.Remendar,tempcard)
+        Jogador1.deck[#Jogador1.deck+1] = tempcard
+        Jogador1.deck[#Jogador1.deck+1] = tempcard
+        tempcard = {}
         Funcoes.shuffle2(Jogador1.deck)
         print("Dois cards 'Remendar' foram adicionados ao deck de "..Jogador1.nome..".")
     end
@@ -48,13 +113,16 @@ Cards.Anjo = {
     stamina = 1,
     descricao = "Quando invocado, adicione sete cards 'Remendar' ao seu deck.",
     efeito = {ifsummoned = function(Jogador1,Jogador2)
-        Jogador1.deck[#Jogador1.deck+1] = Cards.Remendar
-        Jogador1.deck[#Jogador1.deck+1] = Cards.Remendar
-        Jogador1.deck[#Jogador1.deck+1] = Cards.Remendar
-        Jogador1.deck[#Jogador1.deck+1] = Cards.Remendar
-        Jogador1.deck[#Jogador1.deck+1] = Cards.Remendar
-        Jogador1.deck[#Jogador1.deck+1] = Cards.Remendar
-        Jogador1.deck[#Jogador1.deck+1] = Cards.Remendar
+        tempcard = {}
+        tempcard = Funcoes.copiar(Cards.Remendar,tempcard)
+        Jogador1.deck[#Jogador1.deck+1] = tempcard
+        Jogador1.deck[#Jogador1.deck+1] = tempcard
+        Jogador1.deck[#Jogador1.deck+1] = tempcard
+        Jogador1.deck[#Jogador1.deck+1] = tempcard
+        Jogador1.deck[#Jogador1.deck+1] = tempcard
+        Jogador1.deck[#Jogador1.deck+1] = tempcard
+        Jogador1.deck[#Jogador1.deck+1] = tempcard
+        tempcard = {}
         Funcoes.shuffle2(Jogador1.deck)
         print("Sete cards 'Remendar' foram adicionados ao deck de "..Jogador1.nome..".")
     end
@@ -71,9 +139,12 @@ Cards.Coveiro = {
     h = false
     while h == false do
         print("Adicione até uma unidade do seu cemitério à sua mão:")
+        print("0 - Nenhuma")
             Funcoes.printzona(Jogador1.cemiterio)
             opcao = tonumber(io.read())
-            if opcao ~= nil and opcao <= #Jogador1.cemiterio and opcao > 0 and Jogador1.cemiterio[opcao].tipo == "Unidade" then
+            if opcao ~= nil and opcao == 0 then
+                h = true
+            elseif opcao ~= nil and opcao <= #Jogador1.cemiterio and opcao > 0 and Jogador1.cemiterio[opcao].tipo == "Unidade" then
                 Jogador1.mao[#Jogador1.mao+1] = Jogador1.cemiterio[opcao]
                 while opcao <= #Jogador1.cemiterio do
                     Jogador1.cemiterio[opcao] = Jogador1.cemiterio[opcao+1]
@@ -99,9 +170,12 @@ Cards.Arqueologo = {
     h = false
     while h == false do
         print("Adicione até um suporte do seu cemitério à sua mão:")
+        print("0 - Nenhum")
             Funcoes.printzona(Jogador1.cemiterio)
             opcao = tonumber(io.read())
-            if opcao ~= nil and opcao <= #Jogador1.cemiterio and opcao > 0 and Jogador1.cemiterio[opcao].tipo == "Suporte" then
+            if opcao ~= nil and opcao == 0 then
+                h = true
+            elseif opcao ~= nil and opcao <= #Jogador1.cemiterio and opcao > 0 and Jogador1.cemiterio[opcao].tipo == "Suporte" then
                 Jogador1.mao[#Jogador1.mao+1] = Jogador1.cemiterio[opcao]
                 while opcao <= #Jogador1.cemiterio do
                     Jogador1.cemiterio[opcao] = Jogador1.cemiterio[opcao+1]
@@ -125,7 +199,7 @@ Cards.StormTitan = {
     descricao = "Quando invocado, adicione os cards 'Brainstorm', 'Firestorm' e 'Lifestorm' à sua mão.",
     efeito = {ifsummoned = function(Jogador1,Jogador2)
         tempcard = {}
-        tempcard = Funcoes.copiar(Cards.Brainstorm,tempcard)--tá dando bad
+        tempcard = Funcoes.copiar(Cards.Brainstorm,tempcard)
         Jogador1.mao[#Jogador1.mao+1] = tempcard
         tempcard = {}
         tempcard = Funcoes.copiar(Cards.Firestorm,tempcard)
@@ -190,7 +264,7 @@ Cards.RedAristocrat = {
         print("Sacrifique uma unidade:")
         Funcoes.printzona(Jogador1.campo)
         local opcao = tonumber(io.read())
-        if opcao ~= nil and opcao <= #Jogador1.campo then
+        if opcao ~= nil and opcao <= #Jogador1.campo and opcao > 0  then
             Funcoes.destruir(Jogador1.campo[opcao],Jogador1,Jogador2)
             Funcoes.dano(Jogador2,15)
             print(Jogador2.nome.." recebeu 15 de dano.")
@@ -211,7 +285,7 @@ Cards.BlueAristocrat = {
         print("Sacrifique uma unidade:")
         Funcoes.printzona(Jogador1.campo)
         local opcao = tonumber(io.read())
-        if opcao ~= nil and opcao <= #Jogador1.campo then
+        if opcao ~= nil and opcao <= #Jogador1.campo and opcao > 0  then
             Funcoes.destruir(Jogador1.campo[opcao],Jogador1,Jogador2)
             Funcoes.draw(Jogador1)
             print(Jogador1.nome.." comprou um card.")
@@ -232,7 +306,7 @@ Cards.YellowAristocrat = {
         print("Sacrifique uma unidade:")
         Funcoes.printzona(Jogador1.campo)
         local opcao = tonumber(io.read())
-        if opcao ~= nil and opcao <= #Jogador1.campo then
+        if opcao ~= nil and opcao <= #Jogador1.campo and opcao > 0 then
             Funcoes.destruir(Jogador1.campo[opcao],Jogador1,Jogador2)
             Funcoes.getgold(Jogador1)
             print(Jogador1.nome.." recebeu 1 de ouro")
@@ -253,7 +327,7 @@ Cards.GreenAristocrat = {
         print("Sacrifique uma unidade:")
         Funcoes.printzona(Jogador1.campo)
         local opcao = tonumber(io.read())
-        if opcao ~= nil and opcao <= #Jogador1.campo then
+        if opcao ~= nil and opcao <= #Jogador1.campo and opcao > 0  then
             Funcoes.destruir(Jogador1.campo[opcao],Jogador1,Jogador2)
             Funcoes.getlife(Jogador1,20)
             print(Jogador1.nome.." ganhou 20 de vida.")
@@ -449,13 +523,13 @@ Cards.Remendar = {
     custo = 0,
     tipo = "Suporte",
     stamina = nil,
-    descricao = "Storm +1; Compre um card e ganhe 5 de vida.",
+    descricao = "Storm +1; Compre um card e ganhe 7 de vida.",
 efeito = function(Jogador1,Jogador2)
     Jogador1.storm = Jogador1.storm+1
     print(Jogador1.nome.." aumentou seu storm em 1.")
     Funcoes.draw(Jogador1)
-    Funcoes.getlife(Jogador1,5)
-    print(Jogador1.nome.." comprou um card e ganhou 5 de vida.")
+    Funcoes.getlife(Jogador1,7)
+    print(Jogador1.nome.." comprou um card e ganhou 7 de vida.")
 end
 }
 Cards.Ganancia = {
@@ -479,6 +553,7 @@ Cards.VenderAlma = {
     descricao = "Receba 2 de ouro e perca 20 de vida.",
 efeito = function(Jogador1,Jogador2)
     Funcoes.getgold(Jogador1)
+    Funcoes.getgold(Jogador1)
     Funcoes.dano(Jogador1,20)
     print(Jogador1.nome.." recebeu 1 de ouro e perdeu 20 de vida.")
 end
@@ -489,12 +564,12 @@ Cards.Bolt = {
     custo = 0,
     tipo = "Suporte",
     stamina = nil,
-    descricao = "Storm +1; Causa 9 de dano ao oponente.",
+    descricao = "Storm +1; Causa 15 de dano ao oponente.",
 efeito = function(Jogador1,Jogador2)
     Jogador1.storm = Jogador1.storm+1
     print(Jogador1.nome.." aumentou seu storm em 1.")
-    Funcoes.dano(Jogador2,9)
-    print(Jogador2.nome.." perdeu 9 de vida.")
+    Funcoes.dano(Jogador2,15)
+    print(Jogador2.nome.." perdeu 15 de vida.")
 end
 }
 Cards.Cooperar = {
@@ -630,23 +705,29 @@ Cards.Lembrar = {
 efeito = function(Jogador1,Jogador2)
     local h = false
     while h == false do
-       print("Selecione um card no seu cemitério:")
-       Funcoes.printzona(Jogador1.cemiterio)
-       local opcao = tonumber(io.read())
-       if opcao ~= nil and opcao <= #Jogador1.cemiterio then
+        print("Selecione um card no seu cemitério:")
+        print("0 - Nenhum")
+        Funcoes.printzona(Jogador1.cemiterio)
+        local opcao = tonumber(io.read())
+        if opcao ~= nil and opcao == 0 then
+            h = true
+        elseif opcao ~= nil and opcao <= #Jogador1.cemiterio then
            Jogador1.mao[#Jogador1.mao+1] = Jogador1.cemiterio[opcao]
-           Jogador1.cemiterio[opcao] = nil
+            while opcao <= #Jogador1.cemiterio do
+                Jogador1.cemiterio[opcao] = Jogador1.cemiterio[opcao+1]
+                opcao = opcao+1
+            end
            h = true
-       else
-           print("SELECIONE UMA OPÇÃO VÁLIDA!")
-       end
+        else
+            print("SELECIONE UMA OPÇÃO VÁLIDA!")
+        end
     end
 end
 }
 Cards.Reviver = {
     nome = "Reviver   ",
     poder = nil,
-    custo = 1,
+    custo = 2,
     tipo = "Suporte",
     stamina = nil,
     zona = deck,
@@ -655,9 +736,12 @@ efeito = function(Jogador1,Jogador2)
     local h = false
     while h == false do
         print("Selecione uma unidade no seu cemitério:")
+        print("0 - Nenhuma")
         Funcoes.printzona(Jogador1.cemiterio)
         local opcao = tonumber(io.read())
-        if Jogador1.cemiterio[opcao].tipo == "Unidade" then
+        if opcao ~= nil and opcao == 0 then
+            h = true
+        elseif Jogador1.cemiterio[opcao].tipo == "Unidade" then
             local card = Jogador1.cemiterio[opcao]
             Funcoes.invocar(card,Jogador1)
             print(card.nome.." foi invocado!")
@@ -671,6 +755,40 @@ efeito = function(Jogador1,Jogador2)
         end
     end
 end
-}        
+}
+Cards.Reanimar = {
+    nome = "Reanimar  ",
+    poder = nil,
+    custo = 1,
+    tipo = "Suporte",
+    stamina = nil,
+    zona = deck,
+    descricao = "Invoque uma unidade de seu cemitério e perca 15 de vida.",
+efeito = function(Jogador1,Jogador2)
+    local h = false
+    while h == false do
+        print("Selecione uma unidade no seu cemitério:")
+        print("0 - Nenhuma")
+        Funcoes.printzona(Jogador1.cemiterio)
+        local opcao = tonumber(io.read())
+        if opcao ~= nil and opcao == 0 then
+            h = true
+        elseif opcao ~= nil and Jogador1.cemiterio[opcao].tipo == "Unidade" then
+            local card = Jogador1.cemiterio[opcao]
+            Funcoes.invocar(card,Jogador1)
+            print(card.nome.." foi invocado!")
+            while opcao <= #Jogador1.cemiterio do
+                Jogador1.cemiterio[opcao] = Jogador1.cemiterio[opcao+1]
+                opcao = opcao+1
+            end
+            h = true
+        else
+            print("SELECIONE UMA OPÇÃO VÁLIDA!")
+        end
+    end
+    Funcoes.dano(Jogador1,15)
+end
+}
+
 
 return Cards
