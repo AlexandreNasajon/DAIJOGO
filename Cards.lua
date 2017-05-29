@@ -18,7 +18,7 @@ Cards.AlmaGuia = {
             local opcao = tonumber(io.read())
             if opcao ~= nil and opcao == 0 then
                 h = true
-            elseif opcao ~= nil and opcao <= #Jogador1.deck and Jogador1.deck[opcao].tipo = "Unidade" and Jogador1.deck[opcao].poder < 11 then
+            elseif opcao ~= nil and opcao <= #Jogador1.deck and Jogador1.deck[opcao].tipo == "Unidade" and Jogador1.deck[opcao].poder < 11 then
                 Jogador1.mao[#Jogador1.mao+1] = Jogador1.deck[opcao]
                 while opcao <= #Jogador1.deck do
                     Jogador1.deck[opcao] = Jogador1.deck[opcao+1]
@@ -821,6 +821,37 @@ Cards.Tutor = {
         Funcoes.dano(Jogador1,15)
     end
 }
+Cards.Selecionar = {
+    nome = "Selecionar",
+    poder = nil,
+    custo = 0,
+    tipo = "Suporte",
+    stamina = nil,
+    descricao = "Storm +1; Olhe os dois cards do topo de seu deck, adicione um à sua mão e o outro ao seu cemitério.",
+    efeito = function(Jogador1,Jogador2)
+    local h = false
+    local topo = {Jogador1.deck[#Jogador1.deck],Jogador1.deck[#Jogador1.deck-1]}
+            Jogador1.deck[#Jogador1.deck] = nil
+            Jogador1.deck[#Jogador1.deck] = nil
+        while h == false do
+            print("Selecione um card:")
+            Funcoes.printzona(topo)
+            local opcao = tonumber(io.read())
+            if opcao ~= nil and opcao <= #topo and opcao > 0 then
+                Jogador1.mao[#Jogador1.mao+1] = topo[opcao]
+                if opcao == 1 then
+                    Jogador1.cemiterio[#Jogador1.cemiterio+1] = topo[2]
+                    topo = {}
+                elseif opcao == 2 then
+                    Jogador1.cemiterio[#Jogador1.cemiterio+1] = topo[1]
+                    topo = {}
+                end
+                h = true
+            else
+                print("SELECIONE UMA OPÇÃO VÁLIDA!")
+            end
+        end
+    end
 }
 
 return Cards
