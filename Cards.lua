@@ -817,7 +817,7 @@ Cards.Tutor = {
     custo = 1,
     tipo = "Suporte",
     stamina = nil,
-    descricao = "Procure em seu deck por um card e adicione-o à sua mão, depois seu deck é embaralhado. Você perde 17 de vida.",
+    descricao = "Procure em seu deck por um card e adicione-o à sua mão, depois seu deck é embaralhado. Você perde 21 de vida.",
     efeito = function(Jogador1,Jogador2)
     local h = false
         while h == false do
@@ -839,8 +839,8 @@ Cards.Tutor = {
             end
         end
         Funcoes.shuffle2(Jogador1.deck)
-        Funcoes.dano(Jogador1,17)
-        print(Jogado1.nome.." perdeu 17 de vida.")
+        Funcoes.dano(Jogador1,21)
+        print(Jogador1.nome.." perdeu 21 de vida.")
     end
 }
 Cards.Selecionar = {
@@ -880,6 +880,35 @@ Cards.Selecionar = {
             end
         end
     end
+}
+Cards.Blinker = {
+    nome = "Blinker   ",
+    poder = nil,
+    custo = 1,
+    tipo = "Aliado",
+    stamina = 1,
+    lealdade = 4,
+    descricao = "Habilidade: Selecione uma unidade sua. Exile-a e depois invoque-a novamente.",
+    efeito = {habilidade = function(Jogador1,Jogador2)
+    local h = false
+        while h == false do
+        print("Selecione uma unidade:")
+        print("0 - Nenhuma")
+            Funcoes.printzona(Jogador1.campo)
+            local opcao = tonumber(io.read())
+            if opcao ~= nil and opcao == 0 then
+                h = true
+            elseif opcao ~= nil and opcao <= #Jogador1.campo and opcao > 0 then
+                card = Jogador1.campo[opcao]
+                Funcoes.exilar(Jogador1.campo[opcao],Jogador1,Jogador2)
+                Funcoes.invocar(card,Jogador1,Jogador2)
+                h = true
+            else
+                print("SELECIONE UMA OPCAO VÁLIDA!")
+            end
+        end
+    end
+}
 }
 
 return Cards
