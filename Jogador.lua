@@ -8,8 +8,10 @@ Jogador[1] = {
     mao = {},
     campo = {},
     cemiterio = {},
+    exilio = {},
     storm = 0,
-    self = 0
+    lastsupport = {},
+    sala = {}
 }
 
 Jogador[2] = {
@@ -19,8 +21,10 @@ Jogador[2] = {
     mao = {},
     campo = {},
     cemiterio = {},
+    exilio = {},
     storm = 0,
-    self = 0
+    lastsupport = {},
+    sala = {}
 }
 
 return Jogador
