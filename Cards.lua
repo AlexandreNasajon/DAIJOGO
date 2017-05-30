@@ -3,7 +3,7 @@ local Funcoes = require("Funcoes")
 local Cards = {}
 
 Cards.AlmaGuia = {
-    nome = "ALma Guia ",
+    nome = "Alma Guia ",
     poder = 11,
     custo = 1,
     tipo = "Unidade",
@@ -880,7 +880,7 @@ Cards.Selecionar = {
     tipo = "Suporte",
     stamina = nil,
     descricao = "Olhe os dois cards do topo de seu deck, adicione um à sua mão e o outro ao seu cemitério. Você perde 12 de vida.",
-    efeito = function(Jogador1,Jogador2)
+    efeito = function(Jogador1,Jogador2)--------talvez transformar em tabela
         local h = false
         local topo = {Jogador1.deck[#Jogador1.deck],Jogador1.deck[#Jogador1.deck-1]}
         Jogador1.deck[#Jogador1.deck] = nil
@@ -948,13 +948,13 @@ Cards.Blinker = {
 }
 }
 Cards.Seletor = {
-    nome = "Seletor",
+    nome = "Seletor   ",
     poder = nil,
     custo = 1,
     tipo = "Aliado",
     stamina = 1,
     lealdade = 3,
-    descricao = "Habilidade: Olhe os dois cards do topo de seu deck. Adicione um à sua mão e o outro ao seu cemitério."
+    descricao = "Habilidade: Olhe os dois cards do topo de seu deck. Adicione um à sua mão e o outro ao seu cemitério.",
     efeito = {habilidade = function(Jogador1,Jogador2)
         local h = false
         local topo = {Jogador1.deck[#Jogador1.deck],Jogador1.deck[#Jogador1.deck-1]}
@@ -981,6 +981,24 @@ Cards.Seletor = {
                 print("SELECIONE UMA OPÇÃO VÁLIDA!")
             end
         end
+    end
+    }
+}
+Cards.Administrador = {
+    nome = "Admin.    ",
+    poder = nil,
+    custo = 1,
+    tipo = "Aliado",
+    stamina = 1,
+    lealdade = 5,
+    descricao = "Habilidade: Compre dois cards e depois descarte dois cards.",
+    efeito = {habilidade = function(Jogador1,Jogador2)
+    Funcoes.draw(Jogador1)
+    Funcoes.draw(Jogador1)
+    print(Jogador1.nome.." comprou dois cards.")
+    Funcoes.discard(Jogador1)
+    Funcoes.discard(Jogador1)
+    end
 }
 }
 
