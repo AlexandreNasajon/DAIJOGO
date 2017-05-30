@@ -113,10 +113,18 @@ end
 -----------DESTRUIR------------
 Funcoes.destruir = function(card,Jogador,oponente)
     Jogador.cemiterio[#Jogador.cemiterio+1] = card
-    local j = Funcoes.find(Jogador.campo,card)
-    while j <= #Jogador.campo do
+    if card.tipo == "Unidade" then
+        local j = Funcoes.find(Jogador.campo,card)
+        while j <= #Jogador.campo do
         Jogador.campo[j] = Jogador.campo[j+1]
         j = j+1
+        end
+    elseif card.tipo == "Aliado" then
+        local j = Funcoes.find(Jogador.sala,card)
+        while j <= #Jogador.sala do
+        Jogador.sala[j] = Jogador.sala[j+1]
+        j = j+1
+        end
     end
     print(card.nome.." foi destruído.")
     if card.efeito then
@@ -469,7 +477,10 @@ Funcoes.turno = function(t)
                 elseif decisao == 1 and card.stamina > 0 then
                     card.efeito.habilidade(Jogador[t],Jogador[y])
                     card.lealdade = card.lealdade-1
-                    card.staina = card.stamina-1
+                    card.stamina = card.stamina-1
+                    if card.lealdade < 1 then
+                        Funcoes.destruir(card,Jogador[t],Jogador[y])
+                    end
                 else
                     print("SELECIONE UMA OPÇÃO VÁLIDA!")
                 end
