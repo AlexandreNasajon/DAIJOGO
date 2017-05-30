@@ -638,6 +638,21 @@ efeito = function(Jogador1,Jogador2)
     print(Jogador1.nome.." comprou dois cards.")
 end
 }
+Cards.AsCaras = {
+    nome = "As Caras  ",
+    poder = nil,
+    custo = 1,
+    tipo = "Suporte",
+    stamina = nil,
+    descricao = "Copie o efeito do último suporte que você conjurou.",
+efeito = function(Jogador1,Jogador2)
+    if Jogador1.lastsupport.efeito ~= nil and Jogador1.lastsupport ~= {} and Jogador1.lastsupport.nome ~= "As Caras  " then
+        Jogador1.lastsupport.efeito(Jogador1,Jogador2)
+    else
+        print("VOCÊ PRECISA CONJURAR UM SUPORTE ANTES DE JOGAR ESTE CARD! >.<")
+    end
+end
+}
 Cards.Brainstorm = {
     nome = "Brainstorm",
     poder = nil,
@@ -684,13 +699,18 @@ Cards.Espiar = {
     custo = 0,
     tipo = "Suporte",
     stamina = nil,
-    descricao = "Storm +1; Olhe a mão de seu oponente.",
+    descricao = "Storm +1; Compre um card e depois olhe a mão de seu oponente. Você perde 10 de vida.",
 efeito = function(Jogador1,Jogador2)
     Jogador1.storm = Jogador1.storm+1
     print(Jogador1.nome.." aumentou seu storm em 1.")
+    Funcoes.draw(Jogador1)
+    print(Jogador1.nome.." comprou um card.")
+    print("A mão de "..Jogador2.nome.." é:")
     Funcoes.printzona(Jogador2.mao)
     print("Digite qualquer coisa para retornar.")
     input = tonumber(io.read())
+    Funcoes.dano(Jogador1,10)
+    print(Jogador1.nome.."")
     if input then 
     end
 end
@@ -764,7 +784,7 @@ Cards.Reanimar = {
     tipo = "Suporte",
     stamina = nil,
     zona = deck,
-    descricao = "Invoque uma unidade de seu cemitério e perca 13 de vida.",
+    descricao = "Invoque uma unidade de seu cemitério. Você perde 15 de vida.",
 efeito = function(Jogador1,Jogador2)
     local h = false
     while h == false do
@@ -788,6 +808,7 @@ efeito = function(Jogador1,Jogador2)
         end
     end
     Funcoes.dano(Jogador1,15)
+    print(Jogador1.nome.." perdeu 15 de vida.")
 end
 }
 Cards.Tutor = {
@@ -796,7 +817,7 @@ Cards.Tutor = {
     custo = 1,
     tipo = "Suporte",
     stamina = nil,
-    descricao = "Procure em seu deck por um card e adicione-o à sua mão, depois seu deck é embaralhado. Você perde 15 de vida.",
+    descricao = "Procure em seu deck por um card e adicione-o à sua mão, depois seu deck é embaralhado. Você perde 17 de vida.",
     efeito = function(Jogador1,Jogador2)
     local h = false
         while h == false do
@@ -818,7 +839,8 @@ Cards.Tutor = {
             end
         end
         Funcoes.shuffle2(Jogador1.deck)
-        Funcoes.dano(Jogador1,15)
+        Funcoes.dano(Jogador1,17)
+        print(Jogado1.nome.." perdeu 17 de vida.")
     end
 }
 Cards.Selecionar = {
@@ -827,17 +849,21 @@ Cards.Selecionar = {
     custo = 0,
     tipo = "Suporte",
     stamina = nil,
-    descricao = "Storm +1; Olhe os dois cards do topo de seu deck, adicione um à sua mão e o outro ao seu cemitério.",
+    descricao = "Storm +1; Olhe os dois cards do topo de seu deck, adicione um à sua mão e o outro ao seu cemitério. Você perde 14 de vida.",
     efeito = function(Jogador1,Jogador2)
+    Funcoes.storm(Jogador1,1)
     local h = false
     local topo = {Jogador1.deck[#Jogador1.deck],Jogador1.deck[#Jogador1.deck-1]}
             Jogador1.deck[#Jogador1.deck] = nil
             Jogador1.deck[#Jogador1.deck] = nil
         while h == false do
             print("Selecione um card:")
+            print("0 - Nenhum")
             Funcoes.printzona(topo)
             local opcao = tonumber(io.read())
-            if opcao ~= nil and opcao <= #topo and opcao > 0 then
+            if opcao ~= nil and opcao == 0 then
+                h = true
+            elseif opcao ~= nil and opcao <= #topo and opcao > 0 then
                 Jogador1.mao[#Jogador1.mao+1] = topo[opcao]
                 if opcao == 1 then
                     Jogador1.cemiterio[#Jogador1.cemiterio+1] = topo[2]
@@ -846,6 +872,8 @@ Cards.Selecionar = {
                     Jogador1.cemiterio[#Jogador1.cemiterio+1] = topo[1]
                     topo = {}
                 end
+                Funcoes.dano(Jogador1,14)
+                print(Jogador1.nome.." perdeu 14 de vida.")
                 h = true
             else
                 print("SELECIONE UMA OPÇÃO VÁLIDA!")
