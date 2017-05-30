@@ -502,7 +502,7 @@ end
 Cards.Investida = {
     nome = "Investida ",
     poder = nil,
-    custo = 0,
+    custo = 1,
     tipo = "Suporte",
     stamina = nil,
     descricao = "Storm +1; Uma unidade recebe energia adicional para atacar ou ativar uma habilidade neste turno.",
@@ -670,7 +670,7 @@ end
 Cards.Brainstorm = {
     nome = "Brainstorm",
     poder = nil,
-    custo = 1,
+    custo = 2,
     tipo = "Suporte",
     stamina = nil,
     descricao = "Compre X cards; X = storm.",
@@ -698,7 +698,7 @@ end
 Cards.Lifestorm = {
     nome = "Lifestorm ",
     poder = nil,
-    custo = 1,
+    custo = 0,
     tipo = "Suporte",
     stamina = nil,
     descricao = "Ganhe 5X de vida; X = storm.",
@@ -707,13 +707,29 @@ efeito = function(Jogador1,Jogador2)
     print(Jogador1.nome.." ganhou "..5*Jogador1.storm.." de vida.")
 end
 }
+Cards.Concentrar = {
+    nome = "Concentrar",
+    poder = nil,
+    custo = 0,
+    tipo = "Suporte",
+    stamina = nil,
+    descricao = "Se seu storm for maior ou igual a 5, compre dois cards; se for maior ou igual a 9, compre um card adicional.",
+efeito = function(Jogador1,Jogador2)
+    i = Jogador1.storm
+    while i > 0 do
+        Funcoes.draw(Jogador1)
+        i = i-1
+    end
+    print(Jogador1.nome.." comprou "..Jogador1.storm.." cards.")
+end    
+}
 Cards.Espiar = {
     nome = "Espiar    ",
     poder = nil,
     custo = 0,
     tipo = "Suporte",
     stamina = nil,
-    descricao = "Storm +1; Compre um card e depois olhe a mão de seu oponente. Você perde 10 de vida.",
+    descricao = "Storm +1. Compre um card e depois olhe a mão de seu oponente. Você perde 10 de vida.",
 efeito = function(Jogador1,Jogador2)
     Jogador1.storm = Jogador1.storm+1
     print(Jogador1.nome.." aumentou seu storm em 1.")
@@ -863,13 +879,12 @@ Cards.Selecionar = {
     custo = 0,
     tipo = "Suporte",
     stamina = nil,
-    descricao = "Storm +1; Olhe os dois cards do topo de seu deck, adicione um à sua mão e o outro ao seu cemitério. Você perde 14 de vida.",
+    descricao = "Olhe os dois cards do topo de seu deck, adicione um à sua mão e o outro ao seu cemitério. Você perde 12 de vida.",
     efeito = function(Jogador1,Jogador2)
-    Funcoes.storm(Jogador1,1)
-    local h = false
-    local topo = {Jogador1.deck[#Jogador1.deck],Jogador1.deck[#Jogador1.deck-1]}
-            Jogador1.deck[#Jogador1.deck] = nil
-            Jogador1.deck[#Jogador1.deck] = nil
+        local h = false
+        local topo = {Jogador1.deck[#Jogador1.deck],Jogador1.deck[#Jogador1.deck-1]}
+        Jogador1.deck[#Jogador1.deck] = nil
+        Jogador1.deck[#Jogador1.deck] = nil
         while h == false do
             print("Selecione um card:")
             print("0 - Nenhum")
@@ -886,8 +901,8 @@ Cards.Selecionar = {
                     Jogador1.cemiterio[#Jogador1.cemiterio+1] = topo[1]
                     topo = {}
                 end
-                Funcoes.dano(Jogador1,14)
-                print(Jogador1.nome.." perdeu 14 de vida.")
+                Funcoes.dano(Jogador1,12)
+                print(Jogador1.nome.." perdeu 12 de vida.")
                 h = true
             else
                 print("SELECIONE UMA OPÇÃO VÁLIDA!")
@@ -912,10 +927,10 @@ Cards.Blinker = {
     lealdade = 4,
     descricao = "Habilidade: Selecione uma unidade sua. Exile-a e depois invoque-a novamente.",
     efeito = {habilidade = function(Jogador1,Jogador2)
-    local h = false
+        local h = false
         while h == false do
-        print("Selecione uma unidade:")
-        print("0 - Nenhuma")
+            print("Selecione uma unidade:")
+            print("0 - Nenhuma")
             Funcoes.printzona(Jogador1.campo)
             local opcao = tonumber(io.read())
             if opcao ~= nil and opcao == 0 then
@@ -930,6 +945,42 @@ Cards.Blinker = {
             end
         end
     end
+}
+}
+Cards.Seletor = {
+    nome = "Seletor",
+    poder = nil,
+    custo = 1,
+    tipo = "Aliado",
+    stamina = 1,
+    lealdade = 3,
+    descricao = "Habilidade: Olhe os dois cards do topo de seu deck. Adicione um à sua mão e o outro ao seu cemitério."
+    efeito = {habilidade = function(Jogador1,Jogador2)
+        local h = false
+        local topo = {Jogador1.deck[#Jogador1.deck],Jogador1.deck[#Jogador1.deck-1]}
+        Jogador1.deck[#Jogador1.deck] = nil
+        Jogador1.deck[#Jogador1.deck] = nil
+        while h == false do
+            print("Selecione um card:")
+            print("0 - Nenhum")
+            Funcoes.printzona(topo)
+            local opcao = tonumber(io.read())
+            if opcao ~= nil and opcao == 0 then
+                h = true
+            elseif opcao ~= nil and opcao <= #topo and opcao > 0 then
+                Jogador1.mao[#Jogador1.mao+1] = topo[opcao]
+                if opcao == 1 then
+                    Jogador1.cemiterio[#Jogador1.cemiterio+1] = topo[2]
+                    topo = {}
+                elseif opcao == 2 then
+                    Jogador1.cemiterio[#Jogador1.cemiterio+1] = topo[1]
+                    topo = {}
+                end
+                h = true
+            else
+                print("SELECIONE UMA OPÇÃO VÁLIDA!")
+            end
+        end
 }
 }
 
