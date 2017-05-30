@@ -83,8 +83,10 @@ Funcoes.discard = function(Jogador1)
             print("VOCÊ DEVE DESCARTAR UM CARD!")
         end
     end
-    if Jogador1.cemiterio[#Jogador1.cemiterio].efeito.ifdiscarded then
-        Jogador1.cemiterio[#Jogador1.cemiterio].efeito.ifdiscarded(Jogador1,Jogador2)
+    if Jogador1.cemiterio[#Jogador1.cemiterio].tipo ~= "Suporte" then
+        if Jogador1.cemiterio[#Jogador1.cemiterio].efeito.ifdiscarded then
+            Jogador1.cemiterio[#Jogador1.cemiterio].efeito.ifdiscarded(Jogador1,Jogador2)
+        end
     end
 end
 ------------PRINT ZONA----------
