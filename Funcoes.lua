@@ -239,7 +239,7 @@ Funcoes.fimdoturno = function(Jogador1,Jogador2)
             end
             local h = #Jogador2.sala
             while h > 0 do
-                Jogador2.sala[i].stamina = 1
+                Jogador2.sala[h].stamina = 1
                 h = h-1
             end
 end
