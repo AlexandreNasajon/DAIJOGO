@@ -232,10 +232,15 @@ Funcoes.fimdoturno = function(Jogador1,Jogador2)
             end
             Funcoes.getgold(Jogador2)
             print("Jogador "..Jogador2.nome.." recebe 1 de ouro.")
-            i = #Jogador2.campo
+            local i = #Jogador2.campo
             while i > 0 do
                 Jogador2.campo[i].stamina = 1
                 i = i-1
+            end
+            local h = #Jogador2.sala
+            while h > 0 do
+                Jogador2.sala[i].stamina = 1
+                h = h-1
             end
 end
 ------------TURNO---------------
