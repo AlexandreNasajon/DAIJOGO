@@ -113,30 +113,34 @@ Funcoes.printcard = function(card)
     end
 end
 -----------DESTRUIR------------
-Funcoes.destruir = function(card,Jogador,oponente)
+Funcoes.destruir = function(card,Destruidor,Jogador,oponente)
     Jogador.cemiterio[#Jogador.cemiterio+1] = card
     if card.tipo == "Unidade" then
         local j = Funcoes.find(Jogador.campo,card)
         while j <= #Jogador.campo do
-        Jogador.campo[j] = Jogador.campo[j+1]
-        j = j+1
+            Jogador.campo[j] = Jogador.campo[j+1]
+            j = j+1
         end
     elseif card.tipo == "Aliado" then
         local j = Funcoes.find(Jogador.sala,card)
         while j <= #Jogador.sala do
-        Jogador.sala[j] = Jogador.sala[j+1]
-        j = j+1
+            Jogador.sala[j] = Jogador.sala[j+1]
+            j = j+1
         end
     end
     print(card.nome.." foi destruído.")
     if card.efeito then
         if card.efeito.ifdies then
-            card.efeito.ifdies(Jogador,oponente)
+            card.efeito.ifdies(Jogador,oponente) --receber o card tbm como primeiro argumento
         else
         end
     end
+    if modotchebo and Destruidor then 
+        Destruidor.ouro = Destruidor.ouro+card.custo
+        print(Destruidor.nome.." recebeu "..card.custo.." de ouro!")
+    end
 end
-------------EXILAR--------------
+------------EXILAR----------------------------------------------------------
 Funcoes.exilar = function(card,Jogador,oponente)
     Jogador.exilio[#Jogador.exilio+1] = card
     local j = Funcoes.find(Jogador.campo,card)
@@ -146,29 +150,46 @@ Funcoes.exilar = function(card,Jogador,oponente)
     end
     print(card.nome.." foi exilado.")
 end
------------COMBATE-------------testar mais
+-----------COMBATE---------------------------------------------------------
 Funcoes.combate = function(atacante,defensor,Jogador1,Jogador2)
 
     if atacante.poder > defensor.poder then
-        Funcoes.destruir(defensor,Jogador2,Jogador1)
+        Funcoes.destruir(defensor,Jogador1,Jogador2,Jogador1)
+        if atacante.efeito.ifdestroys then
+            atacante.efeito.ifdestroys(Jogador1,Jogador2)
+        end
     elseif atacante.poder == defensor.poder then
-        Funcoes.destruir(defensor,Jogador2,Jogador1)
-        Funcoes.destruir(atacante,Jogador1,Jogador2)
+        Funcoes.destruir(defensor,Jogador1,Jogador2,Jogador1)
+        Funcoes.destruir(atacante,Jogador1,Jogador1,Jogador2)
+        if atacante.efeito.ifdestroys then
+            atacante.efeito.ifdestroys(Jogador1,Jogador2)
+        end
+        if defensor.efeito.ifdestroys then
+            defensor.efeito.ifdestroys(Jogador2,Jogador1)
+        end
     elseif atacante.poder < defensor.poder then
-        Funcoes.destruir(atacante,Jogador1,Jogador2)
+        Funcoes.destruir(atacante,Jogador1,Jogador1,Jogador2)
+        if defensor.efeito.ifdestroys then
+            defensor.efeito.ifdestroys(Jogador2,Jogador1)
+        end
     end
 end
 
------------CONJURAR--------não testada
+-----------CONJURAR----------------------------------------------------
 Funcoes.conjurar = function(card,Jogador1,Jogador2)
     if card.tipo == "Suporte" then
         card.efeito(Jogador1,Jogador2)
         Jogador1.cemiterio[#Jogador1.cemiterio+1] = card
         Jogador1.lastsupport = card
+    elseif card.tipo == "Magia" then
+        card.efeito(Jogador1,Jogador2)
+        Jogador1.cemiterio[#Jogador1.cemiterio+1] = card
+        Jogador1.lastsupport = card
+        Jogador1.magia = Jogador1.magia-1
     end
 end
 
------------ INVOCAR------------nao testada
+----------- INVOCAR-------------------------------------------------------
 Funcoes.invocar = function(card,Jogador1,Jogador2)
     if card.tipo == "Unidade" then
         Jogador1.campo[#Jogador1.campo+1] = card
@@ -178,7 +199,7 @@ Funcoes.invocar = function(card,Jogador1,Jogador2)
         end
     end
 end
------------REQUISITAR--------------
+-----------REQUISITAR----------------------------------------------------------
 Funcoes.requisitar = function(card,Jogador1,Jogador2)
     if card.tipo == "Aliado" then
         Jogador1.sala[#Jogador1.sala+1] = card
@@ -189,7 +210,7 @@ Funcoes.requisitar = function(card,Jogador1,Jogador2)
     end
 end
 
-----------JOGAR-----------nao testada
+----------JOGAR-------------------------------------------------------
 Funcoes.jogar = function(card,Jogador1,Jogador2)
     if card.tipo == "Unidade" then
         Funcoes.invocar(card,Jogador1,Jogador2)
@@ -200,20 +221,20 @@ Funcoes.jogar = function(card,Jogador1,Jogador2)
     end
 end
 
------------DANO----------nao testada
+-----------DANO-----------------------------------------------------
 Funcoes.dano = function(alvo,quantidade)
     alvo.vida = alvo.vida - quantidade
 end
------------GET LIFE--------nao testada
+-----------GET LIFE----------------------------------------------------
 Funcoes.getlife = function(alvo,quantidade)
     alvo.vida = alvo.vida + quantidade
 end
-----------STORM-------------rajada
+----------STORM-------------rajada--------------------------------------------
 Funcoes.storm = function(Jogador1,quantidade)
     Jogador1.storm = Jogador1.storm+quantidade
     print(Jogador1.nome.." aumentou seu storm em "..quantidade..".")
 end
----------HABILIDADE-----------
+---------HABILIDADE-------------------------------------------------------
 Funcoes.habilidade = function(card)
     if card.stamina > 0 then
         card.stamina = card.stamina-1
@@ -244,6 +265,7 @@ Funcoes.fimdoturno = function(Jogador1,Jogador2)
                 Jogador2.sala[h].stamina = 1
                 h = h-1
             end
+            Jogador2.magia = 1
 end
 ------------TURNO---------------
 Funcoes.turno = function(t)
@@ -457,7 +479,7 @@ Funcoes.turno = function(t)
                 break
             end
         end
-        
+        ------------------SALA--------------------------------------------
         while option == 3 do
             print("Sua sala:")
             print("0 - Retornar")
@@ -486,7 +508,7 @@ Funcoes.turno = function(t)
                     card.lealdade = card.lealdade-1
                     card.stamina = card.stamina-1
                     if card.lealdade < 1 then
-                        Funcoes.destruir(card,Jogador[t],Jogador[y])
+                        Funcoes.destruir(card,Jogador1,Jogador[t],Jogador[y])
                     end
                 else
                     print("SELECIONE UMA OPÇÃO VÁLIDA!")
@@ -519,7 +541,6 @@ Funcoes.turno = function(t)
         end
     end
 end
-        
 ------------JOGO----------------
 Funcoes.jogo = function()
 
