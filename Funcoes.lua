@@ -199,13 +199,13 @@ Funcoes.invocar = function(card,Jogador1,Jogador2)
         end
     end
 end
------------REQUISITAR----------------------------------------------------------
-Funcoes.requisitar = function(card,Jogador1,Jogador2)
+-----------CONVOCAR----------------------------------------------------------
+Funcoes.convocar = function(card,Jogador1,Jogador2)
     if card.tipo == "Aliado" then
         Jogador1.sala[#Jogador1.sala+1] = card
-        print(card.nome.." foi requisitado.")
-        if card.efeito.ifrequisitado then
-            card.efeito.ifrequisitado(Jogador1,Jogador2)
+        print(card.nome.." foi convocado.")
+        if card.efeito.ifconvocado then
+            card.efeito.ifconvocado(Jogador1,Jogador2)
         end
     end
 end
