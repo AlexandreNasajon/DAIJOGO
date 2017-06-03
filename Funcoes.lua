@@ -214,7 +214,7 @@ end
 Funcoes.jogar = function(card,Jogador1,Jogador2)
     if card.tipo == "Unidade" then
         Funcoes.invocar(card,Jogador1,Jogador2)
-    elseif card.tipo == "Suporte" then
+    elseif card.tipo == "Suporte" or card.tipo == "Magia" then
         Funcoes.conjurar(card,Jogador1,Jogador2)
     elseif card.tipo == "Aliado" then
         Funcoes.requisitar(card,Jogador1,Jogador2)
