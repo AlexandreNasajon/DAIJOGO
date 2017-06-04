@@ -1,14 +1,14 @@
 math.randomseed(os.time())
-local Funcoes = require("Funcoes")
-local Jogador = require("Jogador")
+local Functions = require("Functions")
+local Player = require("Player")
 local Cards = require("Cards")
 local Decks = require("Decks")
 
 ------------------------DRAFT--------------------------------------------------------------------------------------------
 Draft =  function()
     os.execute("clear")
-    while #Jogador[1].deck < 30 do
-        print(Jogador[1].nome.." deve montar um deck de 30 cards!")
+    while #Player[1].deck < 30 do
+        print(Player[1].name.." deve montar um deck de 30 cards!")
     
         m = 1
         while m <= 5 do
@@ -17,10 +17,10 @@ Draft =  function()
         end
     
         i = 1
-        print("#","Nome     ","Custo","Tipo","Poder","Lealdade")
+        print("#","name     ","cost","type","power","Lealdade")
         print("--------------------------------------------------------")
         while i <= 5 do
-            print(i,Decks.Draftpool[i].nome,Decks.Draftpool[i].custo,Decks.Draftpool[i].tipo,Decks.Draftpool[i].poder,Decks.Draftpool[i].lealdade)
+            print(i,Decks.Draftpool[i].name,Decks.Draftpool[i].cost,Decks.Draftpool[i].type,Decks.Draftpool[i].power,Decks.Draftpool[i].lealdade)
             i = i+1
         end
         
@@ -30,9 +30,9 @@ Draft =  function()
             print("SELECIONE UM CARD VÁLIDO! >.<")
             
         else
-            Jogador[1].deck[#Jogador[1].deck+1] = Decks.Draftpool[action]
-            print("Você selecionou "..Decks.Draftpool[action].nome.."!")
-            print("Seu deck tem "..#Jogador[1].deck.." card(s) agora. Selecione mais "..30-#Jogador[1].deck.."!")
+            Player[1].deck[#Player[1].deck+1] = Decks.Draftpool[action]
+            print("Você selecionou "..Decks.Draftpool[action].name.."!")
+            print("Seu deck tem "..#Player[1].deck.." card(s) agora. Selecione mais "..30-#Player[1].deck.."!")
             Decks.Draftpool[1] = nil
             Decks.Draftpool[2] = nil
             Decks.Draftpool[3] = nil
@@ -40,10 +40,10 @@ Draft =  function()
             Decks.Draftpool[5] = nil
         end
     end
-    print(Jogador[1].nome.." completou seu deck!")
+    print(Player[1].name.." completou seu deck!")
     os.execute("clear")
-    while #Jogador[2].deck < 30 do
-        print(Jogador[2].nome.." deve montar um deck de 30 cards!")
+    while #Player[2].deck < 30 do
+        print(Player[2].name.." deve montar um deck de 30 cards!")
     
         m = 1
         while m <= 5 do
@@ -52,10 +52,10 @@ Draft =  function()
         end
     
         i = 1
-        print("#","Nome     ","Custo","Tipo","Poder","Lealdade")
+        print("#","name     ","cost","type","power","Lealdade")
         print("--------------------------------------------------------")
         while i <= 5 do
-            print(i,Decks.Draftpool[i].nome,Decks.Draftpool[i].custo,Decks.Draftpool[i].tipo,Decks.Draftpool[i].poder,Decks.Draftpool[i].lealdade)
+            print(i,Decks.Draftpool[i].name,Decks.Draftpool[i].cost,Decks.Draftpool[i].type,Decks.Draftpool[i].power,Decks.Draftpool[i].lealdade)
             i = i+1
         end
         
@@ -65,9 +65,9 @@ Draft =  function()
             print("SELECIONE UM CARD VÁLIDO! >.<")
             
         else
-            Jogador[2].deck[#Jogador[2].deck+1] = Decks.Draftpool[action]
-            print("Você selecionou "..Decks.Draftpool[action].nome.."!")
-            print("Seu deck tem "..#Jogador[2].deck.." card(s) agora. Selecione mais "..30-#Jogador[2].deck.."!")
+            Player[2].deck[#Player[2].deck+1] = Decks.Draftpool[action]
+            print("Você selecionou "..Decks.Draftpool[action].name.."!")
+            print("Seu deck tem "..#Player[2].deck.." card(s) agora. Selecione mais "..30-#Player[2].deck.."!")
             Decks.Draftpool[1] = nil
             Decks.Draftpool[2] = nil
             Decks.Draftpool[3] = nil
@@ -94,12 +94,12 @@ print("               Kiki")
 print("               peize")
 -- print("         Leonardo Kaplan")
 -- print("         Thiago Rebello")
-print("Qual é o nome do Jogador 1?")
-Jogador[1].nome = io.read()
-print("Então o Jogador 1 se chama "..Jogador[1].nome.."!")
-print("E qual o nome do Jogador 2?")
-Jogador[2].nome = io.read()
-print("Então o Jogador 2 se chama "..Jogador[2].nome.."!")
+print("Qual é o name do Player 1?")
+Player[1].name = io.read()
+print("Então o Player 1 se chama "..Player[1].name.."!")
+print("E qual o name do Player 2?")
+Player[2].name = io.read()
+print("Então o Player 2 se chama "..Player[2].name.."!")
 print("Imagino que vocês leram o manual, certo? Certo! Então boa sorte!")
 print("-----GAME STARTOOOOO-----")
 print("Selecionem os modos de jogo:")
@@ -119,7 +119,7 @@ if opcao == 1 then
     local z = false
     local e = false
     while z == false do
-        print(Jogador[1].nome.." deve escolher um deck:")
+        print(Player[1].name.." deve escolher um deck:")
         print("1 - Aristocratas")
         print("2 - Storm")
         print("3 - Blink")
@@ -128,24 +128,29 @@ if opcao == 1 then
             tempcard = {}
 
             for k,v in pairs(Decks.Aristocratas) do
-                tempcard = Funcoes.copiar(v,tempcard)
-                Jogador[1].deck[#Jogador[1].deck+1] = tempcard
+                tempcard = Functions.copiar(v,tempcard)
+                Player[1].deck[#Player[1].deck+1] = tempcard
+                tempcard = {}
+            end
+            for k,v in pairs(Decks.AristocratasExtra) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[1].extra[#Player[1].extra+1] = tempcard
                 tempcard = {}
             end
             z = true
         elseif opcao ~= nil and opcao == 2 then
                 tempcard = {}
             for k,v in pairs(Decks.Storm) do
-                tempcard = Funcoes.copiar(v,tempcard)
-                Jogador[1].deck[#Jogador[1].deck+1] = tempcard
+                tempcard = Functions.copiar(v,tempcard)
+                Player[1].deck[#Player[1].deck+1] = tempcard
                 tempcard = {}
             end
             z = true
         elseif opcao ~= nil and opcao == 3 then
                 tempcard = {}
             for k,v in pairs(Decks.Blink) do
-                tempcard = Funcoes.copiar(v,tempcard)
-                Jogador[1].deck[#Jogador[1].deck+1] = tempcard
+                tempcard = Functions.copiar(v,tempcard)
+                Player[1].deck[#Player[1].deck+1] = tempcard
                 tempcard = {}
             end
             z = true
@@ -154,7 +159,7 @@ if opcao == 1 then
         end
     end
     while e == false do
-        print(Jogador[2].nome.." deve escolher um deck:")
+        print(Player[2].name.." deve escolher um deck:")
         print("1 - Aristocratas")
         print("2 - Storm")
         print("3 - Blink")
@@ -163,24 +168,29 @@ if opcao == 1 then
             tempcard = {}
 
             for k,v in pairs(Decks.Aristocratas) do
-                tempcard = Funcoes.copiar(v,tempcard)
-                Jogador[2].deck[#Jogador[2].deck+1] = tempcard
+                tempcard = Functions.copiar(v,tempcard)
+                Player[2].deck[#Player[2].deck+1] = tempcard
+                tempcard = {}
+            end
+            for k,v in pairs(Decks.AristocratasExtra) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[2].extra[#Player[2].extra+1] = tempcard
                 tempcard = {}
             end
             e = true
         elseif opcao ~= nil and opcao == 2 then
             tempcard = {}
             for k,v in pairs(Decks.Storm) do
-                tempcard = Funcoes.copiar(v,tempcard)
-                Jogador[2].deck[#Jogador[2].deck+1] = tempcard
+                tempcard = Functions.copiar(v,tempcard)
+                Player[2].deck[#Player[2].deck+1] = tempcard
                 tempcard = {}
             end
             e = true
         elseif opcao ~= nil and opcao == 3 then
                 tempcard = {}
             for k,v in pairs(Decks.Blink) do
-                tempcard = Funcoes.copiar(v,tempcard)
-                Jogador[2].deck[#Jogador[2].deck+1] = tempcard
+                tempcard = Functions.copiar(v,tempcard)
+                Player[2].deck[#Player[2].deck+1] = tempcard
                 tempcard = {}
             end
             e = true
@@ -193,4 +203,4 @@ elseif opcao == 2 then
 end
 print("É isso aí, peize. Divirtam-se! :3 :3 :3")
 
-Funcoes.jogo()
+Functions.jogo()
