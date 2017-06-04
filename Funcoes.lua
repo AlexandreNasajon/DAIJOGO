@@ -1,22 +1,22 @@
-local Jogador = require("Jogador")
-local Funcoes = {}
+local Player = require("Player")
+local Functions = {}
 
 -----------SHUFFLE DECK----------------NAO FUNCIONA
-Funcoes.shuffle  = function(Jogador1)
+Functions.shuffle  = function(Player1)
     local deckfim = {}
     local i = 1
-    while i < #Jogador1.deck do
-        card = math.random(1,#Jogador1.deck)
-        deckfim.i = Jogador1.deck.card
-        Jogador1.deck.card = nil
+    while i < #Player1.deck do
+        card = math.random(1,#Player1.deck)
+        deckfim.i = Player1.deck.card
+        Player1.deck.card = nil
         i = i+1
     end
-    Jogador1.deck = deckfim
-    return Jogador1.deck
+    Player1.deck = deckfim
+    return Player1.deck
 end
 
 --------outro shuffle---------FUNCIONA
-Funcoes.shuffle2 = function(a)
+Functions.shuffle2 = function(a)
 	local c = #a
 	for i = 1, c do
 		local ndx0 = math.random( 1, c )
@@ -25,14 +25,14 @@ Funcoes.shuffle2 = function(a)
 	return a
 end
 ------------COPIAR---------
-Funcoes.copiar = function(card,b)
+Functions.copiar = function(card,b)
     for k,v in pairs(card) do
         b[k] = v
     end
     return b
 end
 -----------FIND-------------
-Funcoes.find = function(a,n)
+Functions.find = function(a,n)
     local i = 1
     while i <= #a do
         if a[i] == n then
@@ -43,7 +43,7 @@ Funcoes.find = function(a,n)
     end
 end
 ----------FIND2--------------
-Funcoes.find2 = function(a,n)
+Functions.find2 = function(a,n)
     for k,v in pairs(a) do
         if v == n then
         return k
@@ -51,31 +51,31 @@ Funcoes.find2 = function(a,n)
     end
 end
 ------------DRAW----------------
-Funcoes.draw = function(j)
-    j.mao[#j.mao+1] = j.deck[#j.deck]
+Functions.draw = function(j)
+    j.hand[#j.hand+1] = j.deck[#j.deck]
     j.deck[#j.deck] = nil
 end
 
-----------RECEBER OURO-------------
-Funcoes.getgold = function(Jogador)
-    Jogador.ouro = Jogador.ouro+1
+----------GET GOLD-------------
+Functions.getgold = function(Player)
+    Player.gold = Player.gold+1
 end
 
----------RECEBER STAMINA------------
-Funcoes.getstamina = function(card)
+---------GET STAMINA------------
+Functions.getstamina = function(card)
     card.stamina = card.stamina +1
 end
 --------DISCARD--------------
-Funcoes.discard = function(Jogador1)
+Functions.discard = function(Player1)
     local h = false
     while h == false do
         print("Descarte um card:")
-        Funcoes.printzona(Jogador1.mao)
+        Functions.printzone(Player1.hand)
         local opcao = tonumber(io.read())
-        if opcao ~= nil and opcao <= #Jogador1.mao and opcao > 0 then
-            Jogador1.cemiterio[#Jogador1.cemiterio+1] = Jogador1.mao[opcao]
-            while opcao <= #Jogador[t].mao do
-                Jogador[t].mao[opcao] = Jogador[t].mao[opcao+1]
+        if opcao ~= nil and opcao <= #Player1.hand and opcao > 0 then
+            Player1.graveyard[#Player1.graveyard+1] = Player1.hand[opcao]
+            while opcao <= #Player[t].hand do
+                Player[t].hand[opcao] = Player[t].hand[opcao+1]
                 opcao = opcao+1
             end
             h = true
@@ -83,209 +83,211 @@ Funcoes.discard = function(Jogador1)
             print("VOCÊ DEVE DESCARTAR UM CARD!")
         end
     end
-    if Jogador1.cemiterio[#Jogador1.cemiterio].tipo ~= "Suporte" then
-        if Jogador1.cemiterio[#Jogador1.cemiterio].efeito.ifdiscarded then
-            Jogador1.cemiterio[#Jogador1.cemiterio].efeito.ifdiscarded(Jogador1,Jogador2)
+    if Player1.graveyard[#Player1.graveyard].type ~= "Support" then
+        if Player1.graveyard[#Player1.graveyard].effect.ifdiscarded then
+            Player1.graveyard[#Player1.graveyard].effect.ifdiscarded(Player1,Player2)
         end
     end
 end
-------------PRINT ZONA----------
-Funcoes.printzona = function(zona)
+------------PRINTZONE----------
+Functions.printzone = function(zone)
 
     local i = 1
-    print("#","Nome     ","Custo","Tipo","Poder","Lealdade")
-    while i <= #zona do
-        print(i,zona[i].nome,zona[i].custo,zona[i].tipo,zona[i].poder,zona[i].lealdade)
+    print("#","name     ","cost","type","power","Lealdade")
+    while i <= #zone do
+        print(i,zone[i].name,zone[i].cost,zone[i].type,zone[i].power,zone[i].lealdade)
         i = i+1
     end    
 end
 ----------- PRINT CARD---------
-Funcoes.printcard = function(card)
-    print("Nome: "..card.nome)
-    print("Custo: "..card.custo)
-    print("Tipo: "..card.tipo)
-    if card.poder then
-        print("Poder: "..card.poder)
+Functions.printcard = function(card)
+    print("name: "..card.name)
+    print("cost: "..card.cost)
+    print("type: "..card.type)
+    if card.power then
+        print("power: "..card.power)
     end
-    print("Descrição: "..card.descricao)
+    print("Descrição: "..card.description)
     if card.lealdade then
         print("Lealdade: "..card.lealdade)
     end
 end
------------DESTRUIR------------
-Funcoes.destruir = function(card,Destruidor,Jogador,oponente)
-    Jogador.cemiterio[#Jogador.cemiterio+1] = card
-    if card.tipo == "Unidade" then
-        local j = Funcoes.find(Jogador.campo,card)
-        while j <= #Jogador.campo do
-            Jogador.campo[j] = Jogador.campo[j+1]
+-----------DESTROY------------
+Functions.destroy = function(card,Destruidor,Player,oponente)
+    Player.graveyard[#Player.graveyard+1] = card
+    if card.type == "Unit" then
+        local j = Functions.find(Player.field,card)
+        while j <= #Player.field do
+            Player.field[j] = Player.field[j+1]
             j = j+1
         end
-    elseif card.tipo == "Aliado" then
-        local j = Funcoes.find(Jogador.sala,card)
-        while j <= #Jogador.sala do
-            Jogador.sala[j] = Jogador.sala[j+1]
+    elseif card.type == "Ally" then
+        local j = Functions.find(Player.room,card)
+        while j <= #Player.room do
+            Player.room[j] = Player.room[j+1]
             j = j+1
         end
     end
-    print(card.nome.." foi destruído.")
-    if card.efeito then
-        if card.efeito.ifdies then
-            card.efeito.ifdies(Jogador,oponente) --receber o card tbm como primeiro argumento
+    print(card.name.." foi destruído.")
+    if card.effect then
+        if card.effect.ifdies then
+            card.effect.ifdies(Player,oponente) --receber o card tbm como primeiro argumento
         else
         end
     end
     if modotchebo and Destruidor then 
-        Destruidor.ouro = Destruidor.ouro+card.custo
-        print(Destruidor.nome.." recebeu "..card.custo.." de ouro!")
+        Destruidor.gold = Destruidor.gold+card.cost
+        print(Destruidor.name.." recebeu "..card.cost.." de gold!")
     end
 end
-------------EXILAR----------------------------------------------------------
-Funcoes.exilar = function(card,Jogador,oponente)
-    Jogador.exilio[#Jogador.exilio+1] = card
-    local j = Funcoes.find(Jogador.campo,card)
-    while j <= #Jogador.campo do
-        Jogador.campo[j] = Jogador.campo[j+1]
+------------exile----------------------------------------------------------
+Functions.exile = function(card,Player,oponente)
+    Player.exile[#Player.exile+1] = card
+    local j = Functions.find(Player.field,card)
+    while j <= #Player.field do
+        Player.field[j] = Player.field[j+1]
         j = j+1
     end
-    print(card.nome.." foi exilado.")
+    print(card.name.." foi exilado.")
 end
------------COMBATE---------------------------------------------------------
-Funcoes.combate = function(atacante,defensor,Jogador1,Jogador2)
+-----------combat---------------------------------------------------------
+Functions.combat = function(atacante,defensor,Player1,Player2)
 
-    if atacante.poder > defensor.poder then
-        Funcoes.destruir(defensor,Jogador1,Jogador2,Jogador1)
-        if atacante.efeito.ifdestroys then
-            atacante.efeito.ifdestroys(Jogador1,Jogador2)
+    if atacante.power > defensor.power then
+        Functions.destroy(defensor,Player1,Player2,Player1)
+        if atacante.effect.ifdestroys then
+            atacante.effect.ifdestroys(Player1,Player2)
         end
-    elseif atacante.poder == defensor.poder then
-        Funcoes.destruir(defensor,Jogador1,Jogador2,Jogador1)
-        Funcoes.destruir(atacante,Jogador1,Jogador1,Jogador2)
-        if atacante.efeito.ifdestroys then
-            atacante.efeito.ifdestroys(Jogador1,Jogador2)
+    elseif atacante.power == defensor.power then
+        Functions.destroy(defensor,Player1,Player2,Player1)
+        Functions.destroy(atacante,Player1,Player1,Player2)
+        if atacante.effect.ifdestroys then
+            atacante.effect.ifdestroys(Player1,Player2)
         end
-        if defensor.efeito.ifdestroys then
-            defensor.efeito.ifdestroys(Jogador2,Jogador1)
+        if defensor.effect.ifdestroys then
+            defensor.effect.ifdestroys(Player2,Player1)
         end
-    elseif atacante.poder < defensor.poder then
-        Funcoes.destruir(atacante,Jogador1,Jogador1,Jogador2)
-        if defensor.efeito.ifdestroys then
-            defensor.efeito.ifdestroys(Jogador2,Jogador1)
+    elseif atacante.power < defensor.power then
+        Functions.destroy(atacante,Player1,Player1,Player2)
+        if defensor.effect.ifdestroys then
+            defensor.effect.ifdestroys(Player2,Player1)
         end
     end
 end
 
------------CONJURAR----------------------------------------------------
-Funcoes.conjurar = function(card,Jogador1,Jogador2)
-    if card.tipo == "Suporte" then
-        card.efeito(Jogador1,Jogador2)
-        Jogador1.cemiterio[#Jogador1.cemiterio+1] = card
-        Jogador1.lastsupport = card
-    elseif card.tipo == "Magia" then
-        card.efeito(Jogador1,Jogador2)
-        Jogador1.cemiterio[#Jogador1.cemiterio+1] = card
-        Jogador1.lastsupport = card
-        Jogador1.magia = Jogador1.magia-1
+-----------CAST----------------------------------------------------
+Functions.cast = function(card,Player1,Player2)
+    if card.type == "Support" then
+        card.effect(Player1,Player2)
+        Player1.graveyard[#Player1.graveyard+1] = card
+        Player1.lastsupport = card
+    elseif card.type == "Magic" then
+        card.effect(Player1,Player2)
+        Player1.graveyard[#Player1.graveyard+1] = card
+        Player1.magic = Player1.magic-1
     end
 end
 
------------ INVOCAR-------------------------------------------------------
-Funcoes.invocar = function(card,Jogador1,Jogador2)
-    if card.tipo == "Unidade" then
-        Jogador1.campo[#Jogador1.campo+1] = card
-        print(card.nome.." foi invocado.")
-        if card.efeito.ifsummoned then
-            card.efeito.ifsummoned(Jogador1,Jogador2)
+-----------SUMMON-------------------------------------------------------
+Functions.summon = function(card,Player1,Player2)
+    if card.type == "Unit" then
+        Player1.field[#Player1.field+1] = card
+        print(card.name.." foi invocado.")
+        if card.effect.ifsummoned then
+            card.effect.ifsummoned(Player1,Player2)
         end
     end
 end
 -----------CONVOCAR----------------------------------------------------------
-Funcoes.convocar = function(card,Jogador1,Jogador2)
-    if card.tipo == "Aliado" then
-        Jogador1.sala[#Jogador1.sala+1] = card
-        print(card.nome.." foi convocado.")
-        if card.efeito.ifconvocado then
-            card.efeito.ifconvocado(Jogador1,Jogador2)
+Functions.convocar = function(card,Player1,Player2)
+    if card.type == "Ally" then
+        Player1.room[#Player1.room+1] = card
+        print(card.name.." foi convocado.")
+        if card.effect.ifconvocado then
+            card.effect.ifconvocado(Player1,Player2)
         end
     end
 end
 
-----------JOGAR-------------------------------------------------------
-Funcoes.jogar = function(card,Jogador1,Jogador2)
-    if card.tipo == "Unidade" then
-        Funcoes.invocar(card,Jogador1,Jogador2)
-    elseif card.tipo == "Suporte" or card.tipo == "Magia" then
-        Funcoes.conjurar(card,Jogador1,Jogador2)
-    elseif card.tipo == "Aliado" then
-        Funcoes.requisitar(card,Jogador1,Jogador2)
+----------PLAY-------------------------------------------------------
+Functions.play = function(card,Player1,Player2)
+    if card.type == "Unit" then
+        Functions.summon(card,Player1,Player2)
+    elseif card.type == "Support" or card.type == "Magic" then
+        Functions.cast(card,Player1,Player2)
+    elseif card.type == "Ally" then
+        Functions.convocar(card,Player1,Player2)
     end
 end
 
------------DANO-----------------------------------------------------
-Funcoes.dano = function(alvo,quantidade)
-    alvo.vida = alvo.vida - quantidade
+-----------damage-----------------------------------------------------
+Functions.damage = function(alvo,quantidade)
+    alvo.life = alvo.life - quantidade
 end
 -----------GET LIFE----------------------------------------------------
-Funcoes.getlife = function(alvo,quantidade)
-    alvo.vida = alvo.vida + quantidade
+Functions.getlife = function(alvo,quantidade)
+    alvo.life = alvo.life + quantidade
 end
 ----------STORM-------------rajada--------------------------------------------
-Funcoes.storm = function(Jogador1,quantidade)
-    Jogador1.storm = Jogador1.storm+quantidade
-    print(Jogador1.nome.." aumentou seu storm em "..quantidade..".")
+Functions.storm = function(Player1,quantidade)
+    Player1.storm = Player1.storm+quantidade
+    print(Player1.name.." aumentou seu storm em "..quantidade..".")
 end
----------HABILIDADE-------------------------------------------------------
-Funcoes.habilidade = function(card)
+---------ability-------------------------------------------------------
+Functions.ability = function(card)
     if card.stamina > 0 then
         card.stamina = card.stamina-1
-        card.efeito()
+        card.effect()
     else 
-        print("ESTA UNIDADE NÃO TEM MAIS ENERGIA!")
+        print("ESTA Unit NÃO TEM MAIS ENERGIA!")
     end
 end
------------FIM DO TURNO------------nao testada
-Funcoes.fimdoturno = function(Jogador1,Jogador2)
-            print("Fim do turno de "..Jogador1.nome..".")
-            Jogador1.storm = 0
-            if #Jogador2.deck > 0 then
-                Funcoes.draw(Jogador2)
-                print(Jogador2.nome.." compra um card.")
+-----------end turn------------nao testada
+Functions.endturn = function(Player1,Player2)
+            print("end turn de "..Player1.name..".")
+            Player1.storm = 0
+            if #Player2.deck > 0 then
+                Functions.draw(Player2)
+                print(Player2.name.." compra um card.")
             else
-                print(Jogador2.nome.." não tem mais cards no deck.")
+                print(Player2.name.." não tem mais cards no deck.")
             end
-            Funcoes.getgold(Jogador2)
-            print("Jogador "..Jogador2.nome.." recebe 1 de ouro.")
-            local i = #Jogador2.campo
+            Functions.getgold(Player2)
+            print("Player "..Player2.name.." recebe 1 de gold.")
+            local i = #Player2.field
             while i > 0 do
-                Jogador2.campo[i].stamina = 1
+                Player2.field[i].stamina = 1
                 i = i-1
             end
-            local h = #Jogador2.sala
+            local h = #Player2.room
             while h > 0 do
-                Jogador2.sala[h].stamina = 1
+                Player2.room[h].stamina = 1
                 h = h-1
             end
-            Jogador2.magia = 1
+            Player2.magia = 1
 end
-------------TURNO---------------
-Funcoes.turno = function(t)
+------------turn---------------
+Functions.turn = function(t)
 
     while t == 1 or t == 2 do
         
-        print("É o turno do jogador "..Jogador[t].nome.."!")
-        print("Vida: "..Jogador[t].vida,"Ouro: "..Jogador[t].ouro,"Storm: "..Jogador[t].storm)
-        print("1 - Mão")
-        print("2 - Campo")
-        print("3 - Sala")
-        print("4 - Cemitério")
-        print("5 - Fim do turno")
+        print("É o turn do Player "..Player[t].name.."!")
+        print("Life: "..Player[t].life,"Gold: "..Player[t].gold,"Magic: "..Player[t].magic,"Storm: "..Player[t].storm)
+        print("1 - Hand")
+        print("2 - Field")
+        print("3 - Room")
+        print("4 - Graveyard")
+        print("5 - End turn")
+        if #Player[t].extra > 0 then
+            print("6 - Extra Deck")
+        end
         
         local option = tonumber(io.read())
-----------SUA MÃO---------------------------------------------
+----------SUA MÃO--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         while option == 1 do
             print("Sua mão é:")
             print("0 - Retornar")
-            Funcoes.printzona(Jogador[t].mao)
+            Functions.printzone(Player[t].hand)
             
             local opt = tonumber(io.read())
             
@@ -294,12 +296,12 @@ Funcoes.turno = function(t)
                 break
             elseif opt == 0 then
                     break
-            elseif opt <= #Jogador[t].mao and opt > 0 then
-                while opt <= #Jogador[t].mao and opt > 0 do
-                    local card = Jogador[t].mao[opt]
-                    Funcoes.printcard(card)
+            elseif opt <= #Player[t].hand and opt > 0 then
+                while opt <= #Player[t].hand and opt > 0 do
+                    local card = Player[t].hand[opt]
+                    Functions.printcard(card)
                     print("0 - Retornar")
-                    print("1 - Jogar")
+                    print("1 - play")
                     
                     opcao = tonumber(io.read())
                     
@@ -310,16 +312,16 @@ Funcoes.turno = function(t)
                         opt = 0
                         break
                         
-                    elseif opcao == 1 and Jogador[t].ouro >= Jogador[t].mao[opt].custo then
-                        Jogador[t].ouro = Jogador[t].ouro - Jogador[t].mao[opt].custo
-                        Funcoes.jogar(Jogador[t].mao[opt],Jogador[t],Jogador[y])
-                            while opt <= #Jogador[t].mao do
-                                Jogador[t].mao[opt] = Jogador[t].mao[opt+1]
+                    elseif opcao == 1 and Player[t].gold >= Player[t].hand[opt].cost then
+                        Player[t].gold = Player[t].gold - Player[t].hand[opt].cost
+                        Functions.play(Player[t].hand[opt],Player[t],Player[y])
+                            while opt <= #Player[t].hand do
+                                Player[t].hand[opt] = Player[t].hand[opt+1]
                                 opt = opt+1
                             end
                             
-                    elseif opcao == 1 and Jogador[t].ouro < Jogador[t].mao[opt].custo then
-                        print("VOCÊ NÃO TEM OURO SUFICIENTE! >:x")
+                    elseif opcao == 1 and Player[t].gold < Player[t].hand[opt].cost then
+                        print("VOCÊ NÃO TEM gold SUFICIENTE! >:x")
                     else
                         print("SELECIONE UMA OPÇÃO VÁLIDA!")
                     end
@@ -328,12 +330,12 @@ Funcoes.turno = function(t)
                 print("SELECIONE UMA OPÇÃO VÁLIDA!")
             end
         end
-------------------CAMPOS-------------------
+------------------fieldS-------------------
         while option == 2 do
-            print("Selecione o campo:")
+            print("Selecione o field:")
             print("0 - Retornar")
-            print("1 - Seu campo")
-            print("2 - Campo do oponente")
+            print("1 - Seu field")
+            print("2 - field do oponente")
                     
             local num = tonumber(io.read())
             
@@ -345,22 +347,25 @@ Funcoes.turno = function(t)
             end
                 
             while num == 1 do
-                print("Seu campo:")
+                print("Seu field:")
                 print("0 - Retornar")
-                Funcoes.printzona(Jogador[t].campo)
+                Functions.printzone(Player[t].field)
                 local opcao = tonumber(io.read())
                 if opcao == nil then
                     print("ESSA NÃO É UMA OPÇÃO VÁLIDA!")
                     break
                 elseif opcao == 0 then
                     break
-                elseif opcao <= #Jogador[t].campo then
-                    local card = Jogador[t].campo[opcao]
-                    Funcoes.printcard(card)
+                elseif opcao <= #Player[t].field then
+                    local card = Player[t].field[opcao]
+                    Functions.printcard(card)
                     print("0 - Retornar")
                     print("1 - Atacar")
-                    if card.efeito.habilidade then
-                        print("2 - Ativar habilidade")
+                    if card.effect.ability then
+                        print("2 - Ativar ability")
+                    end
+                    if card.effect.ultra and Player[t].ultra > 0 then
+                        print("3 - ULTRA")
                     end
                     local decisao = tonumber(io.read())
                     if decisao == nil then
@@ -375,8 +380,8 @@ Funcoes.turno = function(t)
                             print("Selecione o alvo:")
                             print("0 - Retornar")
                             print("1 - Oponente")
-                            if #Jogador[y].campo > 0 then
-                                print("2 - Unidades")
+                            if #Player[y].field > 0 then
+                                print("2 - Units")
                             end
                                     
                             local alvo = tonumber(io.read())
@@ -391,22 +396,22 @@ Funcoes.turno = function(t)
                                     
                             elseif alvo == 1 then
                                 if atacante.stamina > 0 then
-                                    Jogador[y].vida = Jogador[y].vida - atacante.poder
-                                    print("A vida do jogador "..Jogador[y].nome.." é agora "..Jogador[y].vida..".")
+                                    Player[y].life = Player[y].life - atacante.power
+                                    print("A life do Player "..Player[y].name.." é agora "..Player[y].life..".")
                                     atacante.stamina = atacante.stamina - 1
                                     decisao = 0
                                     break
                                 else
-                                    print("ESTA UNIDADE NÃO TEM MAIS ENERGIA PARA ATACAR! :'(")
+                                    print("ESTA Unit NÃO TEM MAIS ENERGIA PARA ATACAR! :'(")
                                     decisao = 0
                                     break
                                 end
                             end
                                     
-                            while alvo == 2 and #Jogador[y].campo > 0 do
+                            while alvo == 2 and #Player[y].field > 0 do
                                 print("Selecione o alvo:")
                                 print("0 - Retornar")
-                                Funcoes.printzona(Jogador[y].campo)
+                                Functions.printzone(Player[y].field)
                                 
                                 local num2 = tonumber(io.read())
                                         
@@ -418,9 +423,9 @@ Funcoes.turno = function(t)
                                     decisao = 0
                                     break
                                         
-                                elseif num2 <= #Jogador[y].campo then
-                                    local defensor = Jogador[y].campo[num2]
-                                    Funcoes.combate(atacante,defensor,Jogador[t],Jogador[y])
+                                elseif num2 <= #Player[y].field then
+                                    local defensor = Player[y].field[num2]
+                                    Functions.combat(atacante,defensor,Player[t],Player[y])
                                     decisao = 0
                                     break
                                 else
@@ -436,14 +441,17 @@ Funcoes.turno = function(t)
                             end
                             decisao = 0
                         end
--------------------------------HABILIDADE------------------------------------------------------------------------------------------
-                    elseif decisao == 2 and card.efeito.habilidade and card.stamina > 0 then
-                        card.efeito.habilidade(Jogador[t],Jogador[y])
+-------------------------------ability------------------------------------------------------------------------------------------
+                    elseif decisao == 2 and card.effect.ability and card.stamina > 0 then
+                        card.effect.ability(Player[t],Player[y])
                         card.stamina = card.stamina-1
                         break
-                    elseif decisao == 2 and card.efeito.habilidade and card.stamina < 1 then
-                        print("ESTA UNIDADE NÃO TEM MAIS ENERGIA!")
+                    elseif decisao == 2 and card.effect.ability and card.stamina < 1 then
+                        print("ESTA Unit NÃO TEM MAIS ENERGIA!")
                         break
+                    elseif decisao == 3 and Player[t].ultra > 0 and card.effect.ultra and card.stamina > 0 then
+                        card.effect.ultra(Player[t],Player[y])
+                        Player[t].ultra = Player[t].ultra-1
                     else
                         print("ESSA NÃO É UMA OPÇÃO VÁLIDA!")
                         break
@@ -455,17 +463,17 @@ Funcoes.turno = function(t)
             end
                 
             while num == 2 do
-                print("Campo do oponente:")
+                print("field do oponente:")
                 print("0 - Retornar")
-                Funcoes.printzona(Jogador[y].campo)
+                Functions.printzone(Player[y].field)
                 local opcao = tonumber(io.read())
                 if opcao == nil then
                     print("ESSA NÃO É UMA OPÇÃO VÁLIDA!")
                     break
                 elseif opcao == 0 then
                     break
-                elseif opcao <= #Jogador[y].campo then
-                    Funcoes.printcard(Jogador[y].campo[opcao])
+                elseif opcao <= #Player[y].field then
+                    Functions.printcard(Player[y].field[opcao])
                     print("Qualquer comando - Retornar")
                     local option = tonumber(io.read())
                     if option then
@@ -479,23 +487,23 @@ Funcoes.turno = function(t)
                 break
             end
         end
-        ------------------SALA--------------------------------------------
+        ------------------room--------------------------------------------
         while option == 3 do
-            print("Sua sala:")
+            print("Sua room:")
             print("0 - Retornar")
-            Funcoes.printzona(Jogador[t].sala)
+            Functions.printzone(Player[t].room)
             local opcao = tonumber(io.read())
             if opcao == nil then
                 print("ESSA NÃO É UMA OPÇÃO VÁLIDA!")
                     break
             elseif opcao == 0 then
                     break
-            elseif opcao <= #Jogador[t].sala then
-                local card = Jogador[t].sala[opcao]
-                Funcoes.printcard(card)
+            elseif opcao <= #Player[t].room then
+                local card = Player[t].room[opcao]
+                Functions.printcard(card)
                 print("0 - Retornar")
                 if card.stamina > 0 then
-                    print("1 - Ativar habilidade")
+                    print("1 - Ativar ability")
                 end
                 local decisao = tonumber(io.read())
                 if decisao == nil then
@@ -504,11 +512,11 @@ Funcoes.turno = function(t)
                 elseif decisao == 0 then
                     break
                 elseif decisao == 1 and card.stamina > 0 then
-                    card.efeito.habilidade(Jogador[t],Jogador[y])
+                    card.effect.ability(Player[t],Player[y])
                     card.lealdade = card.lealdade-1
                     card.stamina = card.stamina-1
                     if card.lealdade < 1 then
-                        Funcoes.destruir(card,Jogador1,Jogador[t],Jogador[y])
+                        Functions.destroy(card,Player1,Player[t],Player[y])
                     end
                 else
                     print("SELECIONE UMA OPÇÃO VÁLIDA!")
@@ -521,11 +529,11 @@ Funcoes.turno = function(t)
         while option == 4 do
             print("Seu cemitério é:")
             print("0 - Retornar")
-            Funcoes.printzona(Jogador[t].cemiterio)
+            Functions.printzone(Player[t].graveyard)
             
             local opti = tonumber(io.read())
             
-            if opti == 0 then 
+            if opti == 0 then
                 break
             else
                 print("Você não pode fazer nada por eles :'(")
@@ -533,50 +541,92 @@ Funcoes.turno = function(t)
         end
         
         if option == 5 then
-            Funcoes.fimdoturno(Jogador[t],Jogador[y])
+            Functions.endturn(Player[t],Player[y])
             break
+        end
+        
+        while #Player[t].extra > 0 and option == 6 do
+            print("Your extra deck is:")
+            print("0 - Return")
+            Functions.printzone(Player[t].extra)
+            local option = tonumber(io.read())
+            if option ~= nil and option == 0 then
+                break
+--             elseif option == nil then
+--                 break
+--             elseif option ~= nil and option > 0 and option <= #Player[t].extra then
+--                 local card = Player[t].extra[option]
+--                 Functions.printcard(card)
+--                 print("0 - Return")
+--                 print("1 - Play")
+--                 local option = tonumber(io.read())
+--                 if option ~= nil and option == 0 then
+--                     break
+--                 elseif option == nil then
+--                     break
+--                 elseif option == 1 then
+--                     if card.origin then
+-- --                         print(card.origin.name)
+-- --                         print(Player[t].name)
+-- --                         print(card.name)
+--                         Functions.destroy(Player[t].field.r,Player[t],Player[t],Player[y])
+--                         Functions.summon(card,Player[t],Player[y])
+--                         local j = Functions.find(Player[t].extra,card)
+--                         while j <= #Player[t].extra do
+--                             Player[t].extra[j] = Player[t].extra[j+1]
+--                             j = j+1
+--                         end
+--                         print(card.origin.name.." became "..card.name.."!")
+--                     end
+--                 else
+--                 end
+            else
+                print("SELECT A VALID OPTION!")
+            end
             
-        elseif option ~= 1 and option ~= 2 and option ~= 3 and option~= 4 and option ~= 5 then
+        end
+            
+        if option ~= 1 and option ~= 2 and option ~= 3 and option~= 4 and option ~= 5 and option ~= 6 then
             print("Selecione uma opção válida!")
         end
     end
 end
 ------------JOGO----------------
-Funcoes.jogo = function()
+Functions.jogo = function()
 
-    Funcoes.shuffle2(Jogador[1].deck)
-    Funcoes.shuffle2(Jogador[2].deck)
-    Funcoes.draw(Jogador[1])
-    Funcoes.draw(Jogador[1])
-    Funcoes.draw(Jogador[1])
-    Funcoes.draw(Jogador[1])
-    Funcoes.draw(Jogador[1])
-    Funcoes.draw(Jogador[2])
-    Funcoes.draw(Jogador[2])
-    Funcoes.draw(Jogador[2])
-    Funcoes.draw(Jogador[2])
-    Funcoes.draw(Jogador[2])
-    Funcoes.getgold(Jogador[1])
+    Functions.shuffle2(Player[1].deck)
+    Functions.shuffle2(Player[2].deck)
+    Functions.draw(Player[1])
+    Functions.draw(Player[1])
+    Functions.draw(Player[1])
+    Functions.draw(Player[1])
+    Functions.draw(Player[1])
+    Functions.draw(Player[2])
+    Functions.draw(Player[2])
+    Functions.draw(Player[2])
+    Functions.draw(Player[2])
+    Functions.draw(Player[2])
+    Functions.getgold(Player[1])
     
-    while Jogador[1].vida > 0 and Jogador[2].vida > 0 do
+    while Player[1].life > 0 and Player[2].life > 0 do
         t = 1  y = 2
-        Funcoes.turno(t)
-        if Jogador[1].vida <1 then
-            print(Jogador[2].nome.." venceu o jogo!")
+        Functions.turn(t)
+        if Player[1].life <1 then
+            print(Player[2].name.." venceu o jogo!")
             break
-        elseif Jogador[2].vida <1 then
-            print(Jogador[1].nome.." venceu o jogo!")
+        elseif Player[2].life <1 then
+            print(Player[1].name.." venceu o jogo!")
             break
         end
         t = 2  y = 1
-        Funcoes.turno(t)
-        if Jogador[1].vida <1 then
-            print(Jogador[2].nome.." venceu o jogo!")
+        Functions.turn(t)
+        if Player[1].life <1 then
+            print(Player[2].name.." venceu o jogo!")
             break
-        elseif Jogador[2].vida <1 then
-            print(Jogador[1].nome.." venceu o jogo!")
+        elseif Player[2].life <1 then
+            print(Player[1].name.." venceu o jogo!")
         end
     end
 end
 
-return Funcoes
+return Functions
