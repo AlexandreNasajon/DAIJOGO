@@ -93,11 +93,11 @@ end
 Functions.printzone = function(zone)
 
     local i = 1
-    print("#","Name       ","Cost","tipo","Power","Loyalty")
+    print("#","Name       ","Cost","Type","Power","Loyalty")
     while i <= #zone do
         print(i,zone[i].name,zone[i].cost,zone[i].tipo,zone[i].power,zone[i].loyalty)
         i = i+1
-    end    
+    end
 end
 ----------- PRINT CARD---------
 Functions.printcard = function(card)
@@ -194,7 +194,7 @@ Functions.summon = function(card,Player1,Player2)
         Player1.field[#Player1.field+1] = card
         print(card.name.." was summoned.")
         if card.effect.ifsummoned then
-            card.effect.ifsummoned(Player1,Player2)
+            card.effect.ifsummoned(card,Player1,Player2)
         end
     end
 end
@@ -204,7 +204,7 @@ Functions.convocar = function(card,Player1,Player2)
         Player1.room[#Player1.room+1] = card
         print(card.name.." foi convocado.")
         if card.effect.ifconvocado then
-            card.effect.ifconvocado(Player1,Player2)
+            card.effect.ifconvocado(card,Player1,Player2)
         end
     end
 end
