@@ -2,34 +2,35 @@ local Player = require("Player")
 local Functions = require("Functions")
 local Cards = {}
 
--- Cards.Traidor = {
---     name = "Traidor   ",
---     power = 10,
---     cost = 1,
---     type = "Unit",
---     stamina = 1,
---     description = "Quando destruído, é invocado no field do oponente com power aumentado em 2.",
---     effect = {ifdies = function(Player1,Player2)
---         Traidor = {}
---         Functions.copiar(Cards.Traidor,Traidor)
---         Traidor.power = Traidor.power+2
---         Functions.summon(Traidor,Player2,Player1)
---         print("Traidor foi invocado no field do oponente com power aumentado em 2.")
---     end
--- }
--- }
+Cards.Traitor = {
+    name = "Traitor   ",
+    power = 10,
+    cost = 1,
+    tipo = "Unit",
+    stamina = 1,
+    description = "If destroyed, it is summoned on your opponent's field with its power raised by 2.",
+    effect = {ifdies = function(card,Player1,Player2)
+        card.power = card.power+2
+        Functions.summon(card,Player2,Player1)
+        print("Traitor was summoned on your opponent's field with its power raised by 2.")
+    end
+}
+}
 Cards.Sphinx = {
     name = "Sphinx    ",
     power = 19,
     cost = 4,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "Ability: draw a card. ULTRA: draw three cards.",
-    effect = {ability = function(Player1,Player2)
+    description = "Ability: Draw a card. ULTRA: draw three cards.",
+    effect = {ability = function(card,Player1,Player2)
         Functions.draw(Player1)
         print(Player1.name.." drew a card.")
     end,
-    ultra = function(Player1,Player2)
+    ultra = function(card,Player1,Player2)
+        Functions.draw(Player1)
+        Functions.draw(Player1)
+        Functions.draw(Player1)
     print(Player1.name.." drew three cards.")
 end
 }
@@ -38,10 +39,10 @@ Cards.MindKnight = {
     name = "MindKnight",
     power = 16,
     cost = 2,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
     description = "If this destroys a unit, draw a card.",
-    effect = {ifdestroys = function(Player1,Player2)
+    effect = {ifdestroys = function(card,Player1,Player2)
         Functions.draw(Player1)
         print(Player1.name.." drew a card.")
     end
@@ -51,10 +52,10 @@ Cards.GoldKnight = {
     name = "GoldKnight",
     power = 16,
     cost = 2,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
     description = "If this destroys a unit, receive 1 gold.",
-    effect = {ifdestroys = function(Player1,Player2)
+    effect = {ifdestroys = function(card,Player1,Player2)
         Functions.getgold(Player1)
         print(Player1.name.." received 1 gold.")
     end
@@ -62,12 +63,12 @@ Cards.GoldKnight = {
 }
 Cards.Lich = {
     name = "Lich      ",
-    power = 17,
-    cost = 3,
-    type = "Unit",
+    power = 20,
+    cost = 4,
+    tipo = "Unit",
     stamina = 1,
-    description = "If summoned, summon a unit from your graveyard.",
-    effect = {ifsummoned = function(Player1,Player2)    
+    description = "Ability: Summon a unit from your graveyard.",
+    effect = {ability = function(card,Player1,Player2)
     local h = false
     while h == false do
         print("Select a unit in your graveyard:")
@@ -76,7 +77,7 @@ Cards.Lich = {
         local opcao = tonumber(io.read())
         if opcao ~= nil and opcao == 0 then
             h = true
-        elseif Player1.graveyard[opcao].type == "Unit" then
+        elseif Player1.graveyard[opcao].tipo == "Unit" then
             local card = Player1.graveyard[opcao]
             Functions.summon(card,Player1)
             print(card.name.." was summoned!")
@@ -92,15 +93,14 @@ Cards.Lich = {
     end
 }
 }
-        
 Cards.SoulGuide = {
     name = "Soul Guide ",
     power = 11,
     cost = 1,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
     description = "If destroyed, search your deck for a unit card with power 10 or less and add it to your hand, then your deck is shuffled.",
-    effect = {ifdies = function(Player1,Player2)
+    effect = {ifdies = function(card,Player1,Player2)
     local h = false
         while h == false do
             print("Select a unit with power 10 or less:")
@@ -109,7 +109,7 @@ Cards.SoulGuide = {
             local opcao = tonumber(io.read())
             if opcao ~= nil and opcao == 0 then
                 h = true
-            elseif opcao ~= nil and opcao <= #Player1.deck and Player1.deck[opcao].type == "Unit" and Player1.deck[opcao].power < 11 then
+            elseif opcao ~= nil and opcao <= #Player1.deck and Player1.deck[opcao].tipo == "Unit" and Player1.deck[opcao].power < 11 then
                 Player1.hand[#Player1.hand+1] = Player1.deck[opcao]
                 while opcao <= #Player1.deck do
                     Player1.deck[opcao] = Player1.deck[opcao+1]
@@ -128,10 +128,10 @@ Cards.Recruiter = {
     name = "Recruiter ",
     power = 15,
     cost = 2,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
     description = "If summoned, search your deck for a unit card with cost 1 or less and add it to your hand, then your deck is shuffled.",
-    effect = {ifsummoned = function(Player1,Player2)
+    effect = {ifsummoned = function(card,Player1,Player2)
     local h = false
         while h == false do
             print("Select a unit with cost 1 or less:")
@@ -140,7 +140,7 @@ Cards.Recruiter = {
             local opcao = tonumber(io.read())
             if opcao ~= nil and opcao == 0 then
                 h = true
-            elseif opcao ~= nil and opcao <= #Player1.deck and Player1.deck[opcao].type == "Unit" and Player1.deck[opcao].cost < 2 then
+            elseif opcao ~= nil and opcao <= #Player1.deck and Player1.deck[opcao].tipo == "Unit" and Player1.deck[opcao].cost < 2 then
                 Player1.hand[#Player1.hand+1] = Player1.deck[opcao]
                 while opcao <= #Player1.deck do
                     Player1.deck[opcao] = Player1.deck[opcao+1]
@@ -148,7 +148,7 @@ Cards.Recruiter = {
                 end
                 h = true
             else
-                print("SELECIONE UMA OPÇÃO VÁLIDA!")
+                print("SELECT A VALID OPTION!")
             end
         end
         Functions.shuffle2(Player1.deck)
@@ -159,43 +159,43 @@ Cards.Dragon = {
     name = "Dragon    ",
     power = 25,
     cost = 3,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "Quando invocado, sacrifique uma Unit. ULTRA: receive 3 gold.",
-    effect = {ifsummoned = function(Player1,Player2)
+    description = "If summoned, destroy a unit you control. ULTRA: receive 3 gold.",
+    effect = {ifsummoned = function(card,Player1,Player2)
         local h = false
         while h == false do
-            print("Sacrifique uma Unit:")
+            print("Destroy a unit you control:")
             Functions.printzone(Player1.field)
             local opcao = tonumber(io.read())
             if opcao ~= nil and opcao ~= 0 and opcao <= #Player1.field then
                 Functions.destroy(Player1.field[opcao],Player1,Player1,Player2)
                 h = true
             else
-                print("VOCÊ DEVE SACRIFICAR UMA Unit!")
+                print("YOU MUST DESTROY A UNIT YOU CONTROL!")
             end
+        end
         end,
-        ultra = function(Player1,Player2)
+        ultra = function(card,Player1,Player2)
             Functions.getgold(Player1)
             Functions.getgold(Player1)
             Functions.getgold(Player1)
             print(Player1.name.." received 3 gold.")
         end
-    end
 }
 }
-Cards.Elfo = {
-    name = "Elfo      ",
+Cards.Elf = {
+    name = "Elf       ",
     power = 6,
     cost = 1,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "Quando invocado, reduza o power de uma Unit em 6.",
-    effect = {ifsummoned = function(Player1,Player2)
+    description = "If summoned, you may have an enemy unit lose 6 power.",
+    effect = {ifsummoned = function(card,Player1,Player2)
 local h = false
     while h == false do
-        print("Selecione uma Unit:")
-        print("0 - Nenhuma")
+        print("Select a unit:")
+        print("0 - None")
         Functions.printzone(Player2.field)
         local opcao = tonumber(io.read())
         if opcao ~= nil and opcao == 0 then
@@ -203,23 +203,23 @@ local h = false
         elseif opcao <= #Player2.field and opcao > 0 then
             local card = Player2.field[opcao]
             card.power = card.power-6
-            print(card.name.." perdeu 6 de power.")
+            print(card.name.." lost 6 power.")
             h = true
         else
-            print("SELECIONE UMA OPÇÃO VÁLIDA!")
+            print("SELECT A VALID OPTION!")
         end
     end
 end
 }
 }
-Cards.Anjo = {
-    name = "Anjo      ",
+Cards.Angel = {
+    name = "Angel     ",
     power = 18,
     cost = 2,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "Quando invocado, embaralhe sete cards 'Remendar' ao seu deck.",
-    effect = {ifsummoned = function(Player1,Player2)
+    description = "If summoned, shuffle seven 'Patch' cards into your deck.",
+    effect = {ifsummoned = function(card,Player1,Player2)
         tempcard = {}
         tempcard = Functions.copiar(Cards.Remendar,tempcard)
         Player1.deck[#Player1.deck+1] = tempcard
@@ -231,27 +231,27 @@ Cards.Anjo = {
         Player1.deck[#Player1.deck+1] = tempcard
         tempcard = {}
         Functions.shuffle2(Player1.deck)
-        print("Sete cards 'Remendar' foram embaralhados ao deck de "..Player1.name..".")
+        print("Seven 'Patch' cards were shuffle into "..Player1.name.." deck.")
     end
 }
 }
-Cards.Coveiro = {
-    name = "Coveiro   ",
+Cards.Gravedigger = {
+    name = "Gravedigger",
     power = 10,
     cost = 1,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "Quando invocado, adicione até uma Unit do seu cemitério à sua mão.",
-    effect = {ifsummoned = function(Player1,Player2)
+    description = "If summoned, add a unit from your graveyard to your hand.",
+    effect = {ifsummoned = function(card,Player1,Player2)
     h = false
     while h == false do
-        print("Adicione até uma Unit do seu cemitério à sua mão:")
-        print("0 - Nenhuma")
+        print("Add a unit from your graveyard to your hand:")
+        print("0 - None")
             Functions.printzone(Player1.graveyard)
             opcao = tonumber(io.read())
             if opcao ~= nil and opcao == 0 then
                 h = true
-            elseif opcao ~= nil and opcao <= #Player1.graveyard and opcao > 0 and Player1.graveyard[opcao].type == "Unit" then
+            elseif opcao ~= nil and opcao <= #Player1.graveyard and opcao > 0 and Player1.graveyard[opcao].tipo == "Unit" then
                 Player1.hand[#Player1.hand+1] = Player1.graveyard[opcao]
                 while opcao <= #Player1.graveyard do
                     Player1.graveyard[opcao] = Player1.graveyard[opcao+1]
@@ -259,30 +259,30 @@ Cards.Coveiro = {
                 end
                 h = true
             else
-                print("Nenhuma Unit foi adicionada à sua mão.")
+                print("No unit was added to your hand.")
                 h = true
             end
     end
     end
 }
 }
-Cards.Arqueologo = {
-    name = "Arqueólogo",
+Cards.Archaeologist = {
+    name = "Archaeologist",
     power = 7,
     cost = 1,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "Quando invocado, adicione até um Support do seu cemitério à sua mão.",
-    effect = {ifsummoned = function(Player1,Player2)
+    description = "If summoned, add a support from your graveyard to your hand.",
+    effect = {ifsummoned = function(card,Player1,Player2)
     h = false
     while h == false do
-        print("Adicione até um Support do seu cemitério à sua mão:")
-        print("0 - Nenhum")
+        print("Add a support from your graveyard to your hand:")
+        print("0 - None")
             Functions.printzone(Player1.graveyard)
             opcao = tonumber(io.read())
             if opcao ~= nil and opcao == 0 then
                 h = true
-            elseif opcao ~= nil and opcao <= #Player1.graveyard and opcao > 0 and Player1.graveyard[opcao].type == "Support" then
+            elseif opcao ~= nil and opcao <= #Player1.graveyard and opcao > 0 and Player1.graveyard[opcao].tipo == "Support" then
                 Player1.hand[#Player1.hand+1] = Player1.graveyard[opcao]
                 while opcao <= #Player1.graveyard do
                     Player1.graveyard[opcao] = Player1.graveyard[opcao+1]
@@ -290,7 +290,7 @@ Cards.Arqueologo = {
                 end
                 h = true
             else
-                print("Nenhum Support foi adicionada à sua mão.")
+                print("No support was added to your hand.")
                 h = true
             end
     end
@@ -301,10 +301,13 @@ Cards.StormTitan = {
     name = "Storm Titan",
     power = 17,
     cost = 3,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "Quando invocado, adicione os cards 'Brainstorm', 'Firestorm' e 'Lifestorm' à sua mão.",
-    effect = {ifsummoned = function(Player1,Player2)
+    description = "Ability: Storm +5. ULTRA: add a 'Brainstorm', a 'Firestorm' and a 'Lifestorm' cards to your hand.",
+    effect = {ability = function(card,Player1,Player2)
+        Functions.storm(Player1,5)
+    end,
+        ultra = function(card,Player1,Player2)
         tempcard = {}
         tempcard = Functions.copiar(Cards.Brainstorm,tempcard)
         Player1.hand[#Player1.hand+1] = tempcard
@@ -315,48 +318,48 @@ Cards.StormTitan = {
         tempcard = Functions.copiar(Cards.Lifestorm,tempcard)
         Player1.hand[#Player1.hand+1] = tempcard
         tempcard = {}
-        print("Os cards 'Brainstorm','Firestorm' e 'Lifestorm' foram adicionados à mão de "..Player1.name..".")
+        print("The cards 'Brainstorm','Firestorm' and 'Lifestorm' were added to "..Player1.name.." hand.")
     end
 }
 }
-Cards.Stormdude = {
-    name = "Stormdude ",
+Cards.Stormbringer = {
+    name = "Stormbringer ",
     power = 12,
     cost = 1,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "ability: Storm +3.",
-    effect = {ability = function(Player1,Player2)
-        Functions.storm(Player1,3)
+    description = "Ability: Storm +2.",
+    effect = {ability = function(card,Player1,Player2)
+        Functions.storm(Player1,2)
     end
 }
 }
-Cards.Vampiro = {
-    name = "Vampiro   ",
+Cards.Vampire = {
+    name = "Vampire   ",
     power = 13,
     cost = 1,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "Quando invocado, ganhe 13 de life e seu oponente perde 13 de life.",
-    effect = {ifsummoned = function(Player1,Player2)
+    description = "If summoned, gain 13 life and your opponent loses 13 life.",
+    effect = {ifsummoned = function(card,Player1,Player2)
         Functions.getlife(Player1,13)
         Functions.damage(Player2,13)
-    print(Player1.name.." ganhou 13 de life e "..Player2.name.." perdeu 13 de life.")
+    print(Player1.name.." gained 13 life and "..Player2.name.." lost 13 life.")
     end
 }
 }
-Cards.Demonio = {
-    name = "Demonio   ",
+Cards.Demon = {
+    name = "Demon       ",
     power = 17,
     cost = 2,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "Quando invocado, compre dois cards e perca 20 de life.",
-    effect = {ifsummoned = function(Player1,Player2)
+    description = "If summoned, draw two cards and lose 20 life.",
+    effect = {ifsummoned = function(card,Player1,Player2)
         Functions.draw(Player1)
         Functions.draw(Player1)
         Functions.damage(Player1,20)
-        print(Player1.name.." comprou dois cards e perdeu 20 de life.")
+        print(Player1.name.." drew two cards and lost 20 life.")
     end
 }
 }
@@ -364,19 +367,19 @@ Cards.RedAristocrat = {
     name = "Red Arist.",
     power = 12,
     cost = 1,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "ability: sacrifique uma Unit para causar 17 de damage ao oponente.",
-    effect = {ability = function(Player1,Player2)
-        print("Sacrifique uma Unit:")
+    description = "Ability: Destroy a unit you control to have this unit gain 4 power.",
+    effect = {ability = function(card,Player1,Player2)
+        print("Destroy a unit you control:")
         Functions.printzone(Player1.field)
         local opcao = tonumber(io.read())
         if opcao ~= nil and opcao <= #Player1.field and opcao > 0  then
             Functions.destroy(Player1.field[opcao],Player1,Player1,Player2)
-            Functions.damage(Player2,17)
-            print(Player2.name.." recebeu 17 de damage.")
+            card.power = card.power+4
+            print(Player2.name.." gained 4 power.")
         else
-            print("Nenhuma Unit foi sacrificada, então nada aconteceu.")
+            print("No unit was destroyed, so nothing happened.")
         end
     end
 }
@@ -385,19 +388,19 @@ Cards.BlueAristocrat = {
     name = "Blue Arist.",
     power = 12,
     cost = 1,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "ability: sacrifique uma Unit para comprar um card.",
-    effect = {ability = function(Player1,Player2)
-        print("Sacrifique uma Unit:")
+    description = "Ability: Destroy a unit you control to draw a card.",
+    effect = {ability = function(card,Player1,Player2)
+        print("Destroy a unit you control:")
         Functions.printzone(Player1.field)
         local opcao = tonumber(io.read())
         if opcao ~= nil and opcao <= #Player1.field and opcao > 0  then
             Functions.destroy(Player1.field[opcao],Player1,Player1,Player2)
             Functions.draw(Player1)
-            print(Player1.name.." comprou um card.")
+            print(Player1.name.." drew a card.")
         else
-            print("Nenhuma Unit foi sacrificada, então nada aconteceu.")
+            print("No unit was destroyed, so nothing happened.")
         end
     end
 }
@@ -406,19 +409,19 @@ Cards.YellowAristocrat = {
     name = "Yellow Arist.",
     power = 12,
     cost = 1,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "ability: sacrifique uma Unit para receber 1 de gold.",
-    effect = {ability = function(Player1,Player2)
-        print("Sacrifique uma Unit:")
+    description = "Ability: Destroy a unit you control to receive 1 gold.",
+    effect = {ability = function(card,Player1,Player2)
+        print("Destroy a unit you control:")
         Functions.printzone(Player1.field)
         local opcao = tonumber(io.read())
         if opcao ~= nil and opcao <= #Player1.field and opcao > 0 then
             Functions.destroy(Player1.field[opcao],Player1,Player1,Player2)
             Functions.getgold(Player1)
-            print(Player1.name.." recebeu 1 de gold")
+            print(Player1.name.." received 1 gold")
         else
-            print("Nenhuma Unit foi sacrificada, então nada aconteceu.")
+            print("No unit was destroyed, so nothing happened.")
         end
     end
 }
@@ -427,33 +430,33 @@ Cards.GreenAristocrat = {
     name = "Green Arist.",
     power = 12,
     cost = 1,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "ability: sacrifique uma Unit para ganhar 20 de life.",
-    effect = {ability = function(Player1,Player2)
-        print("Sacrifique uma Unit:")
+    description = "Ability: Destroy a unit you control to gain 20 life.",
+    effect = {ability = function(card,Player1,Player2)
+        print("Destroy a unit you control:")
         Functions.printzone(Player1.field)
         local opcao = tonumber(io.read())
         if opcao ~= nil and opcao <= #Player1.field and opcao > 0  then
             Functions.destroy(Player1.field[opcao],Player1,Player1,Player2)
             Functions.getlife(Player1,20)
-            print(Player1.name.." ganhou 20 de life.")
+            print(Player1.name.." gained 20 life.")
         else
-            print("Nenhuma Unit foi sacrificada, então nada aconteceu.")
+            print("No unit was destroyed, so nothing happened.")
         end
     end
 }
 }
-Cards.Gname = {
-    name = "Gname     ",
+Cards.Gnome = {
+    name = "Gnome     ",
     power = 7,
     cost = 1,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "Quando destruído, compre um card.",
-    effect = {ifdies = function(Player1,Player2)
+    description = "If destroyed, draw a card.",
+    effect = {ifdies = function(card,Player1,Player2)
         Functions.draw(Player1)
-        print(Player1.name.." comprou um card.")
+        print(Player1.name.." drew a card.")
     end
 }
 }
@@ -461,99 +464,105 @@ Cards.Dwarf = {
     name = "Dwarf     ",
     power = 8,
     cost = 1,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "Quando destruído, receba 1 de gold.",
-    effect = {ifdies = function(Player1,Player2)
+    description = "If destroyed, receive 1 gold.",
+    effect = {ifdies = function(card,Player1,Player2)
         Functions.getgold(Player1)
-        print(Player1.name.." recebeu 1 de gold.")
+        print(Player1.name.." received 1 gold.")
     end
 }
 }
-Cards.Mago = {
-    name = "Mago      ",
+Cards.Mage = {
+    name = "Mage      ",
     power = 9,
     cost = 1,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "ability: compre dois cards e depois descarte dois cards.",
-    effect = {ability = function(Player1,Player2)
+    description = "Ability: draw two cards then discard two cards.",
+    effect = {ability = function(card,Player1,Player2)
         Functions.draw(Player1)
         Functions.draw(Player1)
-        print(Player1.name.." comprou dois cards.")
+        print(Player1.name.." drew two cards.")
         Functions.discard(Player1)
         Functions.discard(Player1)
+        print(Player1.name.." discarded two cards.")
     end
 }
 }
-Cards.Serpente = {
-    name = "Serpente  ",
+Cards.Serpent = {
+    name = "Serpent   ",
     power = 5,
     cost = 1,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "Se este card for descartado da sua mão, você pode pagar 7 de life para devolvê-lo à sua mão.",
-    effect = {ifdiscarded = function(Player1,Player2)
-        print("Pagar 7 de life para devolver Serpente à sua mão?")
-        print("1 - Sim")
-        print("2 - Não")
+    description = "If you discard this card from your hand, you may pay 7 life to add it to your hand.",
+    effect = {ifdiscarded = function(card,Player1,Player2)
+        print("Pay 7 life to add Serpent to your hand?")
+        print("1 - Yes")
+        print("2 - No")
         local opcao = tonumber(io.read())
         if opcao ~= nil and opcao == 1 then
             tempcard = {}
             Functions.copiar(Cards.Serpente,tempcard)
             Player1.hand[#Player1.hand+1] = tempcard
             tempcard = {}
-            print(Player1.name.." perdeu 7 de life e Serpente voltou para a mão de "..Player1.name..".")
+            print(Player1.name.." lost 7 life and Serpent was added to that player's hand.")
         else
-            print("Serpente não foi devollife para a mão.")
+            print("Serpent was not added to your hand.")
         end
     end
 }
 }
 Cards.Healer = {
-    name = "Healer    ",
+    name = "Healer      ",
     power = 9,
     cost = 1,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "Quando invocado, ganhe 18 de life.",
-    effect = {ifsummoned = function(Player1,Player2)
+    description = "If summoned, gain 18 life.",
+    effect = {ifsummoned = function(card,Player1,Player2)
         Functions.getlife(Player1,18)
-        print(Player1.name.." ganhou 18 de life.")
+        print(Player1.name.." gained 18 life.")
     end
 }
 }
 Cards.Golem = {
-    name = "Golem     ",
-    power = 15,
+    name = "Golem       ",
+    power = 16,
     cost = 2,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "Quando invocado, ganhe 14 de life. Quando destruído, compre um card.",
-effect = {ifsummoned = function(Player1,Player2)
+    description = "If summoned, gain 14 life. If destroyed, draw a card.",
+effect = {ifsummoned = function(card,Player1,Player2)
         Functions.getlife(Player1,14)
-        print(Player1.name.." ganhou 14 de life.")
+        print(Player1.name.." gained 14 life.")
     end,
-    ifdies = function(Player1,Player2)
+    ifdies = function(card,Player1,Player2)
         Functions.draw(Player1)
-        print(Player1.name.." comprou um card.")
+        print(Player1.name.." drew a card.")
     end
 }
 }
-Cards.Devedor = {
-    name = "Devedor",
-    power = 12,
+Cards.Debtor = {
+    name = "Debtor      ",
+    power = 14,
     cost = 1,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "Quando invocado, compre um card e ganhe 10 de life. Quando destruído, descarte um card e você perde 15 de life.",
-    effect = {ifsummoned = function(Player1,Player2)
+    description = "If summoned, draw a card and gain 10 life. If destroyed, discard a card and you lose 20 life..",
+    effect = {ifsummoned = function(card,Player1,Player2)
         Functions.draw(Player1)
         Functions.getlife(Player1,10)
+        print(Player1.name.."drew a card and gained 10 life.")
     end,
     ifdies = function(Player1)
-    Functions.discard(Player1)
-    Functions.damage(Player1,15)
+    if #Player1.hand > 0 then
+        Functions.discard(Player1)
+        print(Player1.name.." discarded a card.")
+    end
+    Functions.damage(Player1,20)
+    print(Player1.name.." lost 20 life.")
 end
 }
 }
@@ -561,13 +570,13 @@ Cards.Troll = {
     name = "Troll     ",
     power = 10,
     cost = 1,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
-    description = "Quando invocado, compre um card e perca 10 de life.",
-effect = {ifsummoned = function(Player1,Player2)
+    description = "If summoned, draw a card and you lose 8 life..",
+effect = {ifsummoned = function(card,Player1,Player2)
         Functions.draw(Player1)
-        Functions.damage(Player1,10)
-        print(Player1.name.." comprou um card e perdeu 10 de life.")
+        Functions.damage(Player1,8)
+        print(Player1.name.." drew a card and lost 8 life.")
     end  
 }
 }
@@ -585,28 +594,28 @@ effect = {ifsummoned = function(Player1,Player2)
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-Cards.Impulso= {
-    name = "Impulso   ",
+Cards.Impulse= {
+    name = "Impulse     ",
     power = nil,
     cost = 0,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
-    description = "Compre dois cards e você perde 20 de life.",
-effect = function(Player1,Player2)
+    description = "Draw two cards and you lose 20 life.",
+effect = function(card,Player1,Player2)
     Functions.draw(Player1)
     Functions.draw(Player1)
     Functions.damage(Player1,20)
-    print(Player1.name.." comprou dois cards e perdeu 20 de life.")
+    print(Player1.name.." drew two cards and lost 20 life.")
 end
 }
-Cards.Furia = {
-    name = "Fúria     ",
+Cards.Fury = {
+    name = "Fury        ",
     power = nil,
     cost = 0,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
-    description = "Uma Unit sua ganha 5 de power.",
-effect = function(Player1,Player2)
+    description = "A unit you control gains 5 power.",
+effect = function(card,Player1,Player2)
     print("Selecione uma Unit:")
     print("0 - Nenhuma")
     Functions.printzone(Player1.field)
@@ -622,18 +631,18 @@ effect = function(Player1,Player2)
     end
 end
 }
-Cards.Adoecer = {
-    name = "Adoecer   ",
+Cards.Sicken = {
+    name = "Sicken      ",
     power = nil,
     cost = 0,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
-    description = "Uma Unit de seu oponente perde 7 de power.",
-effect = function(Player1,Player2)
+    description = "An enemy unit loses 7 power.",
+effect = function(card,Player1,Player2)
 local h = false
     while h == false do
-        print("Selecione uma Unit:")
-        print("0 - Nenhuma")
+        print("Select a unit:")
+        print("0 - None")
         Functions.printzone(Player2.field)
         local opcao = tonumber(io.read())
         if opcao ~= nil and opcao == 0 then
@@ -641,10 +650,10 @@ local h = false
         elseif opcao <= #Player2.field and opcao > 0 then
             local card = Player2.field[opcao]
             card.power = card.power-7
-            print(card.name.." perdeu 7 de power.")
+            print(card.name.." lost 7 power.")
             h = true
         else
-            print("SELECIONE UMA OPÇÃO VÁLIDA!")
+            print("SELECT A VALID OPTION!")
         end
     end
 end
@@ -653,10 +662,10 @@ Cards.Investida = {
     name = "Investida ",
     power = nil,
     cost = 0,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
     description = "Storm +1; Uma Unit recebe energia adicional para atacar ou ativar uma ability neste turn.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     Player1.storm = Player1.storm+1
     print(Player1.name.." aumentou seu storm em 1.")
     print("Selecione uma Unit:")
@@ -678,10 +687,10 @@ Cards.Stormear = {
     name = "Stormear  ",
     power = nil,
     cost = 0,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
     description = "Storm +3.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     Functions.storm(Player1,3)
 end
 }
@@ -689,10 +698,10 @@ Cards.Remendar = {
     name = "Remendar  ",
     power = nil,
     cost = 0,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
     description = "Storm +1; Compre um card e ganhe 7 de life.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     Player1.storm = Player1.storm+1
     print(Player1.name.." aumentou seu storm em 1.")
     Functions.draw(Player1)
@@ -700,40 +709,40 @@ effect = function(Player1,Player2)
     print(Player1.name.." comprou um card e ganhou 7 de life.")
 end
 }
-Cards.Ganancia = {
-    name = "Ganância  ",
+Cards.Greed = {
+    name = "Greed       ",
     power = nil,
     cost = 0,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
-    description = "Receba 1 de gold.",
-effect = function(Player1,Player2)
+    description = "Receive 1 gold.",
+effect = function(card,Player1,Player2)
     Functions.getgold(Player1)
-    print(Player1.name.." recebeu 1 de gold.")
+    print(Player1.name.." received 1 gold.")
 end
 }
-Cards.VenderAlma = {
-    name = "Vender Alma",
+Cards.SellSoul = {
+    name = "Sell Soul   ",
     power = nil,
     cost = 0,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
-    description = "Receba 2 de gold e perca 20 de life.",
-effect = function(Player1,Player2)
+    description = "Receive 2 gold and you lose 20 life.",
+effect = function(card,Player1,Player2)
     Functions.getgold(Player1)
     Functions.getgold(Player1)
     Functions.damage(Player1,20)
-    print(Player1.name.." recebeu 2 de gold e perdeu 20 de life.")
+    print(Player1.name.." received 2 gold and lost 20 life.")
 end
 }
-Cards.Escralifeo = {
+Cards.Escravidao = {
     name = "Escravidão",
     power = nil,
     cost = 0,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
     description = "Sacrifique uma Unit. Se fizer isso, receba 2 de gold.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     local h = false
     while h == false do
         print("Selecione uma Unit:")
@@ -762,10 +771,10 @@ Cards.Sacrificio = {
     name = "Sacrifício",
     power = nil,
     cost = 0,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
     description = "Sacrifique uma Unit. Se fizer isso, compre dois cards.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     local h = false
     while h == false do
         print("Selecione uma Unit:")
@@ -776,7 +785,7 @@ effect = function(Player1,Player2)
             h = true
         elseif opcao ~= nil and opcao <= #Player1.field and opcao > 0 then
             local card = Player1.field[opcao]
-            Functions.destroy(Player1.field[opcao],Player1,Player1,Player2)
+            Functions.destroy(card,Player1,Player1,Player2)
             h = true
             g = true
         else
@@ -794,10 +803,10 @@ end
 --     name = "Vício     ",
 --     power = nil,
 --     cost = 0,
---     type = "Support",
+--     tipo = "Support",
 --     stamina = nil,
 --     description = "Descarte um card. Se fizer isso, receba 2 de gold.",
--- effect = function(Player1,Player2)
+-- effect = function(card,Player1,Player2)
 --     Functions.discard(Player1)
 --     Functions.getgold(Player1)
 --     Functions.getgold(Player1)
@@ -808,10 +817,10 @@ Cards.Burn = {
     name = "Burn      ",
     power = nil,
     cost = 0,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
     description = "Storm +1; Causa 15 de damage ao oponente.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     Player1.storm = Player1.storm+1
     print(Player1.name.." aumentou seu storm em 1.")
     Functions.damage(Player2,15)
@@ -822,10 +831,10 @@ Cards.Cooperar = {
     name = "Cooperar  ",
     power = nil,
     cost = 0,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
     description = "Storm +1; Cada Player compra um card.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     Player1.storm = Player1.storm+1
     print(Player1.name.." aumentou seu storm em 1.")
     Functions.draw(Player1)
@@ -837,10 +846,10 @@ Cards.Drenar = {
     name = "Drenar    ",
     power = nil,
     cost = 0,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
     description = "Storm +1; Ganhe 10 de life e causa 10 de damage ao oponente.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     Player1.storm = Player1.storm+1
     print(Player1.name.." aumentou seu storm em 1.")
     Functions.getlife(Player1,10)
@@ -848,14 +857,14 @@ effect = function(Player1,Player2)
     print(Player1.name.." ganhou 10 de life e "..Player2.name.." perdeu 10 de life.")
 end
 }
-Cards.destroy = {
-    name = "destroy  ",
+Cards.Destroy = {
+    name = "Destroy   ",
     power = nil,
     cost = 1,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
     description = "Destrua uma Unit de seu oponente.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     h = false
     while h == false do
         print("Selecione uma Unit para destroy:")
@@ -877,10 +886,10 @@ Cards.Esmagar = {
     name = "Esmagar   ",
     power = nil,
     cost = 0,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
     description = "Destrua uma Unit de seu oponente com power menor ou igual a 10.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     h = false
     while h == false do
         print("Selecione uma Unit com power menor ou igual a 10 para destroy:")
@@ -905,86 +914,30 @@ Cards.Pote = {
     name = "Pote      ",
     power = nil,
     cost = 1,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
     description = "Compre dois cards.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     Functions.draw(Player1)
     Functions.draw(Player1)
     print(Player1.name.." comprou dois cards.")
 end
 }
-Cards.AsCaras = {
-    name = "As Caras  ",
-    power = nil,
-    cost = 1,
-    type = "Support",
-    stamina = nil,
-    description = "Copie o effect do último Support que você conjurou.",
-effect = function(Player1,Player2)
-    if Player1.lastsupport.effect ~= nil and Player1.lastsupport ~= {} and Player1.lastsupport.name ~= "As Caras  " then
-        Player1.lastsupport.effect(Player1,Player2)
-    else
-        print("VOCÊ PRECISA cast UM Support ANTES DE JOGAR ESTE CARD! >.<")
-    end
-end
-}
-Cards.Brainstorm = {
-    name = "Brainstorm",
-    power = nil,
-    cost = 2,
-    type = "Support",
-    stamina = nil,
-    description = "Compre X cards; X = storm.",
-effect = function(Player1,Player2)
-    i = Player1.storm
-    while i > 0 do
-        Functions.draw(Player1)
-        i = i-1
-    end
-    print(Player1.name.." comprou "..Player1.storm.." cards.")
-end    
-}
-Cards.Firestorm = {
-    name = "Firestorm ",
+Cards.Concentrate = {
+    name = "Concentrate",
     power = nil,
     cost = 0,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
-    description = "Causa 3X de damage ao oponente; X = storm.",
-effect = function(Player1,Player2)
-    Functions.damage(Player2,3*Player1.storm)
-    print(Player2.name.." perdeu "..3*Player1.storm.." de life.")
-end
-}
-Cards.Lifestorm = {
-    name = "Lifestorm ",
-    power = nil,
-    cost = 0,
-    type = "Support",
-    stamina = nil,
-    description = "Ganhe 5X de life; X = storm.",
-effect = function(Player1,Player2)
-    Functions.getlife(Player1,5*Player1.storm)
-    print(Player1.name.." ganhou "..5*Player1.storm.." de life.")
-end
-}
-Cards.Concentrar = {
-    name = "Concentrar",
-    power = nil,
-    cost = 0,
-    type = "Support",
-    stamina = nil,
-    description = "Se seu storm for maior ou igual a 5, compre dois cards; se for maior ou igual a 9, compre um card adicional.",
-effect = function(Player1,Player2)
-    if Player1.storm > 4 then
+    description = "If your storm is 3 or more, draw a card; then if your storm is 7 or more, draw an additional card.",
+effect = function(card,Player1,Player2)
+    if Player1.storm > 2 then
         Functions.draw(Player1)
-        Functions.draw(Player1)
-        print(Player1.name.." comprou dois cards.")
+        print(Player1.name.." drew a card.")
     end
-    if Player1.storm > 8 then
+    if Player1.storm > 6 then
         Functions.draw(Player1)
-        print(Player1.name.." comprou um card adicional.")
+        print(Player1.name.." drew an additional card.")
     end
 end    
 }
@@ -992,10 +945,10 @@ Cards.Espiar = {
     name = "Espiar    ",
     power = nil,
     cost = 0,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
     description = "Compre um card e depois olhe a mão de seu oponente. Você perde 10 de life.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     Functions.draw(Player1)
     print(Player1.name.." comprou um card.")
     print("A mão de "..Player2.name.." é:")
@@ -1012,11 +965,11 @@ Cards.Lembrar = {
     name = "Lembrar   ",
     power = nil,
     cost = 1,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
     zone = deck,
     description = "Adicione um card de seu cemitério à sua mão.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     local h = false
     while h == false do
         print("Selecione um card em seu cemitério:")
@@ -1042,11 +995,11 @@ Cards.Reviver = {
     name = "Reviver   ",
     power = nil,
     cost = 2,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
     zone = deck,
     description = "Invoque uma Unit de seu cemitério.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     local h = false
     while h == false do
         print("Selecione uma Unit no seu cemitério:")
@@ -1055,7 +1008,7 @@ effect = function(Player1,Player2)
         local opcao = tonumber(io.read())
         if opcao ~= nil and opcao == 0 then
             h = true
-        elseif Player1.graveyard[opcao].type == "Unit" then
+        elseif Player1.graveyard[opcao].tipo == "Unit" then
             local card = Player1.graveyard[opcao]
             Functions.summon(card,Player1)
             print(card.name.." foi invocado!")
@@ -1074,11 +1027,11 @@ Cards.Reanimar = {
     name = "Reanimar  ",
     power = nil,
     cost = 1,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
     zone = deck,
     description = "Invoque uma Unit de seu cemitério. Você perde 15 de life.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     local h = false
     while h == false do
         print("Selecione uma Unit no seu cemitério:")
@@ -1087,7 +1040,7 @@ effect = function(Player1,Player2)
         local opcao = tonumber(io.read())
         if opcao ~= nil and opcao == 0 then
             h = true
-        elseif opcao ~= nil and Player1.graveyard[opcao].type == "Unit" then
+        elseif opcao ~= nil and Player1.graveyard[opcao].tipo == "Unit" then
             local card = Player1.graveyard[opcao]
             Functions.summon(card,Player1)
             print(card.name.." foi invocado!")
@@ -1108,10 +1061,10 @@ Cards.Tutor = {
     name = "Tutor     ",
     power = nil,
     cost = 1,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
     description = "Procure em seu deck por um card e adicione-o à sua mão, depois seu deck é embaralhado. Você perde 17 de life.",
-    effect = function(Player1,Player2)
+    effect = function(card,Player1,Player2)
     local h = false
         while h == false do
             print("Selecione um card:")
@@ -1140,10 +1093,10 @@ Cards.Selecionar = {
     name = "Selecionar",
     power = nil,
     cost = 0,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
     description = "Olhe os dois cards do topo de seu deck, adicione um à sua mão e o outro ao seu cemitério. Você perde 12 de life.",
-    effect = function(Player1,Player2)--------talvez transformar em tabela
+    effect = function(card,Player1,Player2)--------talvez transformar em tabela
         local h = false
         local topo = {Player1.deck[#Player1.deck],Player1.deck[#Player1.deck-1]}
         Player1.deck[#Player1.deck] = nil
@@ -1177,10 +1130,10 @@ Cards.Projetar = {
     name = "Projetar  ",
     power = nil,
     cost = 0,
-    type = "Support",
+    tipo = "Support",
     stamina = nil,
     description = "Adicione os três cards do topo de seu deck ao seu cemitério, depois embaralhe até três cards de seu cemitério em seu deck.",
-    effect = function(Player1,Player2)
+    effect = function(card,Player1,Player2)
         Player1.graveyard[#Player1.graveyard+1] = Player1.deck[#Player1.deck]
         Player1.deck[#Player1.deck] = nil
         Player1.graveyard[#Player1.graveyard+1] = Player1.deck[#Player1.deck]
@@ -1222,15 +1175,19 @@ Cards.Projetar = {
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Cards.Blinker = {
     name = "Blinker   ",
     power = nil,
     cost = 1,
-    type = "Ally",
+    tipo = "Ally",
     stamina = 1,
-    lealdade = 4,
+    loyalty = 4,
     description = "ability: Selecione uma Unit sua. Exile-a e depois invoque-a novamente.",
-    effect = {ability = function(Player1,Player2)
+    effect = {ability = function(card,Player1,Player2)
         local h = false
         while h == false do
             print("Selecione uma Unit:")
@@ -1255,11 +1212,11 @@ Cards.Seletor = {
     name = "Seletor   ",
     power = nil,
     cost = 1,
-    type = "Ally",
+    tipo = "Ally",
     stamina = 1,
-    lealdade = 3,
-    description = "ability: Olhe os dois cards do topo de seu deck. Adicione um à sua mão e o outro ao seu cemitério.",
-    effect = {ability = function(Player1,Player2)
+    loyalty = 3,
+    description = "Ability: Olhe os dois cards do topo de seu deck. Adicione um à sua mão e o outro ao seu cemitério.",
+    effect = {ability = function(card,Player1,Player2)
         local h = false
         local topo = {Player1.deck[#Player1.deck],Player1.deck[#Player1.deck-1]}
         Player1.deck[#Player1.deck] = nil
@@ -1292,11 +1249,11 @@ Cards.Administrador = {
     name = "Admin.    ",
     power = nil,
     cost = 0,
-    type = "Ally",
+    tipo = "Ally",
     stamina = 1,
-    lealdade = 5,
-    description = "ability: Compre dois cards e depois descarte dois cards.",
-    effect = {ability = function(Player1,Player2)
+    loyalty = 5,
+    description = "Ability: Compre dois cards e depois descarte dois cards.",
+    effect = {ability = function(card,Player1,Player2)
     Functions.draw(Player1)
     Functions.draw(Player1)
     print(Player1.name.." comprou dois cards.")
@@ -1305,16 +1262,15 @@ Cards.Administrador = {
     end
 }
 }
-
 Cards.Librarian = {
     name = "Librarian",
     power = nil,
     cost = 0,
-    type = "Ally",
+    tipo = "Ally",
     stamina = 1,
-    lealdade = 3,
-    description = "ability: Se você tiver pelo menos 5 cards na mão, compre um card.",
-    effect = {ability = function(Player1,Player2)
+    loyalty = 3,
+    description = "Ability: Se você tiver pelo menos 5 cards na mão, compre um card.",
+    effect = {ability = function(card,Player1,Player2)
     if #Player1.hand > 4 then
         Functions.draw(Player1)
         print(Player1.name.." comprou um card.")
@@ -1324,38 +1280,91 @@ Cards.Librarian = {
     end
 }    
 }
--- Cards.LordeCubo = {
---     name = "Lorde Cubo",
+Cards.StormPriest = {
+    name = "Storm Priest",
+    power = nil,
+    cost = 1,
+    tipo = "Ally",
+    stamina = 1,
+    loyalty = 5,
+    description = "Ability: Storm +3.",
+    effect = {ability = function(card,Player1,Player2)
+        Functions.storm(Player1,3)
+    end
+}    
+}
+-- Cards.CubeLord = {
+--     name = "Cube Lord",
 --     power = nil,
 --     cost = 0,
---     type = "Ally",
+--     tipo = "Ally",
 --     stamina = 1,
---     lealdade = 10,
---     description = "ability: Escolha um - coloque o card do topo de seu deck no cubo; ou troque um card da sua mão por um card do cubo.",
---     effect = {ability = function(Player1,Player2)
---         local h = false
---         while h == false do
---             print("Escolha um:")
---             print("0 - Nenhum")
---             print("1 - Colocar o card do topo do deck no cubo")
---             print("2 - Trocar um card da mão por um card do cubo")
---             Functions.printzone(topo)
---             local opcao = tonumber(io.read())
---             if opcao ~= nil and opcao == 0 then
---                 h = true
---             elseif opcao == 1 then
---                 cubo[#cubo] = Player1.deck[#Player1.deck]
---                 Player1.deck[#Player1.deck] = nil
---                 h = true
---             elseif opcao == 2 then
---                 
---             else
+--     loyalty = 12,
+--     description = "Ability: Choose one - Add the top card of your deck to the Cube; or add a card from the Cube to your hand then add a card from your hand to the Cube.",
+--     effect = {ability = function(card,Player1,Player2)
+--         if cube ~= {} then problema aquiAQUIAQUIAQUIAQUIAQUIAQUIAQUIAQUIAQUIAQUI
+--             local cube = {}
+--             local h = false
+--             while h == false do
+--                 print("Choose one:")
+--                 print("0 - None")
+--                 print("1 - Add the top card of your deck to the Cube")
+--                 print("2 - Switch a card from your hand with one from the Cube")
+--                 local opcao = tonumber(io.read())
+--                 if opcao == 0 then
+--                     h = true
+--                 elseif opcao == 1 then
+--                     cube[#cube+1] = Player1.deck[#Player1.deck]
+--                     Player1.deck[#Player1.deck] = nil
+--                     h = true
+--                 elseif opcao == 2 then
+--                     local c = false
+--                     while c == false do
+--                         print("Add a card from the Cube to your hand:")
+--                         Functions.printzone(cube)
+--                         local option = tonumber(io.read())
+--                         if option <= #cube then
+--                             Player1.hand[#Player1.hand+1] = cube[option]
+--                             while option <= #cube do
+--                                 cube[option] = cube[option+1]
+--                                 option = option+1
+--                             end
+--                             c = true
+--                         else
+--                             print("SELECT A VALID OPTION! :X")
+--                         end
+--                         
+--                         local g = false
+--                         while g == false do
+--                             print("Add a card from your hand to the Cube:")
+--                             Functions.printzone(Player1.hand)
+--                             local option = tonumber(io.read())
+--                             if option <= #Player1.hand and option > 0 then
+--                                 cube[#cube+1] = Player1.hand[option]
+--                                 while option <= #Player1.hand do
+--                                     Player1.hand[option] = Player1.hand[option+1]
+--                                     option = option+1
+--                                 end
+--                                 g = true
+--                             else
+--                                 print("SELECT A VALID OPTION! >.<")
+--                             end
+--                         end
+--                     end
+--                 else
+--                     print("SELECT A VALID OPTION!")
+--                 end
 --             end
 --         end
 --     end
 --     }
 -- }
--------------------MAGIA------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------MAGIC------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1367,10 +1376,10 @@ Cards.Providencia = {
     name = "Providência",
     power = nil,
     cost = 0,
-    type = "Magic",
+    tipo = "Spell",
     stamina = nil,
     description = "Compre dois cards.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     Functions.draw(Player1)
     Functions.draw(Player1)
     print(Player1.name.." comprou dois cards.")
@@ -1380,10 +1389,10 @@ Cards.Sorte = {
     name = "Sorte",
     power = nil,
     cost = 0,
-    type = "Magic",
+    tipo = "Spell",
     stamina = nil,
     description = "Receba 2 de gold.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     Functions.getgold(Player1)
     Functions.getgold(Player1)
     print(Player1.name.." recebeu 2 de gold.")
@@ -1393,10 +1402,10 @@ Cards.Suportar = {
     name = "Suportar",
     power = nil,
     cost = 0,
-    type = "Magic",
+    tipo = "Spell",
     stamina = nil,
     description = "Procure em seu deck por um card de Support e adicione-o à sua mão, depois seu deck é embaralhado.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     local h = false
     while h == false do
         print("Selecione um Support:")
@@ -1405,7 +1414,7 @@ effect = function(Player1,Player2)
         local opcao = tonumber(io.read())
         if opcao ~= nil and opcao == 0 then
             h = true
-        elseif opcao ~= nil and opcao <= #Player1.deck and Player1.deck[opcao].type == "Support" then
+        elseif opcao ~= nil and opcao <= #Player1.deck and Player1.deck[opcao].tipo == "Support" then
             Player1.hand[#Player1.hand+1] = Player1.deck[opcao]
             while opcao <= #Player1.deck do
                 Player1.deck[opcao] = Player1.deck[opcao+1]
@@ -1423,10 +1432,10 @@ Cards.Recrutar = {
     name = "Recrutar  ",
     power = nil,
     cost = 0,
-    type = "Magic",
+    tipo = "Spell",
     stamina = nil,
     description = "Procure em seu deck por um card de Unit e adicione-o à sua mão, depois seu deck é embaralhado.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     local h = false
     while h == false do
         print("Selecione um Support:")
@@ -1435,7 +1444,7 @@ effect = function(Player1,Player2)
         local opcao = tonumber(io.read())
         if opcao ~= nil and opcao == 0 then
             h = true
-        elseif opcao ~= nil and opcao <= #Player1.deck and Player1.deck[opcao].type == "Unit" then
+        elseif opcao ~= nil and opcao <= #Player1.deck and Player1.deck[opcao].tipo == "Unit" then
             Player1.hand[#Player1.hand+1] = Player1.deck[opcao]
             while opcao <= #Player1.deck do
                 Player1.deck[opcao] = Player1.deck[opcao+1]
@@ -1453,11 +1462,11 @@ Cards.Renascer = {
     name = "Renascer  ",
     power = nil,
     cost = 0,
-    type = "Magic",
+    tipo = "Spell",
     stamina = nil,
     zone = deck,
     description = "Invoque uma Unit de seu cemitério.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     local h = false
     while h == false do
         print("Selecione uma Unit no seu cemitério:")
@@ -1466,7 +1475,7 @@ effect = function(Player1,Player2)
         local opcao = tonumber(io.read())
         if opcao ~= nil and opcao == 0 then
             h = true
-        elseif Player1.graveyard[opcao].type == "Unit" then
+        elseif Player1.graveyard[opcao].tipo == "Unit" then
             local card = Player1.graveyard[opcao]
             Functions.summon(card,Player1)
             print(card.name.." foi invocado!")
@@ -1485,11 +1494,11 @@ Cards.Recuperar = {
     name = "Recuperar ",
     power = nil,
     cost = 0,
-    type = "Magic",
+    tipo = "Spell",
     stamina = nil,
     zone = deck,
     description = "Add a card from your graveyard to your hand.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     local h = false
     while h == false do
         print("Selecione um card em seu cemitério:")
@@ -1515,10 +1524,10 @@ Cards.Eliminar = {
     name = "Eliminar  ",
     power = nil,
     cost = 0,
-    type = "Magic",
+    tipo = "Spell",
     stamina = nil,
     description = "Destroy one of your opponent's units.",
-effect = function(Player1,Player2)
+effect = function(card,Player1,Player2)
     h = false
     while h == false do
         print("Selecione uma Unit para destroy:")
@@ -1536,6 +1545,118 @@ effect = function(Player1,Player2)
     end
 end
 }
+Cards.LayWaste = {
+    name = "Lay Waste",
+    power = nil,
+    cost = 0,
+    tipo = "Spell",
+    stamina = nil,
+    description = "Destroy all units.",
+    effect = function(card,Player1,Player2)
+    while #Player1.field > 0 do
+        Functions.destroy(Player1.field[#Player1.field],Player1,Player1,Player2)
+    end
+    while #Player2.field > 0 do
+        Functions.destroy(Player2.field[#Player2.field],Player1,Player2,Player1)
+    end
+end
+}
+Cards.Brainstorm = {
+    name = "Brainstorm",
+    power = nil,
+    cost = 0,
+    tipo = "Spell",
+    stamina = nil,
+    description = "Draw X cards then discard four cards; X = storm.",
+effect = function(card,Player1,Player2)
+    i = Player1.storm
+    while i > 0 do
+        Functions.draw(Player1)
+        i = i-1
+    end
+    Functions.discard(Player1)
+    Functions.discard(Player1)
+    Functions.discard(Player1)
+    Functions.discard(Player1)
+    print(Player1.name.." drew "..Player1.storm.." cards.")
+end    
+}
+Cards.Firestorm = {
+    name = "Firestorm ",
+    power = nil,
+    cost = 0,
+    tipo = "Spell",
+    stamina = nil,
+    description = "Causa 3X de damage ao oponente; X = storm.",
+effect = function(card,Player1,Player2)
+    Functions.damage(Player2,3*Player1.storm)
+    print(Player2.name.." perdeu "..3*Player1.storm.." de life.")
+end
+}
+Cards.Lifestorm = {
+    name = "Lifestorm ",
+    power = nil,
+    cost = 0,
+    tipo = "Spell",
+    stamina = nil,
+    description = "Ganhe 5X de life; X = storm.",
+effect = function(card,Player1,Player2)
+    Functions.getlife(Player1,5*Player1.storm)
+    print(Player1.name.." ganhou "..5*Player1.storm.." de life.")
+end
+}
+Cards.AsCaras = {
+    name = "As Caras    ",
+    power = nil,
+    cost = 0,
+    tipo = "Spell",
+    stamina = nil,
+    description = "Copie o effect do último Support que você conjurou.",
+effect = function(card,Player1,Player2)
+    if Player1.lastsupport.effect ~= nil and Player1.lastsupport ~= {} and Player1.lastsupport.name ~= "As Caras  " then
+        Player1.lastsupport.effect(Player1,Player2)
+    else
+        print("VOCÊ PRECISA cast UM Support ANTES DE JOGAR ESTE CARD! >.<")
+    end
+end
+}
+Cards.LevelUp = {
+    name = "Level Up    ",
+    power = nil,
+    cost = 0,
+    tipo = "Spell",
+    stamina = nil,
+    description = "Your level is raised by 1.",
+    effect = function(card,Player1,Player2)
+    Player1.level = Player1.level+1
+    print(Player1.name.."'s level was raised by 1 and is now "..Player1.level..".")
+end
+}
+-------------------TOTEM------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Cards.MindTotem = {
+    name = "Mind Totem  ",
+    power = nil,
+    cost = 0,
+    tipo = "Totem",
+    stamina = nil,
+    description = "At the end of your turn, if you have exactly five cards in your hand, draw a card.",
+    effect = {ateot = function(card,Player1,Player2)
+        if #Player1.hand == 5 then
+            Functions.draw(Player1)
+            print(Player1.name.." drew a card.")
+        end
+    end
+    }
+}
+
+
 -------------------EX------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1548,11 +1669,11 @@ Cards.ExDragon = {
     name = "Ex Dragon",
     power = 30,
     cost = 0,
-    type = "Unit",
+    tipo = "Unit",
     stamina = 1,
     description = "If summoned, destroy a unit your opponent controls. ULTRA: Receive 3 gold.",
     origin = Cards.Dragon,
-    effect = {ifsummoned = function(Player1,Player2)
+    effect = {ifsummoned = function(card,Player1,Player2)
         h = false
         while h == false do
             print("Select a unit to destroy:")
@@ -1569,7 +1690,7 @@ Cards.ExDragon = {
             end
         end
     end,
-    ultra = function(Player1,Player2)
+    ultra = function(card,Player1,Player2)
         Functions.getgold(Player1)
         Functions.getgold(Player1)
         Functions.getgold(Player1)
