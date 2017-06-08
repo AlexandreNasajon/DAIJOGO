@@ -17,10 +17,10 @@ Draft =  function()
         end
     
         i = 1
-        print("#","name     ","cost","type","power","Lealdade")
+        print("#","Name       ","Cost","Type","Power","Loyalty")
         print("--------------------------------------------------------")
         while i <= 5 do
-            print(i,Decks.Draftpool[i].name,Decks.Draftpool[i].cost,Decks.Draftpool[i].type,Decks.Draftpool[i].power,Decks.Draftpool[i].lealdade)
+            print(i,Decks.Draftpool[i].name,Decks.Draftpool[i].cost,Decks.Draftpool[i].tipo,Decks.Draftpool[i].power,Decks.Draftpool[i].loyalty)
             i = i+1
         end
         
@@ -52,10 +52,10 @@ Draft =  function()
         end
     
         i = 1
-        print("#","name     ","cost","type","power","Lealdade")
+        print("#","Name       ","Cost","Type","Power","Loyalty")
         print("--------------------------------------------------------")
         while i <= 5 do
-            print(i,Decks.Draftpool[i].name,Decks.Draftpool[i].cost,Decks.Draftpool[i].type,Decks.Draftpool[i].power,Decks.Draftpool[i].lealdade)
+            print(i,Decks.Draftpool[i].name,Decks.Draftpool[i].cost,Decks.Draftpool[i].tipo,Decks.Draftpool[i].power,Decks.Draftpool[i].loyalty)
             i = i+1
         end
         
@@ -76,10 +76,10 @@ Draft =  function()
         end
     end
 end
-------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 os.execute("clear")
-print("     DAIJOGO: primeira edição")
+print("      DAIJOGO: first edition")
 print("           Versão 1.4.2")
 print("           Game Designer")
 print("         Alexandre Nasajon        ")
@@ -94,33 +94,33 @@ print("               Kiki")
 print("               peize")
 -- print("         Leonardo Kaplan")
 -- print("         Thiago Rebello")
-print("Qual é o name do Player 1?")
+print("What's player 1's name")
 Player[1].name = io.read()
-print("Então o Player 1 se chama "..Player[1].name.."!")
-print("E qual o name do Player 2?")
+print("So player 1's name is "..Player[1].name.."!")
+print("And what's player 2's name?")
 Player[2].name = io.read()
-print("Então o Player 2 se chama "..Player[2].name.."!")
-print("Imagino que vocês leram o manual, certo? Certo! Então boa sorte!")
+print("So player 2's name is "..Player[2].name.."!")
+print("I imagine both player read the manual, right? Right! Then good luck!")
 print("-----GAME STARTOOOOO-----")
-print("Selecionem os modos de jogo:")
-print("1 - Padrão")
+print("Select the game's mode:")
+print("1 - Standard")
 print("2 - Tchebo")
 local opcao = tonumber(io.read())
 if opcao == 2 then
     modotchebo = true
 end
-print("Selecionem o formato de jogo:")
-print("1 - Padrão")
+print("Select the game's format:")
+print("1 - Standard")
 print("2 - Draft")
 local opcao = tonumber(io.read())
 if opcao == 1 then
-    print("Então vocês querem jogar o modo padrão, não é?")
-    print("Escolham seus decks!")
+    print("Standard format it is!")
+    print("Choose your decks!")
     local z = false
     local e = false
     while z == false do
-        print(Player[1].name.." deve escolher um deck:")
-        print("1 - Aristocratas")
+        print(Player[1].name.." must choose a deck:")
+        print("1 - Aristocrats")
         print("2 - Storm")
         print("3 - Blink")
         local opcao = tonumber(io.read())
@@ -155,12 +155,12 @@ if opcao == 1 then
             end
             z = true
         else
-            print("ESCOLHA UM DECK!")
+            print("CHOOSE A DECK!")
         end
     end
     while e == false do
-        print(Player[2].name.." deve escolher um deck:")
-        print("1 - Aristocratas")
+        print(Player[2].name.." must choose a deck:")
+        print("1 - Aristocrats")
         print("2 - Storm")
         print("3 - Blink")
         local opcao = tonumber(io.read())
@@ -195,12 +195,12 @@ if opcao == 1 then
             end
             e = true
         else
-            print("ESCOLHA UM DECK!")
+            print("CHOOSE A DECK!")
         end
     end
 elseif opcao == 2 then
     Draft()
 end
-print("É isso aí, peize. Divirtam-se! :3 :3 :3")
+print("That's it, peize! Have fun! :3 :3 :3")
 
-Functions.jogo()
+Functions.game()
