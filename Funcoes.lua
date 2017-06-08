@@ -83,7 +83,7 @@ Functions.discard = function(Player1)
             print("YOU MUST DISCARD A CARD!")
         end
     end
-    if Player1.graveyard[#Player1.graveyard].type ~= "Support" then
+    if Player1.graveyard[#Player1.graveyard].tipo == "Unit" then
         if Player1.graveyard[#Player1.graveyard].effect.ifdiscarded then
             Player1.graveyard[#Player1.graveyard].effect.ifdiscarded(Player1,Player2)
         end
@@ -93,9 +93,9 @@ end
 Functions.printzone = function(zone)
 
     local i = 1
-    print("#","Name       ","Cost","Type","Power","Loyalty")
+    print("#","Name       ","Cost","tipo","Power","Loyalty")
     while i <= #zone do
-        print(i,zone[i].name,zone[i].cost,zone[i].type,zone[i].power,zone[i].loyalty)
+        print(i,zone[i].name,zone[i].cost,zone[i].tipo,zone[i].power,zone[i].loyalty)
         i = i+1
     end    
 end
@@ -103,7 +103,7 @@ end
 Functions.printcard = function(card)
     print("Name: "..card.name)
     print("Cost: "..card.cost)
-    print("Type: "..card.type)
+    print("tipo: "..card.tipo)
     if card.power then
         print("power: "..card.power)
     end
@@ -115,13 +115,13 @@ end
 -----------DESTROY------------
 Functions.destroy = function(card,Destruidor,Player,oponente)
     Player.graveyard[#Player.graveyard+1] = card
-    if card.type == "Unit" then
+    if card.tipo == "Unit" then
         local j = Functions.find(Player.field,card)
         while j <= #Player.field do
             Player.field[j] = Player.field[j+1]
             j = j+1
         end
-    elseif card.type == "Ally" then
+    elseif card.tipo == "Ally" then
         local j = Functions.find(Player.room,card)
         while j <= #Player.room do
             Player.room[j] = Player.room[j+1]
@@ -131,7 +131,7 @@ Functions.destroy = function(card,Destruidor,Player,oponente)
     print(card.name.." foi destruído.")
     if card.effect then
         if card.effect.ifdies then
-            card.effect.ifdies(Player,oponente) --receber o card tbm como primeiro argumento
+            card.effect.ifdies(card,Player,oponente)
         else
         end
     end
@@ -177,12 +177,12 @@ end
 
 -----------CAST----------------------------------------------------
 Functions.cast = function(card,Player1,Player2)
-    if card.type == "Support" then
-        card.effect(Player1,Player2)
+    if card.tipo == "Support" then
+        card.effect(card,Player1,Player2)
         Player1.graveyard[#Player1.graveyard+1] = card
         Player1.lastsupport = card
-    elseif card.type == "Magic" then
-        card.effect(Player1,Player2)
+    elseif card.tipo == "Spell" then
+        card.effect(card,Player1,Player2)
         Player1.graveyard[#Player1.graveyard+1] = card
         Player1.magic = Player1.magic-1
     end
@@ -190,7 +190,7 @@ end
 
 -----------SUMMON-------------------------------------------------------
 Functions.summon = function(card,Player1,Player2)
-    if card.type == "Unit" then
+    if card.tipo == "Unit" then
         Player1.field[#Player1.field+1] = card
         print(card.name.." was summoned.")
         if card.effect.ifsummoned then
@@ -200,7 +200,7 @@ Functions.summon = function(card,Player1,Player2)
 end
 -----------CONVOCAR----------------------------------------------------------
 Functions.convocar = function(card,Player1,Player2)
-    if card.type == "Ally" then
+    if card.tipo == "Ally" then
         Player1.room[#Player1.room+1] = card
         print(card.name.." foi convocado.")
         if card.effect.ifconvocado then
@@ -211,11 +211,11 @@ end
 
 ----------PLAY-------------------------------------------------------
 Functions.play = function(card,Player1,Player2)
-    if card.type == "Unit" then
+    if card.tipo == "Unit" then
         Functions.summon(card,Player1,Player2)
-    elseif card.type == "Support" or card.type == "Magic" then
+    elseif card.tipo == "Support" or card.tipo == "Spell" then
         Functions.cast(card,Player1,Player2)
-    elseif card.type == "Ally" then
+    elseif card.tipo == "Ally" then
         Functions.convocar(card,Player1,Player2)
     end
 end
@@ -264,7 +264,7 @@ Functions.endturn = function(Player1,Player2)
                 Player2.room[h].stamina = 1
                 h = h-1
             end
-            Player2.magia = 1
+            Player2.magic = 1
 end
 ------------turn---------------
 Functions.turn = function(t)
@@ -272,7 +272,7 @@ Functions.turn = function(t)
     while t == 1 or t == 2 do
         
         print("It's player "..Player[t].name.." turn!")
-        print("Life: "..Player[t].life,"Gold: "..Player[t].gold,"Magic: "..Player[t].magic,"Storm: "..Player[t].storm)
+        print("Life: "..Player[t].life,"Gold: "..Player[t].gold,"Magic: "..Player[t].magic,"Storm: "..Player[t].storm,"Level: "..Player[t].level)
         print("1 - Hand")
         print("2 - Field")
         print("3 - Room")
@@ -312,16 +312,24 @@ Functions.turn = function(t)
                         opt = 0
                         break
                         
-                    elseif opcao == 1 and Player[t].gold >= Player[t].hand[opt].cost then
+                    elseif opcao == 1 and Player[t].hand[opt].tipo == "Spell" and Player[t].magic > 0 and Player[t].gold >= Player[t].hand[opt].cost then
                         Player[t].gold = Player[t].gold - Player[t].hand[opt].cost
                         Functions.play(Player[t].hand[opt],Player[t],Player[y])
                             while opt <= #Player[t].hand do
                                 Player[t].hand[opt] = Player[t].hand[opt+1]
                                 opt = opt+1
                             end
-                            
+                    elseif opcao == 1 and Player[t].hand[opt].tipo ~= "Spell" and Player[t].gold >= Player[t].hand[opt].cost then
+                        Player[t].gold = Player[t].gold - Player[t].hand[opt].cost
+                        Functions.play(Player[t].hand[opt],Player[t],Player[y])
+                            while opt <= #Player[t].hand do
+                                Player[t].hand[opt] = Player[t].hand[opt+1]
+                                opt = opt+1
+                            end
                     elseif opcao == 1 and Player[t].gold < Player[t].hand[opt].cost then
                         print("YOU DON'T HAVE ENOUGH GOLD! :x")
+                    elseif opcao == 1 and Player[t].hand[opt].tipo == "Spell" and Player[t].magic < 1 then
+                        print("YOU CAN'T PLAYER ANOTHER MAGIC CARD THIS TURN!")
                     else
                         print("SELECT A VALID OPTION")
                     end
@@ -445,17 +453,17 @@ Functions.turn = function(t)
                         end
 -------------------------------ability------------------------------------------------------------------------------------------
                     elseif decisao == 2 and card.effect.ability and card.stamina > 0 then
-                        card.effect.ability(Player[t],Player[y])
+                        card.effect.ability(card,Player[t],Player[y])
                         card.stamina = card.stamina-1
                         break
                     elseif decisao == 2 and card.effect.ability and card.stamina < 1 then
                         print("THAT UNIT HAS NO ENERGY LEFT!")
                         break
                     elseif decisao == 2 and Player[t].ultra > 0 and card.effect.ultra and card.stamina > 0 and card.effect.ability == nil then
-                        card.effect.ultra(Player[t],Player[y])
+                        card.effect.ultra(card,Player[t],Player[y])
                         Player[t].ultra = Player[t].ultra-1
                     elseif decisao == 3 and Player[t].ultra > 0 and card.effect.ultra and card.stamina > 0 then
-                        card.effect.ultra(Player[t],Player[y])
+                        card.effect.ultra(card,Player[t],Player[y])
                         Player[t].ultra = Player[t].ultra-1
                     else
                         print("THAT IS NOT A VALID OPTION!")
@@ -517,7 +525,7 @@ Functions.turn = function(t)
                 elseif decisao == 0 then
                     break
                 elseif decisao == 1 and card.stamina > 0 then
-                    card.effect.ability(Player[t],Player[y])
+                    card.effect.ability(card,Player[t],Player[y])
                     card.loyalty = card.loyalty-1
                     card.stamina = card.stamina-1
                     if card.loyalty < 1 then
