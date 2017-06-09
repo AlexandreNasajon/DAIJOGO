@@ -128,7 +128,7 @@ Functions.destroy = function(card,Destruidor,Player,oponente)
             j = j+1
         end
     end
-    print(card.name.." foi destruído.")
+    print(card.name.." was destroyed.")
     if card.effect then
         if card.effect.ifdies then
             card.effect.ifdies(card,Player,oponente)
@@ -137,7 +137,7 @@ Functions.destroy = function(card,Destruidor,Player,oponente)
     end
     if modotchebo and Destruidor then 
         Destruidor.gold = Destruidor.gold+card.cost
-        print(Destruidor.name.." recebeu "..card.cost.." de gold!")
+        print(Destruidor.name.." received "..card.cost.." gold!")
     end
 end
 ------------exile----------------------------------------------------------
@@ -148,7 +148,7 @@ Functions.exile = function(card,Player,oponente)
         Player.field[j] = Player.field[j+1]
         j = j+1
     end
-    print(card.name.." foi exilado.")
+    print(card.name.." was exiled.")
 end
 -----------combat---------------------------------------------------------
 Functions.combat = function(atacante,defensor,Player1,Player2)
@@ -208,7 +208,16 @@ Functions.convocar = function(card,Player1,Player2)
         end
     end
 end
-
+----------BUILD-------------------------------------------------------
+Functions.build = function(card,Player1,Player2)
+    if card.tipo == "Totem" then
+        Player1.temple[#Player1.temple+1] = card
+        print(card.name.." was built.")
+        if card.effect.ifbuilt then
+            card.effect.ifbuilt(card,Player1,Player2)
+        end
+    end
+end
 ----------PLAY-------------------------------------------------------
 Functions.play = function(card,Player1,Player2)
     if card.tipo == "Unit" then
@@ -217,6 +226,8 @@ Functions.play = function(card,Player1,Player2)
         Functions.cast(card,Player1,Player2)
     elseif card.tipo == "Ally" then
         Functions.convocar(card,Player1,Player2)
+    elseif card.tipo == "Totem" then
+        Functions.build(card,Player1,Player2)
     end
 end
 
@@ -242,29 +253,62 @@ Functions.ability = function(card)
         print("THIS UNIT HAS NO ENERGY LEFT!")
     end
 end
------------end turn------------nao testada
+-----------End TURN------------nao testada
 Functions.endturn = function(Player1,Player2)
-            print(Player1.name.." turn ends.")
-            Player1.storm = 0
-            if #Player2.deck > 0 then
-                Functions.draw(Player2)
-                print(Player2.name.." draws a card.")
-            else
-                print(Player2.name.."'s deck has no more cards.")
+    eoteffects = {}
+-------------------Checks if there are any totem effects-----------------------
+        if #Player1.temple > 0 then
+            local i = 1
+            while i <= #Player1.temple do
+                local cardeot = {card = Player1.temple[i],eot = Player1.temple[i].effect.ateot}
+                eoteffects[#eoteffects+1] = cardeot
+                i = i+1
             end
-            Functions.getgold(Player2)
-            print("Player "..Player2.name.." receives 1 gold.")
-            local i = #Player2.field
-            while i > 0 do
-                Player2.field[i].stamina = 1
-                i = i-1
+        end
+------------------Checks if there are any unit effects-------------------------
+        if #Player1.field > 0 then
+            local i = 1
+            while i <= #Player1.field do
+                if Player1.field[i].effect.ateot then
+                    local cardeot = {card = Player1.field[i],eot = Player1.field[i].effect.ateot}
+                    eoteffects[#eoteffects+1] = cardeot
+                    i = i+1
+                end
             end
-            local h = #Player2.room
-            while h > 0 do
-                Player2.room[h].stamina = 1
-                h = h-1
+        end
+-----------------Activates the effects----------------------------
+        if #eoteffects > 0 then
+            local i = 1
+            while i <= #eoteffects do
+                local card = eoteffects[i].card
+                local eot = eoteffects[i].eot
+                eot(card,Player[t],Player[y])
+                i = i+1
             end
-            Player2.magic = 1
+        end
+-----------------Other eot stuff------------------------------
+
+        print(Player1.name.." turn ends.")
+        Player1.storm = 0
+        if #Player2.deck > 0 then
+            Functions.draw(Player2)
+            print(Player2.name.." draws a card.")
+        else
+            print(Player2.name.."'s deck has no more cards.")
+        end
+        Functions.getgold(Player2)
+        print("Player "..Player2.name.." receives 1 gold.")
+        local i = #Player2.field
+        while i > 0 do
+            Player2.field[i].stamina = 1
+            i = i-1
+        end
+        local h = #Player2.room
+        while h > 0 do
+            Player2.room[h].stamina = 1
+            h = h-1
+        end
+        Player2.magic = 1
 end
 ------------turn---------------
 Functions.turn = function(t)
@@ -276,11 +320,10 @@ Functions.turn = function(t)
         print("1 - Hand")
         print("2 - Field")
         print("3 - Room")
-        print("4 - Graveyard")
-        print("5 - End turn")
-        if #Player[t].extra > 0 then
-            print("6 - Extra Deck")
-        end
+        print("4 - Temple")
+        print("5 - Graveyard")
+        print("6 - End turn")
+        print("7 - Extra Deck")
         
         local option = tonumber(io.read())
 ----------SUA MÃO--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -540,6 +583,33 @@ Functions.turn = function(t)
         end
         
         while option == 4 do
+            print("Your temple:")
+            print("0 - Return")
+            Functions.printzone(Player[t].temple)
+            
+            local option = tonumber(io.read())
+            
+            if option == nil then
+                print("THAT IS NOT A VALID OPTION!")
+                    break
+            elseif option == 0 then
+                    break
+            elseif option <= #Player[t].temple then
+                local card = Player[t].temple[option]
+                Functions.printcard(card)
+                print("0 - Return")
+                if option == nil then
+                    print("THAT IS NOT A VALID OPTION!")
+                        break
+                elseif option == 0 then
+                        break
+                else
+                    print("THAT IS NOT A VALID OPTION!")
+                end
+            end
+        end
+        
+        while option == 5 do
             print("Your graveyard:")
             print("0 - Return")
             Functions.printzone(Player[t].graveyard)
@@ -553,12 +623,12 @@ Functions.turn = function(t)
             end
         end
         
-        if option == 5 then
+        if option == 6 then
             Functions.endturn(Player[t],Player[y])
             break
         end
         
-        while #Player[t].extra > 0 and option == 6 do
+        while option == 7 do
             print("Your extra deck:")
             print("0 - Return")
             Functions.printzone(Player[t].extra)
