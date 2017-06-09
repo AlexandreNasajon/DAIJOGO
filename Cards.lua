@@ -2,6 +2,29 @@ local Player = require("Player")
 local Functions = require("Functions")
 local Cards = {}
 
+-- Cards.LampDjinn = {
+--     name = "Lamp Djinn  ",
+--     power = 21,
+--     cost = 3,
+--     tipo = "Unit",
+--     stamina = 1,
+--     description = "If summoned, choose three: draw a card; or receive 1 gold; or gain 21 life; or add a support from your graveyard to your hand; or a unit gains 5 power; or a unit loses 7 power.",
+--     effect = {ifsummoned = function(card,Player1,Player2)
+--         local i = 3
+--         while i > 0 do
+--             print("Choose "..i..":")
+--             print("1 - Draw a card")
+--             print("2 - Receive 1 gold")
+--             print("3 - Gain 21 life")
+--             print("4 - Add a support from your graveyard to your hand")
+--             print("5 - A unit gains 5 power")
+--             print("6 - A unit loses 7 power")
+--             local option = tonumber(io.read())
+--             i = i-1
+--         end
+--     end
+--     }
+-- }
 Cards.Traitor = {
     name = "Traitor   ",
     power = 10,
@@ -16,22 +39,40 @@ Cards.Traitor = {
     end
 }
 }
+Cards.GreenSlime = {
+    name = "Green Slime ",
+    power = 12,
+    cost = 1,
+    tipo = "Unit",
+    stamina = 1,
+    description = "At the end of your turn, summon a copy of this unit.",
+    effect = {ateot = function(card,Player1,Player2)
+        tempcard = {}
+        Functions.copiar(card,tempcard)
+        Functions.summon(tempcard,Player1,Player2)
+        tempcard = {}
+    end
+    }
+}
 Cards.Sphinx = {
     name = "Sphinx    ",
     power = 19,
     cost = 4,
     tipo = "Unit",
     stamina = 1,
-    description = "Ability: Draw a card. ULTRA: draw three cards.",
+    description = "Ability: Gain 4 life for each card in your hand. ULTRA: draw five cards.",
     effect = {ability = function(card,Player1,Player2)
-        Functions.draw(Player1)
-        print(Player1.name.." drew a card.")
+        local x = #Player1.hand
+        Functions.getlife(Player1,4*x)
+        print(Player1.name.." gained "..4*x.." life.")
     end,
     ultra = function(card,Player1,Player2)
         Functions.draw(Player1)
         Functions.draw(Player1)
         Functions.draw(Player1)
-    print(Player1.name.." drew three cards.")
+        Functions.draw(Player1)
+        Functions.draw(Player1)
+    print(Player1.name.." drew five cards.")
 end
 }
 }
@@ -161,7 +202,7 @@ Cards.Dragon = {
     cost = 3,
     tipo = "Unit",
     stamina = 1,
-    description = "If summoned, destroy a unit you control. ULTRA: receive 3 gold.",
+    description = "If summoned, destroy a unit you control. ULTRA: receive 5 gold.",
     effect = {ifsummoned = function(card,Player1,Player2)
         local h = false
         while h == false do
@@ -180,7 +221,9 @@ Cards.Dragon = {
             Functions.getgold(Player1)
             Functions.getgold(Player1)
             Functions.getgold(Player1)
-            print(Player1.name.." received 3 gold.")
+            Functions.getgold(Player1)
+            Functions.getgold(Player1)
+            print(Player1.name.." received 5 gold.")
         end
 }
 }
@@ -533,10 +576,10 @@ Cards.Golem = {
     cost = 2,
     tipo = "Unit",
     stamina = 1,
-    description = "If summoned, gain 14 life. If destroyed, draw a card.",
+    description = "If summoned, gain 12 life. If destroyed, draw a card.",
 effect = {ifsummoned = function(card,Player1,Player2)
-        Functions.getlife(Player1,14)
-        print(Player1.name.." gained 14 life.")
+        Functions.getlife(Player1,12)
+        print(Player1.name.." gained 12 life.")
     end,
     ifdies = function(card,Player1,Player2)
         Functions.draw(Player1)
@@ -1655,8 +1698,54 @@ Cards.MindTotem = {
     end
     }
 }
-
-
+Cards.BurnTotem = {
+    name = "Burn Totem  ",
+    power = nil,
+    cost = 0,
+    tipo = "Totem",
+    stamina = nil,
+    description = "At the end of your turn, if you have 25 or less life, your opponent loses 10 life.",
+    effect = {ateot = function(card,Player1,Player2)
+        if #Player1.life < 26 then
+            Functions.damage(Player2,10)
+            print(Player2.name.." lost 10 life.")
+        end
+    end
+    }
+}
+Cards.AngelicTotem = {
+    name = "Angelic Totem",
+    power = nil,
+    cost = 0,
+    tipo = "Totem",
+    stamina = nil,
+    description = "At the end of your turn, if you have 107 or more life, summon an 'Angel'.",
+    effect = {ateot = function(card,Player1,Player2)
+        if #Player1.life > 106 then
+            tempcard = {}
+            Functions.copiar(Cards.Angel,tempcard)
+            Functions.summon(tempcard,Player1,Player2)
+            tempcard = {}
+        end
+    end
+    }
+}
+Cards.GrowthTotem = {
+    name = "Growth Totem",
+    power = nil,
+    cost = 0,
+    tipo = "Totem",
+    stamina = nil,
+    description = "At the end of your turn, if your level is 4 or higher, draw a card and receive 1 gold.",
+    effect = {ateot = function(card,Player1,Player2)
+        if Player1.level > 3 then
+            Functions.draw(Player1)
+            Functions.getgold(Player1)
+            print(Player1.name.." drew a card and receive 1 gold.")
+        end
+    end
+    }
+}
 -------------------EX------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
