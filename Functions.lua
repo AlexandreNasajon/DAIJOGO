@@ -103,7 +103,7 @@ end
 Functions.printcard = function(card)
     print("Name: "..card.name)
     print("Cost: "..card.cost)
-    print("tipo: "..card.tipo)
+    print("Type: "..card.tipo)
     if card.power then
         print("power: "..card.power)
     end
@@ -262,8 +262,8 @@ Functions.endturn = function(Player1,Player2)
             while i <= #Player1.temple do
                 local cardeot = {card = Player1.temple[i],eot = Player1.temple[i].effect.ateot}
                 eoteffects[#eoteffects+1] = cardeot
-                i = i+1
             end
+            i = i+1
         end
 ------------------Checks if there are any unit effects-------------------------
         if #Player1.field > 0 then
@@ -272,8 +272,9 @@ Functions.endturn = function(Player1,Player2)
                 if Player1.field[i].effect.ateot then
                     local cardeot = {card = Player1.field[i],eot = Player1.field[i].effect.ateot}
                     eoteffects[#eoteffects+1] = cardeot
-                    i = i+1
+                    
                 end
+                i = i+1
             end
         end
 -----------------Activates the effects----------------------------
