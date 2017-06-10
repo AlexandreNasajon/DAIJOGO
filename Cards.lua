@@ -593,7 +593,7 @@ Cards.Debtor = {
     cost = 1,
     tipo = "Unit",
     stamina = 1,
-    description = "If summoned, draw a card and gain 10 life. If destroyed, discard a card and you lose 20 life..",
+    description = "If summoned, draw a card and gain 10 life. If destroyed, discard a card and you lose 20 life.",
     effect = {ifsummoned = function(card,Player1,Player2)
         Functions.draw(Player1)
         Functions.getlife(Player1,10)
@@ -606,6 +606,28 @@ Cards.Debtor = {
     end
     Functions.damage(Player1,20)
     print(Player1.name.." lost 20 life.")
+end
+}
+}
+Cards.Rewarder = {
+    name = "Rewarder    ",
+    power = 14,
+    cost = 1,
+    tipo = "Unit",
+    stamina = 1,
+    description = "If summoned, discard a card and you lose 10 life. If destroyed, draw a card and you gain 20 life.",
+    effect = {ifsummoned = function(card,Player1,Player2)
+        if #Player1.hand > 0 then
+            Functions.discard(Player1)
+            print(Player1.name.." discarded a card.")
+        end
+        Functions.damage(Player1,10)
+        print(Player1.name.." lost 10 life.")
+    end,
+    ifdies = function(Player1)
+        Functions.draw(Player1)
+        Functions.getlife(Player1,20)
+        print(Player1.name.."drew a card and gained 20 life.")
 end
 }
 }
@@ -1229,23 +1251,23 @@ Cards.Blinker = {
     tipo = "Ally",
     stamina = 1,
     loyalty = 4,
-    description = "ability: Selecione uma Unit sua. Exile-a e depois invoque-a novamente.",
+    description = "Ability: Selecione uma Unit sua. Exile-a e depois invoque-a novamente.",
     effect = {ability = function(card,Player1,Player2)
         local h = false
         while h == false do
-            print("Selecione uma Unit:")
-            print("0 - Nenhuma")
+            print("Exile a unit:")
+            print("0 - None")
             Functions.printzone(Player1.field)
             local opcao = tonumber(io.read())
             if opcao ~= nil and opcao == 0 then
                 h = true
             elseif opcao ~= nil and opcao <= #Player1.field and opcao > 0 then
                 card = Player1.field[opcao]
-                Functions.exilar(Player1.field[opcao],Player1,Player2)
+                Functions.exile(Player1.field[opcao],Player1,Player2)
                 Functions.summon(card,Player1,Player2)
                 h = true
             else
-                print("SELECIONE UMA OPCAO VÁLIDA!")
+                print("SELECT A VALID OPTION!")
             end
         end
     end
@@ -1326,13 +1348,13 @@ Cards.Librarian = {
 Cards.StormPriest = {
     name = "Storm Priest",
     power = nil,
-    cost = 1,
+    cost = 0,
     tipo = "Ally",
     stamina = 1,
-    loyalty = 5,
-    description = "Ability: Storm +3.",
+    loyalty = 8,
+    description = "Ability: Storm +2.",
     effect = {ability = function(card,Player1,Player2)
-        Functions.storm(Player1,3)
+        Functions.storm(Player1,2)
     end
 }    
 }
@@ -1704,9 +1726,9 @@ Cards.BurnTotem = {
     cost = 0,
     tipo = "Totem",
     stamina = nil,
-    description = "At the end of your turn, if you have 25 or less life, your opponent loses 10 life.",
+    description = "At the end of your turn, if you have 50 or less life, your opponent loses 10 life.",
     effect = {ateot = function(card,Player1,Player2)
-        if #Player1.life < 26 then
+        if #Player1.life < 51 then
             Functions.damage(Player2,10)
             print(Player2.name.." lost 10 life.")
         end
@@ -1745,6 +1767,281 @@ Cards.GrowthTotem = {
         end
     end
     }
+}
+Cards.DiggerTotem = {
+    name = "Digger Totem",
+    power = nil,
+    cost = 0,
+    tipo = "Totem",
+    stamina = nil,
+    description = "At the end of your turn, if there are seven or more cards in your graveyard, add a unit from your graveyard to your hand.",
+    effect = {ateot = function(card,Player1,Player2)
+        if #Player1.graveyard > 6 then
+            local h = false
+            while h == false do
+                print("Select a unit from your graveyard:")
+                print("0 - None")
+                Functions.printzone(Player1.graveyard)
+                local opcao = tonumber(io.read())
+                if opcao ~= nil and opcao == 0 then
+                    h = true
+                elseif Player1.graveyard[opcao].tipo == "Unit" then
+                    local card = Player1.graveyard[opcao]
+                    Player1.hand[#Player1.hand+1] = card
+                    print(card.name.." was added to your hand.")
+                    while opcao <= #Player1.graveyard do
+                        Player1.graveyard[opcao] = Player1.graveyard[opcao+1]
+                        opcao = opcao+1
+                    end
+                    h = true
+                else
+                    print("SELECT A VALID OPTION!")
+                end
+            end
+        end
+    end
+    }
+}
+-------------------HERO------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Cards.BikerLeo = {
+    name = "Biker Leo   ",
+    power = 7,
+    cost = 1,
+    tipo = "Unit",
+    stamina = 1,
+    description = "If summoned, exile another unit you control, then summon it. At the end of your turn, add this card to your hand.",
+    effect = {ifsummoned = function(card,Player1,Player2)
+        local h = false
+        while h == false do
+            print("Exile a unit:")
+            print("0 - None")
+            Functions.printzone(Player1.field)
+            local opcao = tonumber(io.read())
+            if opcao ~= nil and opcao == 0 then
+                h = true
+            elseif opcao ~= nil and opcao <= #Player1.field and opcao > 0 and Player1.field[opcao].name ~= "Biker Leo   " then
+                card = Player1.field[opcao]
+                Functions.exile(Player1.field[opcao],Player1,Player2)
+                Functions.summon(card,Player1,Player2)
+                h = true
+            else
+                print("SELECT A VALID OPTION!")
+            end
+        end
+    end,
+    ateot = function(card,Player1,Player2)
+        local j = Functions.find(Player1.field,card)
+        while j <= #Player1.field do
+            Player1.field[j] = Player1.field[j+1]
+            j = j+1
+        end
+        Player1.hand[#Player1.hand+1] = card
+        print(card.name.." was added to "..Player1.name.."'s hand.")
+    end
+    }
+}
+Cards.Val = {
+    name = "Val         ",
+    power = 9,
+    cost = 1,
+    tipo = "Unit",
+    stamina = 1,
+    description = "If summoned, an enemy unit loses 4 power. At the end of your turn, add this card to your hand.",
+    effect = {ifsummoned = function(card,Player1,Player2)
+    local h = false
+        while h == false do
+            print("An enemy unit loses 4 power:")
+            print("0 - None")
+            Functions.printzone(Player2.field)
+            local opcao = tonumber(io.read())
+            if opcao ~= nil and opcao == 0 then
+                h = true
+            elseif opcao <= #Player2.field and opcao > 0 then
+                local enemy = Player2.field[opcao]
+                enemy.power = enemy.power-4
+                print(enemy.name.." lost 4 power.")
+                h = true
+            else
+                print("SELECT A VALID OPTION!")
+            end
+        end
+        end,
+        ateot = function(card,Player1,Player2)
+        local j = Functions.find(Player1.field,card)
+        while j <= #Player1.field do
+            Player1.field[j] = Player1.field[j+1]
+            j = j+1
+        end
+        Player1.hand[#Player1.hand+1] = card
+        print(card.name.." was added to "..Player1.name.."'s hand.")
+    end
+}
+}
+Cards.Paim = {
+    name = "Paim",
+    power = 8,
+    cost = 1,
+    tipo = "Unit",
+    stamina = 1,
+    description = "",
+    effect = {a = function(card,Player1,Player2)
+        
+        
+        
+            ateot = function(card,Player1,Player2)
+        local j = Functions.find(Player1.field,card)
+        while j <= #Player1.field do
+            Player1.field[j] = Player1.field[j+1]
+            j = j+1
+        end
+        Player1.hand[#Player1.hand+1] = card
+        print(card.name.." was added to "..Player1.name.."'s hand.")
+    end
+end
+}
+}
+Cards.Isa = {
+    name = "Isa",
+    power = 8,
+    cost = 1,
+    tipo = "Unit",
+    stamina = 1,
+    description = "",
+    effect = {a = function(card,Player1,Player2)
+        
+        
+        
+            ateot = function(card,Player1,Player2)
+        local j = Functions.find(Player1.field,card)
+        while j <= #Player1.field do
+            Player1.field[j] = Player1.field[j+1]
+            j = j+1
+        end
+        Player1.hand[#Player1.hand+1] = card
+        print(card.name.." was added to "..Player1.name.."'s hand.")
+    end
+end
+}
+}
+Cards.Pougy = {
+    name = "Pougy",
+    power = 8,
+    cost = 1,
+    tipo = "Unit",
+    stamina = 1,
+    description = "",
+    effect = {a = function(card,Player1,Player2)
+        
+        
+            ateot = function(card,Player1,Player2)
+        local j = Functions.find(Player1.field,card)
+        while j <= #Player1.field do
+            Player1.field[j] = Player1.field[j+1]
+            j = j+1
+        end
+        Player1.hand[#Player1.hand+1] = card
+        print(card.name.." was added to "..Player1.name.."'s hand.")
+    end
+end
+}
+}
+Cards.Nasa = {
+    name = "Nasa",
+    power = 8,
+    cost = 1,
+    tipo = "Unit",
+    stamina = 1,
+    description = "",
+    effect = {a = function(card,Player1,Player2)
+        
+        
+        
+            ateot = function(card,Player1,Player2)
+        local j = Functions.find(Player1.field,card)
+        while j <= #Player1.field do
+            Player1.field[j] = Player1.field[j+1]
+            j = j+1
+        end
+        Player1.hand[#Player1.hand+1] = card
+        print(card.name.." was added to "..Player1.name.."'s hand.")
+    end
+end
+}
+}
+Cards.Tchebo = {
+    name = "Tchebo",
+    power = 8,
+    cost = 1,
+    tipo = "Unit",
+    stamina = 1,
+    description = "",
+    effect = {a = function(card,Player1,Player2)
+        
+        
+        
+            ateot = function(card,Player1,Player2)
+        local j = Functions.find(Player1.field,card)
+        while j <= #Player1.field do
+            Player1.field[j] = Player1.field[j+1]
+            j = j+1
+        end
+        Player1.hand[#Player1.hand+1] = card
+        print(card.name.." was added to "..Player1.name.."'s hand.")
+    end
+end
+}
+}
+Cards.Jonhzera = {
+    name = "Johnzera",
+    power = 8,
+    cost = 1,
+    tipo = "Unit",
+    stamina = 1,
+    description = "",
+    effect = {a = function(card,Player1,Player2)
+        
+        
+        
+            ateot = function(card,Player1,Player2)
+        local j = Functions.find(Player1.field,card)
+        while j <= #Player1.field do
+            Player1.field[j] = Player1.field[j+1]
+            j = j+1
+        end
+        Player1.hand[#Player1.hand+1] = card
+        print(card.name.." was added to "..Player1.name.."'s hand.")
+    end
+end
+}
+}
+Cards.Kapuran = {
+    name = "Kapuran",
+    power = 8,
+    cost = 1,
+    tipo = "Unit",
+    stamina = 1,
+    description = "",
+    effect = {a = function(card,Player1,Player2)
+        
+        
+            ateot = function(card,Player1,Player2)
+        local j = Functions.find(Player1.field,card)
+        while j <= #Player1.field do
+            Player1.field[j] = Player1.field[j+1]
+            j = j+1
+        end
+        Player1.hand[#Player1.hand+1] = card
+        print(card.name.." was added to "..Player1.name.."'s hand.")
+    end
+end
+}
 }
 -------------------EX------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
