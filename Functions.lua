@@ -93,7 +93,7 @@ end
 Functions.printzone = function(zone)
 
     local i = 1
-    print("#","Name       ","Cost","Type","Power","Loyalty")
+    print("#","Name         ","Cost","Type","Power","Loyalty")
     while i <= #zone do
         print(i,zone[i].name,zone[i].cost,zone[i].tipo,zone[i].power,zone[i].loyalty)
         i = i+1
@@ -156,21 +156,21 @@ Functions.combat = function(atacante,defensor,Player1,Player2)
     if atacante.power > defensor.power then
         Functions.destroy(defensor,Player1,Player2,Player1)
         if atacante.effect.ifdestroys then
-            atacante.effect.ifdestroys(Player1,Player2)
+            atacante.effect.ifdestroys(atacante,Player1,Player2,defensor)
         end
     elseif atacante.power == defensor.power then
         Functions.destroy(defensor,Player1,Player2,Player1)
         Functions.destroy(atacante,Player1,Player1,Player2)
         if atacante.effect.ifdestroys then
-            atacante.effect.ifdestroys(Player1,Player2)
+            atacante.effect.ifdestroys(atacante,Player1,Player2,defensor)
         end
         if defensor.effect.ifdestroys then
-            defensor.effect.ifdestroys(Player2,Player1)
+            defensor.effect.ifdestroys(defensor,Player2,Player1,atacante)
         end
     elseif atacante.power < defensor.power then
         Functions.destroy(atacante,Player1,Player1,Player2)
         if defensor.effect.ifdestroys then
-            defensor.effect.ifdestroys(Player2,Player1)
+            defensor.effect.ifdestroys(defensor,Player2,Player1,atacante)
         end
     end
 end
@@ -202,7 +202,7 @@ end
 Functions.convocar = function(card,Player1,Player2)
     if card.tipo == "Ally" then
         Player1.room[#Player1.room+1] = card
-        print(card.name.." foi convocado.")
+        print(card.name.." was called.")
         if card.effect.ifconvocado then
             card.effect.ifconvocado(card,Player1,Player2)
         end
@@ -262,8 +262,8 @@ Functions.endturn = function(Player1,Player2)
             while i <= #Player1.temple do
                 local cardeot = {card = Player1.temple[i],eot = Player1.temple[i].effect.ateot}
                 eoteffects[#eoteffects+1] = cardeot
+                i = i+1
             end
-            i = i+1
         end
 ------------------Checks if there are any unit effects-------------------------
         if #Player1.field > 0 then
@@ -272,7 +272,6 @@ Functions.endturn = function(Player1,Player2)
                 if Player1.field[i].effect.ateot then
                     local cardeot = {card = Player1.field[i],eot = Player1.field[i].effect.ateot}
                     eoteffects[#eoteffects+1] = cardeot
-                    
                 end
                 i = i+1
             end
@@ -358,18 +357,22 @@ Functions.turn = function(t)
                         
                     elseif opcao == 1 and Player[t].hand[opt].tipo == "Spell" and Player[t].magic > 0 and Player[t].gold >= Player[t].hand[opt].cost then
                         Player[t].gold = Player[t].gold - Player[t].hand[opt].cost
-                        Functions.play(Player[t].hand[opt],Player[t],Player[y])
-                            while opt <= #Player[t].hand do
-                                Player[t].hand[opt] = Player[t].hand[opt+1]
-                                opt = opt+1
+                        local w = opt
+                            while w <= #Player[t].hand do
+                                Player[t].hand[w] = Player[t].hand[w+1]
+                                w = w+1
                             end
+                        Functions.play(card,Player[t],Player[y])
+                        break
                     elseif opcao == 1 and Player[t].hand[opt].tipo ~= "Spell" and Player[t].gold >= Player[t].hand[opt].cost then
                         Player[t].gold = Player[t].gold - Player[t].hand[opt].cost
-                        Functions.play(Player[t].hand[opt],Player[t],Player[y])
-                            while opt <= #Player[t].hand do
-                                Player[t].hand[opt] = Player[t].hand[opt+1]
-                                opt = opt+1
+                        local w = opt
+                            while w <= #Player[t].hand do
+                                Player[t].hand[w] = Player[t].hand[w+1]
+                                w = w+1
                             end
+                        Functions.play(card,Player[t],Player[y])
+                        break
                     elseif opcao == 1 and Player[t].gold < Player[t].hand[opt].cost then
                         print("YOU DON'T HAVE ENOUGH GOLD! :x")
                     elseif opcao == 1 and Player[t].hand[opt].tipo == "Spell" and Player[t].magic < 1 then
