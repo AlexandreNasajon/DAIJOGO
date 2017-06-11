@@ -1,14 +1,10 @@
-CARD GAME eh um jogo desenvolvido por Alexandre Nasajon, com o objetivo de treinar suas habilidades como aprendiz de programador.
+DAIJOGO is a game programmed by Alexandre Nasajon and developed in conjunction with his friends. It is heavily (and I mean HEAVILY) influenced by Magic: the Gathering, Yu-Gi-Oh!, Pokémon TCG, Hearthstone, Faeria and other games like those. Lots os elements in DAIJOGO are copies of some elements from those games, so I don't expect to make any money out of DAIJOGO at this point.
 
-1 - Objetivo do Jogo
-  O objetivo do jogo CARD GAME eh vencer uma partida contra seu oponente.
-  Cada jogador começa o jogo com 10 pontos de vida e aquele que começar o turno sem pontos de vida perde o jogo.
-  O oponente do jogador que perder o jogo eh o vencedor.
-  O jogo se chama CARD GAME porque eh um jogo que usa elementos chamados "card"s.
-    Cada card possui um nome, um custo, um tipo e um poder. Mais sera explicado adiante.
+1 - How to win the game
+  Each player begins the game with 100 life. If at the end of any turn a player has less than 1 life, that player loses the game. If both players have less than 1 life, then the match is a draw.
   
-2 - Começando o Jogo
-  Os jogadores devem escolher entre si quem será o Jogador 1 e quem ser o Jogador 2, digitando seus nomes assim que o jogo pedir.
+2 - Setup
+  
   Cada jogador recebe um baralho, o "deck".
   Cada deck contém um card Soldado e um card Milícia.
   Cada jogador começa a partida com três cópias de cards aleatorios de seus respectivos decks em suas mãos.
