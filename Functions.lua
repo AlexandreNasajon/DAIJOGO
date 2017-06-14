@@ -93,7 +93,7 @@ end
 Functions.printzone = function(zone)
 
     local i = 1
-    print("#","Name         ","Cost","Type","Power","Loyalty")
+    print("#","Name           ","Cost","Type","Power","Loyalty") --name tem 15 caracteres
     while i <= #zone do
         print(i,zone[i].name,zone[i].cost,zone[i].tipo,zone[i].power,zone[i].loyalty)
         i = i+1
@@ -272,6 +272,19 @@ Functions.endturn = function(Player1,Player2)
                 if Player1.field[i].effect.ateot then
                     local cardeot = {card = Player1.field[i],eot = Player1.field[i].effect.ateot}
                     eoteffects[#eoteffects+1] = cardeot
+                end
+                i = i+1
+            end
+        end
+------------------Checks if there are any unit effects in the graveyard--------------
+        if #Player1.graveyard > 0 then
+            local i = 1
+            while i <= #Player1.graveyard do
+                if Player1.graveyard[i].tipo == "Unit" then
+                    if Player1.graveyard[i].effect.ateot then
+                        local cardeot = {card = Player1.graveyard[i],eot = Player1.graveyard[i].effect.ateot}
+                        eoteffects[#eoteffects+1] = cardeot
+                    end
                 end
                 i = i+1
             end
