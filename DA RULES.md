@@ -1,16 +1,12 @@
 DAIJOGO is a game programmed by Alexandre Nasajon and developed in conjunction with his friends. It is heavily (and I mean HEAVILY) influenced by Magic: the Gathering, Yu-Gi-Oh!, Pokémon TCG, Hearthstone, Faeria and other games like those. Lots os elements in DAIJOGO are copies of some elements from those games, so I don't expect to make any money out of DAIJOGO at this point.
 
 1 - How to win the game
+
   Each player begins the game with 100 life. If at the end of any turn a player has less than 1 life, that player loses the game. If both players have less than 1 life, then the match is a draw.
   
 2 - Setup
   
-  Cada jogador recebe um baralho, o "deck".
-  Cada deck contém um card Soldado e um card Milícia.
-  Cada jogador começa a partida com três cópias de cards aleatorios de seus respectivos decks em suas mãos.
-    Por exemplo, o Jogador 1 começou o jogo com uma cópia de Milícia e duas cópias de Soldado na mão.
-  Cada jogador só tem acesso aos cards que possui na mão, não podendo ver quais cards estao na mão de seu oponente.
-  O Jogador 1 começa o jogo
+  Each 
   
   3 - Zonas do Jogo
     3.1 - Deck
