@@ -123,6 +123,7 @@ if opcao == 1 then
         print("1 - Aristocrats")
         print("2 - Storm")
         print("3 - Blink")
+        print("4 - Reanimator")
         local opcao = tonumber(io.read())
         if opcao ~= nil and opcao == 1 then
             tempcard = {}
@@ -154,6 +155,14 @@ if opcao == 1 then
                 tempcard = {}
             end
             z = true
+        elseif opcao ~= nil and opcao == 4 then
+                tempcard = {}
+            for k,v in pairs(Decks.Reanimator) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[1].deck[#Player[1].deck+1] = tempcard
+                tempcard = {}
+            end
+            z = true
         else
             print("CHOOSE A DECK!")
         end
@@ -163,6 +172,7 @@ if opcao == 1 then
         print("1 - Aristocrats")
         print("2 - Storm")
         print("3 - Blink")
+        print("4 - Reanimator")
         local opcao = tonumber(io.read())
         if opcao ~= nil and opcao == 1 then
             tempcard = {}
@@ -189,6 +199,14 @@ if opcao == 1 then
         elseif opcao ~= nil and opcao == 3 then
                 tempcard = {}
             for k,v in pairs(Decks.Blink) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[2].deck[#Player[2].deck+1] = tempcard
+                tempcard = {}
+            end
+            e = true
+        elseif opcao ~= nil and opcao == 4 then
+                tempcard = {}
+            for k,v in pairs(Decks.Reanimator) do
                 tempcard = Functions.copiar(v,tempcard)
                 Player[2].deck[#Player[2].deck+1] = tempcard
                 tempcard = {}
