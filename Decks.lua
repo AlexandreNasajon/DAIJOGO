@@ -4,23 +4,35 @@ local Decks = {}
 
 
 Decks.Pool = {
-----------------UnitS---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------    
-    Cards.SoulGuide,Cards.Elfo,Cards.Gnome,Cards.Dwarf,Cards.Troll,Cards.Anjo,Cards.Demonio,Cards.RedAristocrat,Cards.BlueAristocrat,Cards.GreenAristocrat,Cards.YellowAristocrat,Cards.Mago,Cards.Dragao,
-    Cards.Serpente,Cards.Vampiro,Cards.Golem,Cards.Coveiro,Cards.Arqueologo,Cards.StormTitan,Cards.Healer,Cards.Recrutador,Cards.Stormbringer,Cards.MindKnight,Cards.GoldKnight,Cards.Lich,Cards.Devedor,
-    
-----------------SupportS---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    Cards.Impulso,Cards.Furia,Cards.Investida,Cards.Stormear,Cards.Greed,Cards.SellSoul,Cards.Burn,Cards.Cooperar,Cards.Drenar,Cards.destroy,Cards.Pote,Cards.AsCaras,Cards.Brainstorm,Cards.Firestorm,
-    Cards.Lifestorm,Cards.Concentrar,Cards.Espiar,Cards.Lembrar,Cards.Reviver,Cards.Reanimar,Cards.Tutor,Cards.Selecionar,Cards.Projetar,Cards.Esmagar,Cards.Adoecer,Cards.Sacrificio,Cards.Escravidao,
-            
-----------------AllyS----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    Cards.Blinker,Cards.Seletor,Cards.Administrador,Cards.StormPriest
+----------------UNIT---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------    
+    Cards.CascadeKeeper,Cards.GraveBetrayer,Cards.ReplicatorOoze,Cards.CyanSphinx,Cards.MindfulKnight,Cards.GoldenKnight,Cards.CollectorLich,Cards.SoulGuide,Cards.ArmyRecruiter,Cards.DevourerDragon,
+    Cards.ElfTrickster,Cards.MercifulAngel,Cards.Gravedigger,Cards.Archaeologist,Cards.StormTitan,Cards.Stormbringer,Cards.VampireNoble,Cards.ImpulsiveDemon,Cards.RedAristocrat,Cards.BlueAristocrat,
+    Cards.CoinAristocrat,Cards.LifeAristocrat,Cards.GratefulGnome,Cards.HonorableDwarf,Cards.PilgrimMage,Cards.BlackSerpent,Cards.WhiteSnake,Cards.SolitaryHealer,Cards.HelpfulGolem,Cards.BrokenDebtor,
+    Cards.SolidRewarder,Cards.CavernTroll,
+
+
+----------------SUPPORT---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    Cards.MindImpulse,Cards.BlindingFury,Cards.SuddenSickness,Cards.StormCall,Cards.RecklessGreed,Cards.SoulSelling,Cards.SlaveDestiny,Cards.LastSacrifice,Cards.TormentingVice,Cards.StrangeVirtue,
+    Cards.BurningFlame,Cards.Cooperation,Cards.LifeDrain,Cards.DestroyUnit,Cards.CrushingBlow,Cards.Knowledge,Cards.Concentrate,Cards.UndercoverSpy,Cards.DearMemory,Cards.PureRevival,Cards.ReanimateDead,
+    Cards.QuickSelection,Cards.ClearProject,Cards.DaringGamble,
+
+----------------ALLY----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    Cards.Blinker,Cards.Selector,Cards.Administrator,Cards.Librarian,Cards.StormPriest,Cards.CubeLord,
+
+---------------SPELL------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    Cards.Enlightenment,Cards.UnusualLuck,Cards.GracefulGrace,Cards.SupportSeeking,Cards.UnitSeeking,Cards.PastRecover,Cards.EliminateEvil,Cards.LayWaste,Cards.Brainstorm,Cards.Firestorm,Cards.Lifestorm,
+    Cards.TheFaces,Cards.LevelUp,Cards.SelfGrowth,Cards.CatchingUp,
+
+---------------TOTEM------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    Cards.MindTotem,Cards.BurnTotem,Cards.AngelicTotem,Cards.LetGoTotem,Cards.DiggerTotem
+
 }
 
-Decks.Ace = {
-} --cada deck só pode ter um card Ace
+Decks.Heroes = {Cards.BikerLeo,Cards.Valentina,Cards.MasterPaim,Cards.IsaFusels,Cards.Tchebello,Cards.JonhZera,Cards.MasterKaplan,Cards.BrenoItself
+} --HERO: units que só pode ter uma de cada no deck
 
-Decks.Spell = {Cards.Providencia,Cards.Sorte,Cards.Suportar,Cards.Recrutar,Cards.Renascer,Cards.Recuperar,Cards.Eliminar
-} --só pode usar uma magia por turn
+Decks.Ace = {Cards.MindControl,Cards.Imperial,Cards.Rebirth,Cards.Tutor
+} --cada deck só pode ter um card Ace
 
 Decks.Extra = {
 } --monta um deck extra de 10 cards que podem ser jogados somente de formas específicas, jogados diretamente do deck extra
@@ -52,44 +64,57 @@ Decks.Fases = {
 Decks.Traps = {
 } --cards traps são jogados sem o oponente saber. Tem condição pra ativar e ativam sozinhas
 
-Decks.Totems = {
-} --ateot, if cond then effect
 
 --ULTRA: cards podem ter uma ability Ultra. Só pode usar uma durante toda a partida
 
-Decks.Heroes = {
-} --HERO: units que só pode ter uma no deck
 
-Decks.Aristocratas = {Cards.BlueAristocrat,Cards.BlueAristocrat,Cards.BlueAristocrat,Cards.YellowAristocrat,Cards.YellowAristocrat,Cards.YellowAristocrat,Cards.Dragon, -- Aristocrats
-    Cards.Gnome,Cards.Gnome,Cards.Gnome,Cards.Dwarf,Cards.Dwarf,Cards.Dwarf,Cards.Rewarder,Cards.Rewarder,Cards.Rewarder, --Sac fodder
-    Cards.Enlighten,Cards.Enlighten,Cards.Enlighten,Cards.Luck,Cards.Luck,Cards.Luck, -- Spells
-    Cards.DiggerTotem,Cards.DiggerTotem,Cards.DiggerTotem, --Totems
-    Cards.Slavery,Cards.Slavery,Cards.Sacrifice,Cards.Sacrifice,Cards.Sacrifice -- Supports
+Decks.Aristocratas = {Cards.RedAristocrat,Cards.RedAristocrat,Cards.RedAristocrat,Cards.CoinAristocrat,Cards.CoinAristocrat,Cards.CoinAristocrat,Cards.DevourerDragon, -- 7 Aristocrats
+    Cards.WhiteSnake,Cards.HonorableDwarf,Cards.HonorableDwarf,Cards.HonorableDwarf,Cards.GratefulGnome,Cards.GratefulGnome,Cards.GratefulGnome,Cards.SolidRewarder,Cards.SolidRewarder, -- 9 Sac fodder
+    Cards.SlaveDestiny,Cards.LastSacrifice,Cards.SlaveDestiny,Cards.LastSacrifice,Cards.SlaveDestiny,Cards.LastSacrifice, -- 6 Supports
+    Cards.DiggerTotem, -- 1 Totem
+    Cards.Enlightenment,Cards.Enlightenment,Cards.Enlightenment,Cards.EliminateEvil,Cards.EliminateEvil, -- 5 Spells
+    Cards.JonhZera, -- 1 hero
+    Cards.Tutor -- Ace
 }
 Decks.AristocratasExtra = {Cards.ExDragon}
 
-Decks.Storm = {Cards.StormTitan, -- wincon
-    Cards.Concentrate,Cards.Concentrate,Cards.Concentrate,Cards.Brainstorm,Cards.Brainstorm,Cards.Firestorm,Cards.Firestorm,Cards.Lifestorm,Cards.Lifestorm, --storm cards
-    Cards.Stormbringer,Cards.Stormbringer,Cards.Stormbringer,Cards.StormCall,Cards.StormCall,Cards.StormCall,Cards.StormPriest,Cards.StormPriest,Cards.StormPriest, --Storm producers
-    Cards.Impulse,Cards.Impulse,Cards.Impulse, --card draw
-    Cards.SellSoul,Cards.SellSoul,Cards.SellSoul, -- get gold
-    Cards.Cooperate,Cards.Cooperate,Cards.Cooperate, -- filler
-    Cards.Johnzera, -- recursion
-    Cards.Isa --life gain
-    
+Decks.Storm = {Cards.StormTitan, -- 1 wincon
+    Cards.Concentrate,Cards.Concentrate,Cards.Concentrate,Cards.Brainstorm,Cards.Brainstorm,Cards.Lifestorm,Cards.Lifestorm,Cards.Lifestorm, -- 8 storm cards
+    Cards.Stormbringer,Cards.Stormbringer,Cards.Stormbringer,Cards.StormCall,Cards.StormCall,Cards.StormCall,Cards.StormPriest,Cards.StormPriest,Cards.StormPriest, -- 9 Storm producers
+    Cards.SolitaryHealer,Cards.SolitaryHealer,Cards.SolitaryHealer, --3 lifegain
+    Cards.Cooperation,Cards.Cooperation,Cards.Cooperation, -- 3 cantrip
+    Cards.BlackSerpent, -- 1 brainstorm combo
+    Cards.AngelicTotem,Cards.AngelicTotem,Cards.AngelicTotem, -- 3 totems
+    Cards.JohnZera, -- 1 hero
+    Cards.Tutor -- Ace
 }
 
-Decks.Blink = {Cards.Blinker,Cards.Blinker,Cards.Blinker,Cards.BikerLeo, -- blinkers
-    Cards.Recruiter,Cards.Demon, -- units cost 2
-    Cards.Vampire,Cards.Vampire,Cards.Vampire,Cards.Healer,Cards.Archaeologist,Cards.Gravedigger,Cards.Debtor,Cards.Debtor,Cards.Debtor, -- units cost 1
-    Cards.Fury,Cards.Tutor,Cards.SellSoul,Cards.Destroy, -- Supports
-    Cards.Enlighten,Cards.Enlighten,Cards.Enlighten,Cards.ToRecruit,Cards.ToRecruit,Cards.ToRecruit, -- Spells
-    Cards.Val,Cards.Isa,Cards.Paim,Cards.Breno,Cards.Johnzera -- Heroes
-    
+Decks.Blink = {Cards.Blinker,Cards.Blinker,Cards.Blinker,Cards.BikerLeo, -- 4 Blinkers
+    Cards.ArmyRecruiter,Cards.ImpulsiveDemon,Cards.MercifulAngel, -- 3 Units cost 2
+    Cards.VampireNoble,Cards.VampireNoble,Cards.VampireNoble,Cards.SolitaryHealer,Cards.Archaeologist,Cards.Gravedigger,Cards.CavernTroll,Cards.CavernTroll,Cards.CavernTroll, -- 9 units cost 1
+    Cards.BlindingFury,Cards.BlindingFury,Cards.BlindingFury,Cards.SoulSelling,Cards.SoulSelling, -- 5 Supports
+    Cards.EliminateEvil,Cards.EliminateEvil,Cards.EliminateEvil,Cards.UnusualLuck,Cards.UnusualLuck,Cards.UnusualLuck, -- 6 Spells
+    Cards.MasterPaim,Cards.Johnzera, -- 2 Heroes
+    Cards.Imperial -- Ace
 }
 
-Decks.Reanimate = {
+Decks.Reanimator = {Cards.CollectorLich,Cards.CyanSphinx,Cards.Dragon,Cards.CascadeKeeper,Cards.CascadeKeeper,Cards.CascadeKeeper, -- reanimation targets
+    Cards.Project,Cards.Project,Cards.Project,Cards.Johnzera,Cards.GracefulGrace,Cards.GracefulGrace,Cards.GracefulGrace,Cards.Mage,Cards.Mage,Cards.Mage, -- fill graveyard
+    Cards.Reanimate,Cards.Reanimate,Cards.Reanimate,Cards.Rebirth, -- reanimators
+    Cards.Healer,Cards.Healer,Cards.Healer, -- life gain
+    Cards.Recoup,Cards.Recoup, -- recursion
+    Cards.Luck,Cards.Luck,Cards.Luck,Cards.Elf, -- get gold
+    Cards.Spy,Cards.Spy
 }
+
+Decks.LibrarianLich = {Cards.Librarian,Cards.Librarian,Cards.Librarian, -- 3 Allies
+    Cards.CollectorLich,Cards.CollectorLich,
+    Cards.VampireNoble,Cards.VampireNoble,Cards.VampireNoble,Cards.ElfTrickster,Cards.ElfTrickster,Cards.ElfTrickster,Cards.HelpfulGolem,Cards.HelpfulGolem,Cards.HelpfulGolem, -- 11 Units
+    Cards.EliminateEvil,Cards.EliminateEvil,Cards.EliminateEvil,Cards.UnusualLuck,Cards.UnusualLuck,Cards.UnusualLuck, -- 6 Spells
+    Cards.ClearProject,Cards.ClearProject,Cards.ClearProject,Cards.CrushingBlow,Cards.CrushingBlow,Cards.CrushingBlow,Cards.TormentingVice,Cards.TormentingVice,Cards.TormentingVice, -- 9 Supports
+    Cards.Tutor -- Ace
+}
+
 
 Decks.Architect = {
 }
