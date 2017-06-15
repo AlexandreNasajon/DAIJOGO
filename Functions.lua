@@ -66,7 +66,7 @@ Functions.getstamina = function(card)
     card.stamina = card.stamina +1
 end
 --------DISCARD--------------
-Functions.discard = function(Player1)
+Functions.discard = function(Player1,Player2)
     local h = false
     while h == false do
         print("Discard a card:")
@@ -85,7 +85,7 @@ Functions.discard = function(Player1)
     end
     if Player1.graveyard[#Player1.graveyard].tipo == "Unit" then
         if Player1.graveyard[#Player1.graveyard].effect.ifdiscarded then
-            Player1.graveyard[#Player1.graveyard].effect.ifdiscarded(Player1,Player2)
+            Player1.graveyard[#Player1.graveyard].effect.ifdiscarded(Player1.graveyard[#Player1.graveyard],Player1,Player2)
         end
     end
 end
@@ -522,9 +522,11 @@ Functions.turn = function(t)
                     elseif decisao == 2 and Player[t].ultra > 0 and card.effect.ultra and card.stamina > 0 and card.effect.ability == nil then
                         card.effect.ultra(card,Player[t],Player[y])
                         Player[t].ultra = Player[t].ultra-1
+                        card.stamina = card.stamina-1
                     elseif decisao == 3 and Player[t].ultra > 0 and card.effect.ultra and card.stamina > 0 then
                         card.effect.ultra(card,Player[t],Player[y])
                         Player[t].ultra = Player[t].ultra-1
+                        card.stamina = card.stamina-1
                     else
                         print("THAT IS NOT A VALID OPTION!")
                         break
