@@ -374,9 +374,9 @@ Cards.Stormbringer = {
     cost = 1,
     tipo = "Unit",
     stamina = 1,
-    description = "Ability: Storm +2.",
+    description = "Ability: Storm +3.",
     effect = {ability = function(card,Player1,Player2)
-        Functions.storm(Player1,2)
+        Functions.storm(Player1,3)
     end
 }
 }
@@ -506,8 +506,8 @@ Cards.GratefulGnome = {
     end
 }
 }
-Cards.HonoredDwarf = {
-    name = "Honored Dwarf",
+Cards.HonorableDwarf = {
+    name = "Honorable Dwarf",
     power = 6,
     cost = 1,
     tipo = "Unit",
@@ -530,8 +530,8 @@ Cards.PilgrimMage = {
         Functions.draw(Player1)
         Functions.draw(Player1)
         print(Player1.name.." drew two cards.")
-        Functions.discard(Player1)
-        Functions.discard(Player1)
+        Functions.discard(Player1,Player2)
+        Functions.discard(Player1,Player2)
         print(Player1.name.." discarded two cards.")
     end
 }
@@ -571,21 +571,23 @@ Cards.WhiteSnake = {
     stamina = 1,
     description = "At end of turn, if this is in your graveyard, you may pay 7 life to add it to hand.",
     effect = {ateot = function(card,Player1,Player2)
-        print("Pay 7 life to add White Snake to your hand?")
-        print("1 - Yes")
-        print("2 - No")
-        local opcao = tonumber(io.read())
-        if opcao ~= nil and opcao == 1 then
-            local j = Functions.find2(Player1.graveyard,card)
-            while j <= #Player1.graveyard do
-                Player1.graveyard[j] = Player1.graveyard[j+1]
-                j = j+1
+        local j = Functions.find2(Player1.graveyard,card)
+        if j ~= nil then
+            print("Pay 7 life to add White Snake to your hand?")
+            print("1 - Yes")
+            print("2 - No")
+            local opcao = tonumber(io.read())
+            if opcao ~= nil and opcao == 1 then
+                while j <= #Player1.graveyard do
+                    Player1.graveyard[j] = Player1.graveyard[j+1]
+                    j = j+1
+                end
+                Player1.hand[#Player1.hand+1] = card
+                Functions.damage(Player1,7)
+                print(Player1.name.." lost 7 life and White Snake was added to that player's hand.")
+            else
+                print("Snake was not added to your hand.")
             end
-            Player1.hand[#Player1.hand+1] = card
-            Functions.damage(Player1,7)
-            print(Player1.name.." lost 7 life and White Snake was added to that player's hand.")
-        else
-            print("Snake was not added to your hand.")
         end
     end
 }
@@ -638,7 +640,7 @@ Cards.BrokenDebtor = {
     end,
     ifdies = function(card,Player1,Player2)
     if #Player1.hand > 0 then
-        Functions.discard(Player1)
+        Functions.discard(Player1,Player2)
         print(Player1.name.." discarded a card.")
     end
     Functions.damage(Player1,20)
@@ -655,7 +657,7 @@ Cards.SolidRewarder = {
     description = "If summoned, discard a card and you lose 10 life. If destroyed, draw a card and you gain 20 life.",
     effect = {ifsummoned = function(card,Player1,Player2)
         if #Player1.hand > 0 then
-            Functions.discard(Player1)
+            Functions.discard(Player1,Player2)
             print(Player1.name.." discarded a card.")
         end
         Functions.damage(Player1,10)
@@ -716,7 +718,7 @@ Cards.BlindingFury = {
     cost = 0,
     tipo = "Support",
     stamina = nil,
-    description = "A unit you control gains 5 power.",
+    description = "A unit you control gains 3 power.",
 effect = function(card,Player1,Player2)
     print("Select a unit:")
     print("0 - None")
@@ -726,14 +728,14 @@ effect = function(card,Player1,Player2)
         h = true
     elseif opcao <= #Player1.field and opcao > 0 then
         local card = Player1.field[opcao]
-        card.power = card.power+5
-        print(card.name.." gained 5 power.")
+        card.power = card.power+3
+        print(card.name.." gained 3 power.")
     else
         print("SELECT A VALID OPTION!")
     end
 end
 }
-Cards.SuddenSickness= {
+Cards.SuddenSickness = {
     name = "Sudden Sickness",
     power = nil,
     cost = 0,
@@ -883,7 +885,7 @@ Cards.TormentingVice = {
     stamina = nil,
     description = "Discard a card. If you do, receive 2 gold.",
 effect = function(card,Player1,Player2)
-    Functions.discard(Player1)
+    Functions.discard(Player1,Player2)
     Functions.getgold(Player1)
     Functions.getgold(Player1)
     print(Player1.name.." received 2 gold.")
@@ -897,7 +899,7 @@ Cards.StrangeVirtue = {
     stamina = nil,
     description = "Discard a card. If you do, draw two cards.",
 effect = function(card,Player1,Player2)
-    Functions.discard(Player1)
+    Functions.discard(Player1,Player2)
     Functions.draw(Player1)
     Functions.draw(Player1)
     print(Player1.name.." drew two cards.")
@@ -1048,7 +1050,7 @@ effect = function(card,Player1,Player2)
     end
 end
 }
-Cards.DearMemory= {
+Cards.DearMemory = {
     name = "Dear Memory",
     power = nil,
     cost = 1,
@@ -1224,6 +1226,25 @@ Cards.ClearProject = {
         Functions.shuffle2(Player1.deck)
         print(Player1.name.."'s deck was shuffled.")
     end
+}
+Cards.DaringGamble = {
+    name = "Daring Gamble",
+    power = nil,
+    cost = 0,
+    tipo = "Support",
+    stamina = nil,
+    description = "Discard your hand, then draw the same number of cards discarded this way.",
+effect = function(card,Player1,Player2)
+    local n = #Player1.hand
+    while #Player1.hand > 0 do
+        Functions.discard(Player1,Player2)
+    end
+    while n > 0 do
+        Functions.draw(Player1)
+        n = n-1
+    end
+    print(Player1.name.." drew "..n.." cards.")
+end
 }
 ---------------------------------AllyS------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1443,8 +1464,8 @@ Cards.CubeLord = {
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-Cards.Enlighten = {
-    name = "Enlighten   ",
+Cards.Enlightenment = {
+    name = "Enlightenment",
     power = nil,
     cost = 0,
     tipo = "Spell",
@@ -1456,8 +1477,8 @@ effect = function(card,Player1,Player2)
     print(Player1.name.." drew two cards.")
 end
 }
-Cards.Luck = {
-    name = "Luck      ",
+Cards.UnusualLuck = {
+    name = "Unusual Luck",
     power = nil,
     cost = 0,
     tipo = "Spell",
@@ -1481,14 +1502,14 @@ effect = function(card,Player1,Player2)
     Functions.draw(Player1)
     Functions.draw(Player1)
     print(Player1.name.." drew three cards.")
-    Functions.discard(Player1)
-    Functions.discard(Player1)
+    Functions.discard(Player1,Player2)
+    Functions.discard(Player1,Player2)
     print(Player1.name.." discarded two cards.")
     
 end
 }
-Cards.ToSupport = {
-    name = "To Support  ",
+Cards.SupportSeeking = {
+    name = "Support Seeking",
     power = nil,
     cost = 0,
     tipo = "Spell",
@@ -1517,8 +1538,8 @@ effect = function(card,Player1,Player2)
     Functions.shuffle2(Player1.deck)
 end
 }
-Cards.ToRecruit = {
-    name = "To Recruit  ",
+Cards.UnitSeeking = {
+    name = "Unit Seeking",
     power = nil,
     cost = 0,
     tipo = "Spell",
@@ -1547,8 +1568,8 @@ effect = function(card,Player1,Player2)
     Functions.shuffle2(Player1.deck)
 end
 }
-Cards.Recoup = {
-    name = "Recoup      ",
+Cards.PastRecover = {
+    name = "Past Recover",
     power = nil,
     cost = 0,
     tipo = "Spell",
@@ -1577,8 +1598,8 @@ effect = function(card,Player1,Player2)
     end
 end
 }
-Cards.Eliminate = {
-    name = "Eliminate  ",
+Cards.EliminateEvil = {
+    name = "Eliminate Evil",
     power = nil,
     cost = 0,
     tipo = "Spell",
@@ -1631,10 +1652,10 @@ effect = function(card,Player1,Player2)
         Functions.draw(Player1)
         i = i-1
     end
-    Functions.discard(Player1)
-    Functions.discard(Player1)
-    Functions.discard(Player1)
-    Functions.discard(Player1)
+    Functions.discard(Player1,Player2)
+    Functions.discard(Player1,Player2)
+    Functions.discard(Player1,Player2)
+    Functions.discard(Player1,Player2)
     print(Player1.name.." drew "..Player1.storm.." cards.")
 end    
 }
@@ -1705,6 +1726,22 @@ Cards.SelfGrowth = {
     print(Player1.name.." drew "..Player1.level.." cards.")
 end
 }
+Cards.CatchingUp = {
+    name = "Catching Up",
+    power = nil,
+    cost = 0,
+    tipo = "Spell",
+    stamina = nil,
+    description = "Each player draws cards until that player has five cards in hand.",
+effect = function(card,Player1,Player2)
+    while #Player1.hand < 5 do
+        Functions.draw(Player1)
+    end
+    while #Player2.hand < 5 do
+        Functions.draw(Player2)
+    end
+end
+}
 -------------------TOTEM------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1751,7 +1788,7 @@ Cards.AngelicTotem = {
     stamina = nil,
     description = "At end of turn, if you have 107 or more life, summon a 'Merciful Angel'.",
     effect = {ateot = function(card,Player1,Player2)
-        if #Player1.life > 106 then
+        if Player1.life > 106 then
             tempcard = {}
             Functions.copiar(Cards.MercifulAngel,tempcard)
             Functions.summon(tempcard,Player1,Player2)
@@ -1822,7 +1859,7 @@ Cards.DiggerTotem = {
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Cards.BikerLeo = {
-    name = "Biker Leo   ",
+    name = "Biker Leo",
     power = 7,
     cost = 1,
     tipo = "Unit",
@@ -1838,7 +1875,6 @@ Cards.BikerLeo = {
             if opcao ~= nil and opcao == 0 then
                 h = true
             elseif opcao ~= nil and opcao <= #Player1.field and opcao > 0 and Player1.field[opcao].name ~= "Biker Leo   " then
-                card = Player1.field[opcao]
                 Functions.exile(Player1.field[opcao],Player1,Player2)
                 Functions.summon(card,Player1,Player2)
                 h = true
@@ -1858,8 +1894,8 @@ Cards.BikerLeo = {
     end
     }
 }
-Cards.Val = {
-    name = "Val         ",
+Cards.Valentina = {
+    name = "Valentina",
     power = 9,
     cost = 1,
     tipo = "Unit",
@@ -1895,8 +1931,8 @@ Cards.Val = {
     end
 }
 }
-Cards.Paim = {
-    name = "Paim        ",
+Cards.MasterPaim = {
+    name = "Master Paim",
     power = 8,
     cost = 1,
     tipo = "Unit",
@@ -1921,8 +1957,8 @@ Cards.Paim = {
     end
 }
 }
-Cards.Isa = {
-    name = "Isa         ",
+Cards.IsaFusels = {
+    name = "Isa Fusels",
     power = 7,
     cost = 1,
     tipo = "Unit",
@@ -2019,8 +2055,8 @@ Cards.Nasa = {
 end
 }
 }
-Cards.Tchebo = {
-    name = "Tchebo      ",
+Cards.Tchebello = {
+    name = "Tchebello",
     power = 15,
     cost = 2,
     tipo = "Unit",
@@ -2041,9 +2077,9 @@ Cards.Tchebo = {
     end
 }
 }
-Cards.Jonhzera = {
-    name = "Johnzera    ",
-    power = 14,
+Cards.JonhZera = {
+    name = "John Zera",
+    power = 15,
     cost = 1,
     tipo = "Unit",
     stamina = 1,
@@ -2094,8 +2130,8 @@ Cards.Jonhzera = {
     end
 }
 }
-Cards.Kapran = {
-    name = "Kapran      ",
+Cards.MasterKaplan = {
+    name = "Master Kaplan",
     power = 11,
     cost = 1,
     tipo = "Unit",
@@ -2121,17 +2157,20 @@ Cards.Kapran = {
     end
 }
 }
-Cards.Breno = {
-    name = "Breno      ",
+Cards.BrenoItself = {
+    name = "Breno, Itself",
     power = 4,
     cost = 1,
     tipo = "Unit",
     stamina = 1,
-    description = "If summoned and you control two or more units, draw a card. At end of turn, add this to your hand.",
+    description = "If summoned and you control two or more units, draw a card, otherwise this gains 3 power. At end of turn, add this to your hand.",
     effect = {ifsummoned = function(card,Player1,Player2)
         if #Player1.field > 1 then
             Functions.draw(Player1)
             print(Player1.name.." drew a card.")
+        else
+            card.power = card.power+3
+            print(card.name.." gained 3 power.")
         end
     end,
             ateot = function(card,Player1,Player2)
