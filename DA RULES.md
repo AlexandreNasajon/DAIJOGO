@@ -43,13 +43,11 @@ Fun: lots of fun
   4 - Player's turn
     DAIJOGO is a turn based game; the turn structure is simple: the turn player may play cards from their hand and/or attack with units and/or activate their card's abilities. When that player can no longer perform any actions or simply doesn't wish to perform another action that turn, then that player must select the option "End turn", which will activate card effects that are only activated at the end of the turn. If there are no cards with effects that activate at the end of the turn, then the turn ends and the other player's turn begins.
     
-    4.1 - Jogar um card
-      Para jogar um card, o jogador deve selecionar um card da própria mao. 
-      Se o jogador tiver ouro suficiente para pagar pelo custo daquele card, o card  colocado no campo daquele jogador.
-      Depois, aquele jogador perde uma quantidade de ouro igual ao custo daquele card.
-      Se o jogador não tiver ouro suficiente, o card não podera ser jogado.
+    4.1 - Play a card
+      To play a card, the player must select a card from their hand and then select the option "Play".
+      If the player has an amount of gold equal or higher than that card's cost, then an amount of gold equal to that card's cost will be taken from him and the card will be played. If a unit card is played, it is summoned on that player's field. If an ally card is played, it is called on that player's room. If a totem card is played, it is built on that player's temple. If a spell or support card is played, it is cast then sent to that player's graveyard.
       
-    4.2 - Atacar com uma unidade
+    4.2 - Attacking with a unit
       Para reduzir os pontos de vida de seu oponente, o jogador deve ataca-lo com seus cards de tipo Unidade.
       Cada unidade tem uma quantidade de poder. Milícias têm poder igual a 1 e Soldados têm poder igual a 2.
       Para atacar seu oponente, o jogador deve selecionar uma unidade que controla.
