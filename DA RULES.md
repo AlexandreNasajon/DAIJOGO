@@ -1,28 +1,32 @@
 DAIJOGO is a game programmed by Alexandre Nasajon and developed in conjunction with his friends. It is heavily (and I mean HEAVILY) influenced by Magic: the Gathering, Yu-Gi-Oh!, Pokémon TCG, Hearthstone, Faeria and other games like those. Lots os elements in DAIJOGO are copies of some elements from those games, so I don't expect to make any money out of DAIJOGO at this point.
 
+Number of players: 2
+Duration of a match: 5-10 minutes
+Fun: lots of fun
+
 1 - How to win the game
 
   Each player begins the game with 100 life. If at the end of any turn a player has less than 1 life, that player loses the game. If both players have less than 1 life, then the match is a draw.
   
-2 - Setup
+2 - Starting the game
+  The players must choose who will be Player 1 and who will be Player 2. Player 1 starts the game.
+  Then each player chooses a deck to play with. Each deck has its own strategy and unique cards, so choose wisely.
+  After both players have chosen their decks, the game begins.
+  Each player starts with their respective decks, both with 30 cards, and draws five cards from them. Players alternate in turns until one of them loses the game. At the beggining of each player's turn, that player draws a card from their deck and receives 1 gold. Then that player may play cards from their hand, attack with units or activate abilities. When that player has no more actions to take or simply wishes to end their turn, that player must select the option " End turn".
   
-  Each 
-  
-  3 - Zonas do Jogo
+3 - Game Zones
     3.1 - Deck
-      Cada jogador possui seu próprio deck.
-      O deck eh formado por uma coleção de cards.
-      Um jogador comprar um card é ele pegar uma cópia aleatória de um card de seu próprio deck e a colocar em sua mão.
+      Each player starts the game with a deck of 30(thirty) cards.
+      Whenever a player must draw a card, that player draws a card from their respective deck.
       
-    3.2 - Mão
-      Cada jogador começa o jogo com três cards na mao.
-      Cada jogador so pode ver quais cards estao na sua propria mao, nao podendo ver os cards na mao do oponente.
-      Cada jogador pode jogar cards de sua mao e coloca-las no proprio campo.
+    3.2 - Hand
+      Each player starts the game with five cards in hand.
+      Each player can only see the cards in their own hand, meaning they won't know what cards are in their opponent's hand.
+      Players may play cards from their hands. Each card has a card type that determines where that card goes when played.
       
-    3.3 - Campo
-      Cada jogador tem um campo, onde ficam os cards jogados por ele.
-      Cards no campo podem atacar (ver 4.2).
-      Cards no campo podem ser destruídos (ver 4.2).
+    3.3 - Field
+      Each player has their own field, where that player's unit cards go if played.
+      A player may select one of their units on the field to attack. If that unit has an ability, then that player may INSTEAD choose to activate that unit's ability. 
       
     3.4 - Cemiterio
       Cada jogador tem um cemiterio, onde ficam seus cards destruidos.
