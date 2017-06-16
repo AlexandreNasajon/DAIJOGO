@@ -9,12 +9,14 @@ Fun: lots of fun
   Each player begins the game with 100 life. If at the end of any turn a player has less than 1 life, that player loses the game. If both players have less than 1 life, then the match is a draw.
   
 2 - Starting the game
-  The players must choose who will be Player 1 and who will be Player 2. Player 1 starts the game.
+
+  The players must choose who will be Player 1 and who will be Player 2. Player 1 starts the game, but doesn't draw a card in the first turn.
   Then each player chooses a deck to play with. Each deck has its own strategy and unique cards, so choose wisely.
   After both players have chosen their decks, the game begins.
   Each player starts with their respective decks, both with 30 cards, and draws five cards from them. Players alternate in turns until one of them loses the game. At the beggining of each player's turn, that player draws a card from their deck and receives 1 gold. Then that player may play cards from their hand, attack with units or activate abilities. When that player has no more actions to take or simply wishes to end their turn, that player must select the option " End turn".
   
 3 - Game Zones
+
     3.1 - Deck
       Each player starts the game with a deck of 30(thirty) cards.
       Whenever a player must draw a card, that player draws a card from their respective deck.
@@ -26,18 +28,20 @@ Fun: lots of fun
       
     3.3 - Field
       Each player has their own field, where that player's unit cards go if played.
-      A player may select one of their units on the field to attack. If that unit has an ability, then that player may INSTEAD choose to activate that unit's ability. 
+      A player may select one of their units on the field to attack. If that unit has an ability, then that player may INSTEAD choose to activate that unit's ability.
+      If a unit on the field is destroyed, that unit is sent to it's controller's graveyard.
       
-    3.4 - Cemiterio
-      Cada jogador tem um cemiterio, onde ficam seus cards destruidos.
-      O jogador não pode fazer nada por eles :'(
+    3.4 - Graveyard
+      Each player has their own graveyard. Cards are sent to the graveyard in the following situations:
+      - If a card is destroyed;
+      - If an ally has no loyalty left;
+      - After a spell is cast and its effect already happened;
+      - After a support is cast and its effect already happened;
+      - If a card is discarded from a player's hand;
+      - If an effect makes a card go to the graveyard.
     
-  4 - O Turno do Jogador
-    CARD GAME eh um jogo de turnos, isto significa que cada jogador tem sua vez de realizar suas açoes dentro do jogo.
-    Cada jogador deve realizar seu turno , alternando entre ambos os jogadores, uma vez cada.
-    O jogo lembra aos jogadores de quem eh a vez de jogar.
-    Os jogadores devem se alternar desta maneira ate algum vencer.
-    O Jogador 1 começa o jogo sendo o primeiro a realizar seu turno, mas ele nao compra um card nesse primeiro turno do jogo.
+  4 - Player's turn
+    DAIJOGO is a turn based game; the turn structure is simple: the turn player may play cards from their hand and/or attack with units and/or activate their card's abilities. When that player can no longer perform any actions or simply doesn't wish to perform another action that turn, then that player must select the option "End turn", which will activate card effects that are only activated at the end of the turn. If there are no cards with effects that activate at the end of the turn, then the turn ends and the other player's turn begins.
     
     4.1 - Jogar um card
       Para jogar um card, o jogador deve selecionar um card da própria mao. 
