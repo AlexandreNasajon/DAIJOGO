@@ -48,23 +48,23 @@ Fun: lots of fun
       If the player has an amount of gold equal or higher than that card's cost, then an amount of gold equal to that card's cost will be taken from him and the card will be played. If a unit card is played, it is summoned on that player's field. If an ally card is played, it is called on that player's room. If a totem card is played, it is built on that player's temple. If a spell or support card is played, it is cast then sent to that player's graveyard.
       
     4.2 - Attacking with a unit
-      Para reduzir os pontos de vida de seu oponente, o jogador deve ataca-lo com seus cards de tipo Unidade.
-      Cada unidade tem uma quantidade de poder. Milícias têm poder igual a 1 e Soldados têm poder igual a 2.
-      Para atacar seu oponente, o jogador deve selecionar uma unidade que controla.
-      Depois de selecionada a unidade atacante, ele entao deve selecionar seu alvo: o oponente ou uma unidade do oponente.
-      No caso de selecionar o oponente como alvo, esse oponente perdera pontos de vida iguais ao poder da unidade atacante.
-      No caso de selecionar uma unidade como alvo, ambas as unidades terao seus poderes comparados.
-        Se a unidade atacante tiver poder maior que o da unidade atacada, a unidade atacada sera destruida.
-        Se a unidade atacante tiver poder igual ao da unidade atacada, ambas serao destruidas.
-        Se a unidade atacante tiver poder menor que o da unidade atacada, a unidade atacante sera destruida.
-     Cada jogador só pode realizar o ataque uma vez por turno.
+      To reduce your opponent's life to zero, you must attack with your units!
+      Each unit has its own power.
+      To attack, the player must select a unit under their control to attack.
+      That unit can attack the opponent or a unit that opponent controls.
+      If that unit attacks the opponent, then that player will lose life equal to the unit's power.
+      If that unit attacks an enemy unit:
+        If the attacking unit has power greater than the enemy unit, then the enemy unit will be destroyed.
+        If the attacking unit has power equal to the enemy unit, then both will be destroyed.
+        If the attacking units has power less than the enemy unit, then the attacking unit will be destroyed.
+     Each unit can only attack or activate an ability once per turn.
      
-    4.3 - Ver cemiterio
-      Cada jogador pode ver os cards que estão em seu proprio cemiterio, mas nao pode ver os cards no cemiterio do oponente.
-      Como dito anteriormente, o jogador nao pode fazer nada por esses cards :'(
+    4.3 - Graveyard
+      If a card goes to the graveyard, that card can no longer be played, unless an effect adds that card to another zone.
       
-    4.4 - Fim do turno
-      Se um jogador ja tiver realizado todas as açoes que gostaria em seu turno, ele deve terminar seu turno.
-      No fim do turno de um jogador, o oponente dele compra um card e recebe um ouro.
-      
-Muito bem, esse é o jogo. Divirta-se, peize!
+    4.4 - End turn
+      When a player end their turn, all "at end of turn" effects activate at the same time, but each will resolve in a specified order:
+      1 - Totem effects, starting with the first totem built;
+      2 - Unit effects, starting with the first unit summoned;
+      3 - Unit in the graveyard effects, starting with the first unit that was sent there.
+      After all "at end of turn" effects resolve, the player's turn will end and the other player will draw a card and receive 1 gold, starting their next turn.
