@@ -102,19 +102,19 @@ Player[2].name = io.read()
 print("So player 2's name is "..Player[2].name.."!")
 print("I imagine both player read the manual, right? Right! Then good luck!")
 print("-----GAME STARTOOOOO-----")
-print("Select the game's mode:")
-print("1 - Standard")
-print("2 - Tchebo")
-local opcao = tonumber(io.read())
-if opcao == 2 then
-    modotchebo = true
-end
-print("Select the game's format:")
-print("1 - Standard")
-print("2 - Draft")
-local opcao = tonumber(io.read())
-if opcao == 1 then
-    print("Standard format it is!")
+-- print("Select the game's mode:")
+-- print("1 - Standard")
+-- print("2 - Tchebo")
+-- local opcao = tonumber(io.read())
+-- if opcao == 2 then
+--     modotchebo = true
+-- end
+-- print("Select the game's format:")
+-- print("1 - Standard")
+-- print("2 - Draft")
+-- local opcao = tonumber(io.read())
+-- if opcao == 1 then
+--     print("Standard format it is!")
     print("Choose your decks!")
     local z = false
     local e = false
@@ -124,6 +124,10 @@ if opcao == 1 then
         print("2 - Storm")
         print("3 - Blink")
         print("4 - Reanimator")
+        print("5 - Librarian Lich")
+        print("6 - Burn")
+        print("7 - Paim Ooze")
+        print("8 - Level Up")
         local opcao = tonumber(io.read())
         if opcao ~= nil and opcao == 1 then
             tempcard = {}
@@ -146,6 +150,11 @@ if opcao == 1 then
                 Player[1].deck[#Player[1].deck+1] = tempcard
                 tempcard = {}
             end
+            for k,v in pairs(Decks.StormExtra) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[1].extra[#Player[1].extra+1] = tempcard
+                tempcard = {}
+            end
             z = true
         elseif opcao ~= nil and opcao == 3 then
                 tempcard = {}
@@ -154,12 +163,74 @@ if opcao == 1 then
                 Player[1].deck[#Player[1].deck+1] = tempcard
                 tempcard = {}
             end
+            for k,v in pairs(Decks.BlinkExtra) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[1].extra[#Player[1].extra+1] = tempcard
+                tempcard = {}
+            end
             z = true
         elseif opcao ~= nil and opcao == 4 then
                 tempcard = {}
             for k,v in pairs(Decks.Reanimator) do
                 tempcard = Functions.copiar(v,tempcard)
                 Player[1].deck[#Player[1].deck+1] = tempcard
+                tempcard = {}
+            end
+            for k,v in pairs(Decks.ReanimatorExtra) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[1].extra[#Player[1].extra+1] = tempcard
+                tempcard = {}
+            end
+            z = true
+        elseif opcao ~= nil and opcao == 5 then
+                tempcard = {}
+            for k,v in pairs(Decks.LibrarianLich) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[1].deck[#Player[1].deck+1] = tempcard
+                tempcard = {}
+            end
+            for k,v in pairs(Decks.LibrarianLichExtra) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[1].extra[#Player[1].extra+1] = tempcard
+                tempcard = {}
+            end
+            z = true
+        elseif opcao ~= nil and opcao == 6 then
+                tempcard = {}
+            for k,v in pairs(Decks.Burn) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[1].deck[#Player[1].deck+1] = tempcard
+                tempcard = {}
+            end
+            for k,v in pairs(Decks.BurnExtra) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[1].extra[#Player[1].extra+1] = tempcard
+                tempcard = {}
+            end
+            z = true
+        elseif opcao ~= nil and opcao == 7 then
+                tempcard = {}
+            for k,v in pairs(Decks.PaimOoze) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[1].deck[#Player[1].deck+1] = tempcard
+                tempcard = {}
+            end
+            for k,v in pairs(Decks.PaimOozeExtra) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[1].extra[#Player[1].extra+1] = tempcard
+                tempcard = {}
+            end
+            z = true
+        elseif opcao ~= nil and opcao == 8 then
+                tempcard = {}
+            for k,v in pairs(Decks.LevelUp) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[1].deck[#Player[1].deck+1] = tempcard
+                tempcard = {}
+            end
+            for k,v in pairs(Decks.LevelUpExtra) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[1].extra[#Player[1].extra+1] = tempcard
                 tempcard = {}
             end
             z = true
@@ -173,6 +244,10 @@ if opcao == 1 then
         print("2 - Storm")
         print("3 - Blink")
         print("4 - Reanimator")
+        print("5 - Librarian Lich")
+        print("6 - Burn")
+        print("7 - Paim Ooze")
+        print("8 - Level Up")
         local opcao = tonumber(io.read())
         if opcao ~= nil and opcao == 1 then
             tempcard = {}
@@ -195,12 +270,22 @@ if opcao == 1 then
                 Player[2].deck[#Player[2].deck+1] = tempcard
                 tempcard = {}
             end
+            for k,v in pairs(Decks.StormExtra) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[2].extra[#Player[2].extra+1] = tempcard
+                tempcard = {}
+            end
             e = true
         elseif opcao ~= nil and opcao == 3 then
                 tempcard = {}
             for k,v in pairs(Decks.Blink) do
                 tempcard = Functions.copiar(v,tempcard)
                 Player[2].deck[#Player[2].deck+1] = tempcard
+                tempcard = {}
+            end
+            for k,v in pairs(Decks.BlinkExtra) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[2].extra[#Player[2].extra+1] = tempcard
                 tempcard = {}
             end
             e = true
@@ -211,14 +296,71 @@ if opcao == 1 then
                 Player[2].deck[#Player[2].deck+1] = tempcard
                 tempcard = {}
             end
+            for k,v in pairs(Decks.ReanimatorExtra) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[2].extra[#Player[2].extra+1] = tempcard
+                tempcard = {}
+            end
+            e = true
+        elseif opcao ~= nil and opcao == 5 then
+                tempcard = {}
+            for k,v in pairs(Decks.LibrarianLich) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[2].deck[#Player[2].deck+1] = tempcard
+                tempcard = {}
+            end
+            for k,v in pairs(Decks.LibrarianLichExtra) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[2].extra[#Player[2].extra+1] = tempcard
+                tempcard = {}
+            end
+            e = true
+        elseif opcao ~= nil and opcao == 6 then
+                tempcard = {}
+            for k,v in pairs(Decks.Burn) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[2].deck[#Player[2].deck+1] = tempcard
+                tempcard = {}
+            end
+            for k,v in pairs(Decks.BurnExtra) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[2].extra[#Player[2].extra+1] = tempcard
+                tempcard = {}
+            end
+            e = true
+        elseif opcao ~= nil and opcao == 7 then
+                tempcard = {}
+            for k,v in pairs(Decks.PaimOoze) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[2].deck[#Player[2].deck+1] = tempcard
+                tempcard = {}
+            end
+            for k,v in pairs(Decks.PaimOozeExtra) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[2].extra[#Player[2].extra+1] = tempcard
+                tempcard = {}
+            end
+            e = true
+        elseif opcao ~= nil and opcao == 8 then
+                tempcard = {}
+            for k,v in pairs(Decks.LevelUp) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[2].deck[#Player[2].deck+1] = tempcard
+                tempcard = {}
+            end
+            for k,v in pairs(Decks.LevelUpExtra) do
+                tempcard = Functions.copiar(v,tempcard)
+                Player[2].extra[#Player[2].extra+1] = tempcard
+                tempcard = {}
+            end
             e = true
         else
             print("CHOOSE A DECK!")
         end
     end
-elseif opcao == 2 then
-    Draft()
-end
+-- elseif opcao == 2 then
+--     Draft()
+-- end
 print("That's it, peize! Have fun! :3 :3 :3")
 
 Functions.game()
