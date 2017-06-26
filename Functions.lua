@@ -281,8 +281,8 @@ Functions.endturn = function(Player1,Player2)
             local i = 1
             while i <= #Player1.graveyard do
                 if Player1.graveyard[i].tipo == "Unit" then
-                    if Player1.graveyard[i].effect.ateot then
-                        local cardeot = {card = Player1.graveyard[i],eot = Player1.graveyard[i].effect.ateot}
+                    if Player1.graveyard[i].effect.ateotgrave then
+                        local cardeot = {card = Player1.graveyard[i],eot = Player1.graveyard[i].effect.ateotgrave}
                         eoteffects[#eoteffects+1] = cardeot
                     end
                 end
@@ -303,6 +303,9 @@ Functions.endturn = function(Player1,Player2)
 
         print(Player1.name.." turn ends.")
         Player1.storm = 0
+        Player1.turnevents = {}
+        
+        
         if #Player2.deck > 0 then
             Functions.draw(Player2)
             print(Player2.name.." draws a card.")
@@ -321,6 +324,16 @@ Functions.endturn = function(Player1,Player2)
             Player2.room[h].stamina = 1
             h = h-1
         end
+        local u = #Player2.hand
+        while u > 0 do
+            Player2.hand[u].stamina = 1
+            u = u-1
+        end
+        local q = #Player2.graveyard
+        while q > 0 do
+            Player2.graveyard[q].stamina = 1
+            q = q-1
+        end
         Player2.magic = 1
 end
 ------------turn---------------
@@ -329,6 +342,10 @@ Functions.turn = function(t)
     while t == 1 or t == 2 do
         
         print("It's player "..Player[t].name.." turn!")
+        print(Player[y].name)
+        print("Life: "..Player[y].life,"Level: "..Player[y].level..".")
+        print("--------------------------------------------------------------------------------")
+        print(Player[t].name)
         print("Life: "..Player[t].life,"Gold: "..Player[t].gold,"Magic: "..Player[t].magic,"Storm: "..Player[t].storm,"Level: "..Player[t].level)
         print("1 - Hand")
         print("2 - Field")
@@ -654,41 +671,38 @@ Functions.turn = function(t)
             local option = tonumber(io.read())
             if option ~= nil and option == 0 then
                 break
---             elseif option == nil then
---                 break
---             elseif option ~= nil and option > 0 and option <= #Player[t].extra then
---                 local card = Player[t].extra[option]
---                 Functions.printcard(card)
---                 print("0 - Return")
---                 print("1 - Play")
---                 local option = tonumber(io.read())
---                 if option ~= nil and option == 0 then
---                     break
---                 elseif option == nil then
---                     break
---                 elseif option == 1 then
---                     if card.origin then
--- --                         print(card.origin.name)
--- --                         print(Player[t].name)
--- --                         print(card.name)
---                         Functions.destroy(Player[t].field.r,Player[t],Player[t],Player[y])
---                         Functions.summon(card,Player[t],Player[y])
---                         local j = Functions.find(Player[t].extra,card)
---                         while j <= #Player[t].extra do
---                             Player[t].extra[j] = Player[t].extra[j+1]
---                             j = j+1
---                         end
---                         print(card.origin.name.." became "..card.name.."!")
---                     end
---                 else
---                 end
+            elseif option ~= nil and option > 0 and option <= #Player[t].extra then
+                local card = Player[t].extra[option]
+                Functions.printcard(card)
+                print("0 - Return")
+                print("1 - Play")
+                local option = tonumber(io.read())
+                if option ~= nil and option == 0 then
+                    break
+                elseif option == 1 then
+                    if card.effect.condition then
+                        if card.effect.condition(card,Player[t],Player[y]) == true then
+                            local j = Functions.find(Player[t].extra,card)
+                            while j <= #Player[t].extra do
+                                Player[t].extra[j] = Player[t].extra[j+1]
+                                j = j+1
+                            end
+                            Functions.play(card,Player[t],Player[y])
+                        else
+                            print("YOU CAN'T PLAY THIS CARD! YOU HAVE NOT FULFILLED ITS CONDITION!")
+                        end
+                    end
+
+                else
+                    print("SELECT A VALID OPTION!")
+                end
             else
                 print("SELECT A VALID OPTION!")
             end
             
         end
             
-        if option ~= 1 and option ~= 2 and option ~= 3 and option~= 4 and option ~= 5 and option ~= 6 then
+        if option ~= 1 and option ~= 2 and option ~= 3 and option~= 4 and option ~= 5 and option ~= 6 and option ~= 7 then
             print("SELECT A VALID OPTION!")
         end
     end
