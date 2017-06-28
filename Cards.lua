@@ -24,6 +24,20 @@ local Cards = {}
 --         end
 --     end
 --     }
+
+Cards.YoungApprentice = {
+    name = "Young Apprentice",
+    power = 0,
+    cost= 1,
+    tipo = "Unit",
+    stamina = 1,
+    description = "If summoned, this gains power equal to your level.",
+    effect = {ifsummoned = function(card,Player1,Player2)
+            card.power = card.power+Player1.level
+            print(card.name.." gained "..Player1.level.." power.")
+        end
+}
+}
 Cards.Avatar = {
     name = "Avatar",
     power = 0,
