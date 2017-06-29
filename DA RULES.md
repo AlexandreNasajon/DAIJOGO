@@ -15,7 +15,7 @@ Fun: lots of fun
   The players must choose who will be Player 1 and who will be Player 2. Player 1 starts the game, but doesn't draw a card in the first turn.
   Then each player chooses a deck to play with. Each deck has its own strategy and unique cards, so choose wisely.
   After both players have chosen their decks, the game begins.
-  Each player starts with their respective decks, both with 30 cards, and draws five cards from them. Players alternate in turns until one of them loses the game. At the beggining of each player's turn, that player draws a card from their deck and receives 1 gold. Then that player may play cards from their hand, attack with units or activate abilities. When that player has no more actions to take or simply wishes to end their turn, that player must select the option " End turn".
+  Each player starts with their respective decks, both with 30 cards, and draws five cards from them. Players alternate in turns until one of them loses the game. At the beginning of each player's turn, that player draws a card from their deck and receives 1 gold. Then that player may play cards from their hand, attack with units or activate abilities. When that player has no more actions to take or simply wishes to end their turn, that player must select the option " End turn".
   
 3 - Game Zones
 
