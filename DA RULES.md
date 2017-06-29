@@ -1,7 +1,9 @@
 DAIJOGO is a game programmed by Alexandre Nasajon and developed in conjunction with his friends. It is heavily (and I mean HEAVILY) influenced by Magic: the Gathering, Yu-Gi-Oh!, Pokémon TCG, Hearthstone, Faeria and other games like those. Lots os elements in DAIJOGO are copies of some elements from those games, so I don't expect to make any money out of DAIJOGO at this point.
 
 Number of players: 2
+
 Duration of a match: 5-10 minutes
+
 Fun: lots of fun
 
 1 - How to win the game
