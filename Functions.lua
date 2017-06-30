@@ -114,30 +114,36 @@ Functions.printcard = function(card)
 end
 -----------DESTROY------------
 Functions.destroy = function(card,Destruidor,Player,oponente)
-    Player.graveyard[#Player.graveyard+1] = card
-    if card.tipo == "Unit" then
-        local j = Functions.find(Player.field,card)
-        while j <= #Player.field do
-            Player.field[j] = Player.field[j+1]
-            j = j+1
+
+    if card.effect.ifwoulddie then
+        card.effect.ifwoulddie(card,Player,oponente)
+    else
+
+        Player.graveyard[#Player.graveyard+1] = card
+        if card.tipo == "Unit" then
+            local j = Functions.find(Player.field,card)
+            while j <= #Player.field do
+                Player.field[j] = Player.field[j+1]
+                j = j+1
+            end
+        elseif card.tipo == "Ally" then
+            local j = Functions.find(Player.room,card)
+            while j <= #Player.room do
+                Player.room[j] = Player.room[j+1]
+                j = j+1
+            end
         end
-    elseif card.tipo == "Ally" then
-        local j = Functions.find(Player.room,card)
-        while j <= #Player.room do
-            Player.room[j] = Player.room[j+1]
-            j = j+1
+        print(card.name.." was destroyed.")
+        if card.effect then
+            if card.effect.ifdies then
+                card.effect.ifdies(card,Player,oponente)
+            else
+            end
         end
-    end
-    print(card.name.." was destroyed.")
-    if card.effect then
-        if card.effect.ifdies then
-            card.effect.ifdies(card,Player,oponente)
-        else
+        if modotchebo and Destruidor then 
+            Destruidor.gold = Destruidor.gold+card.cost
+            print(Destruidor.name.." received "..card.cost.." gold!")
         end
-    end
-    if modotchebo and Destruidor then 
-        Destruidor.gold = Destruidor.gold+card.cost
-        print(Destruidor.name.." received "..card.cost.." gold!")
     end
 end
 ------------exile----------------------------------------------------------
