@@ -2285,8 +2285,8 @@ Cards.Valentina = {
     end
 }
 }
-Cards.MasterPaim = {
-    name = "Master Paim",
+Cards.MasterP = {
+    name = "Master P",
     power = 8,
     cost = 1,
     tipo = "Unit",
@@ -2311,8 +2311,8 @@ Cards.MasterPaim = {
     end
 }
 }
-Cards.IsaFusels = {
-    name = "Isa Fusels",
+Cards.Isa = {
+    name = "Isa",
     power = 7,
     cost = 1,
     tipo = "Unit",
@@ -2334,8 +2334,8 @@ Cards.IsaFusels = {
     end
 }
 }
-Cards.Pougy = {
-    name = "Pougy       ",
+Cards.Puji = {
+    name = "Puji",
     power = 12,
     cost = 1,
     tipo = "Unit",
@@ -2386,8 +2386,8 @@ Cards.Pougy = {
     end
 }
 }
-Cards.NasajeraHost = {
-    name = "Nasajera, Host",
+Cards.Host = {
+    name = "Host",
     power = 10,
     cost = 1,
     tipo = "Unit",
@@ -2454,8 +2454,8 @@ Cards.Tchebounty = {
     end
 }
 }
-Cards.JonhZera = {
-    name = "John Zera",
+Cards.JonhZ = {
+    name = "John Z",
     power = 15,
     cost = 1,
     tipo = "Unit",
@@ -2504,8 +2504,8 @@ Cards.JonhZera = {
     end
 }
 }
-Cards.MasterKaplan = {
-    name = "Master Kaplan",
+Cards.MasterK = {
+    name = "Master K",
     power = 11,
     cost = 1,
     tipo = "Unit",
@@ -2531,8 +2531,8 @@ Cards.MasterKaplan = {
     end
 }
 }
-Cards.BrenoHerbal = {
-    name = "Breno Herbal",
+Cards.Breno = {
+    name = "Breno",
     power = 4,
     cost = 1,
     tipo = "Unit",
