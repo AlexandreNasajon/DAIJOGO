@@ -1,366 +1,219 @@
-math.randomseed(os.time())
-local Functions = require("Functions")
-local Player = require("Player")
-local Cards = require("Cards")
-local Decks = require("Decks")
+Functions = {}
 
-------------------------DRAFT--------------------------------------------------------------------------------------------
-Draft =  function()
-    os.execute("clear")
-    while #Player[1].deck < 30 do
-        print(Player[1].name.." deve montar um deck de 30 cards!")
-    
-        m = 1
-        while m <= 5 do
-            Decks.Draftpool[#Decks.Draftpool+1] = Decks.Pool[math.random(1,#Decks.Pool)]
-            m = m+1
-        end
-    
-        i = 1
-        print("#","Name       ","Cost","Type","Power","Loyalty")
-        print("--------------------------------------------------------")
-        while i <= 5 do
-            print(i,Decks.Draftpool[i].name,Decks.Draftpool[i].cost,Decks.Draftpool[i].tipo,Decks.Draftpool[i].power,Decks.Draftpool[i].loyalty)
-            i = i+1
-        end
-        
-        action = tonumber(io.read())
-                    
-        if action == nil or action<1 or action>5 then
-            print("SELECIONE UM CARD VÁLIDO! >.<")
-            
-        else
-            Player[1].deck[#Player[1].deck+1] = Decks.Draftpool[action]
-            print("Você selecionou "..Decks.Draftpool[action].name.."!")
-            print("Seu deck tem "..#Player[1].deck.." card(s) agora. Selecione mais "..30-#Player[1].deck.."!")
-            Decks.Draftpool[1] = nil
-            Decks.Draftpool[2] = nil
-            Decks.Draftpool[3] = nil
-            Decks.Draftpool[4] = nil
-            Decks.Draftpool[5] = nil
-        end
-    end
-    print(Player[1].name.." completou seu deck!")
-    os.execute("clear")
-    while #Player[2].deck < 30 do
-        print(Player[2].name.." deve montar um deck de 30 cards!")
-    
-        m = 1
-        while m <= 5 do
-            Decks.Draftpool[#Decks.Draftpool+1] = Decks.Pool[math.random(1,#Decks.Pool)]
-            m = m+1
-        end
-    
-        i = 1
-        print("#","Name       ","Cost","Type","Power","Loyalty")
-        print("--------------------------------------------------------")
-        while i <= 5 do
-            print(i,Decks.Draftpool[i].name,Decks.Draftpool[i].cost,Decks.Draftpool[i].tipo,Decks.Draftpool[i].power,Decks.Draftpool[i].loyalty)
-            i = i+1
-        end
-        
-        action = tonumber(io.read())
-                    
-        if action == nil or action<1 or action>5 then
-            print("SELECIONE UM CARD VÁLIDO! >.<")
-            
-        else
-            Player[2].deck[#Player[2].deck+1] = Decks.Draftpool[action]
-            print("Você selecionou "..Decks.Draftpool[action].name.."!")
-            print("Seu deck tem "..#Player[2].deck.." card(s) agora. Selecione mais "..30-#Player[2].deck.."!")
-            Decks.Draftpool[1] = nil
-            Decks.Draftpool[2] = nil
-            Decks.Draftpool[3] = nil
-            Decks.Draftpool[4] = nil
-            Decks.Draftpool[5] = nil
+-- These functions are needed for Cards.lua
+
+Functions.find = function( where ,what )
+    for k,v in pairs(where) do
+        if v == what then
+        return k
         end
     end
 end
---------------------------------------------------------------------------------
 
-os.execute("clear")
-print("      DAIJOGO: first edition")
-print("           Versão 1.4.2")
-print("           Game Designer")
-print("         Alexandre Nasajon        ")
-print("           Game Developer           ")
-print("         Alexandre Nasajon        ")
-print("           Game Producer           ")
-print("         Alexandre Nasajon        ")
-print("          Game Programmer          ")
-print("         Alexandre Nasajon        ")
-print("       Com a colaboração de       ")
-print("               Kiki")
-print("               peize")
--- print("         Leonardo Kaplan")
--- print("         Thiago Rebello")
-print("What's player 1's name")
-Player[1].name = io.read()
-print("So player 1's name is "..Player[1].name.."!")
-print("And what's player 2's name?")
-Player[2].name = io.read()
-print("So player 2's name is "..Player[2].name.."!")
-print("I imagine both player read the manual, right? Right! Then good luck!")
-print("-----GAME STARTOOOOO-----")
--- print("Select the game's mode:")
--- print("1 - Standard")
--- print("2 - Tchebo")
--- local opcao = tonumber(io.read())
--- if opcao == 2 then
---     modotchebo = true
--- end
--- print("Select the game's format:")
--- print("1 - Standard")
--- print("2 - Draft")
--- local opcao = tonumber(io.read())
--- if opcao == 1 then
---     print("Standard format it is!")
-    print("Choose your decks!")
-    local z = false
-    local e = false
-    while z == false do
-        print(Player[1].name.." must choose a deck:")
-        print("1 - Aristocrats")
-        print("2 - Storm")
-        print("3 - Blink")
-        print("4 - Reanimator")
-        print("5 - Librarian Lich")
-        print("6 - Burn")
-        print("7 - Paim Ooze")
-        print("8 - Level Up")
-        local opcao = tonumber(io.read())
-        if opcao ~= nil and opcao == 1 then
-            tempcard = {}
+Functions.shuffle = function(a)
+	local c = #a
+	for i = 1, c do
+		local ndx0 = math.random( 1, c )
+		a[ ndx0 ], a[ i ] = a[ i ], a[ ndx0 ]
+	end
+	return a
+end
 
-            for k,v in pairs(Decks.Aristocratas) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[1].deck[#Player[1].deck+1] = tempcard
-                tempcard = {}
+--[[
+    The most important function
+]]
+Functions.move = function( what , origin , destiny )
+    destiny[#destiny+1] = what
+    local j = Functions.find( origin , what)
+    if j then
+        while j <= #origin do
+            origin[j] = origin[j+1]
+            j = j+1
+        end
+    else print('J É NIL') -- debugger
+    end
+end
+
+Functions.drawCards = function( player , n )
+    if #player.deck > 0 then
+        if n > #player.deck then
+            n = #player.deck
+        end
+        for i = 1 , n do
+            Functions.move( player.deck[#player.deck] , player.deck , player.hand )
+        end
+        print(player.name..' drew '..n..' cards.')
+    else
+        print('THE DECK IS EMPTY')
+    end
+end
+
+Functions.printZone = function( zone )
+    local i = 1
+    print("#","Name","Points","Has been activated")
+    while i <= #zone do
+        print(i,zone[i].name,zone[i].points,zone[i].activated)
+        i = i+1
+    end
+end
+
+Functions.printCard = function( card )
+    print('Name: '..card.name)
+    print('Points: '..card.points)
+    print('Cost: '..card.costText)
+    print('Effect: '..card.effectText)
+end
+
+--[[
+    Shows a table (where) and returns the selected element
+]]
+Functions.pick = function( where )
+    while true do
+        Functions.printZone( where)
+        print('Pick one:')
+        local opt = tonumber(io.read())
+        if opt ~= nil then
+            if opt > 0 and opt <= #where then
+                return where[opt]
             end
-            for k,v in pairs(Decks.AristocratasExtra) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[1].extra[#Player[1].extra+1] = tempcard
-                tempcard = {}
-            end
-            z = true
-        elseif opcao ~= nil and opcao == 2 then
-                tempcard = {}
-            for k,v in pairs(Decks.Storm) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[1].deck[#Player[1].deck+1] = tempcard
-                tempcard = {}
-            end
-            for k,v in pairs(Decks.StormExtra) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[1].extra[#Player[1].extra+1] = tempcard
-                tempcard = {}
-            end
-            z = true
-        elseif opcao ~= nil and opcao == 3 then
-                tempcard = {}
-            for k,v in pairs(Decks.Blink) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[1].deck[#Player[1].deck+1] = tempcard
-                tempcard = {}
-            end
-            for k,v in pairs(Decks.BlinkExtra) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[1].extra[#Player[1].extra+1] = tempcard
-                tempcard = {}
-            end
-            z = true
-        elseif opcao ~= nil and opcao == 4 then
-                tempcard = {}
-            for k,v in pairs(Decks.Reanimator) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[1].deck[#Player[1].deck+1] = tempcard
-                tempcard = {}
-            end
-            for k,v in pairs(Decks.ReanimatorExtra) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[1].extra[#Player[1].extra+1] = tempcard
-                tempcard = {}
-            end
-            z = true
-        elseif opcao ~= nil and opcao == 5 then
-                tempcard = {}
-            for k,v in pairs(Decks.LibrarianLich) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[1].deck[#Player[1].deck+1] = tempcard
-                tempcard = {}
-            end
-            for k,v in pairs(Decks.LibrarianLichExtra) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[1].extra[#Player[1].extra+1] = tempcard
-                tempcard = {}
-            end
-            z = true
-        elseif opcao ~= nil and opcao == 6 then
-                tempcard = {}
-            for k,v in pairs(Decks.Burn) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[1].deck[#Player[1].deck+1] = tempcard
-                tempcard = {}
-            end
-            for k,v in pairs(Decks.BurnExtra) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[1].extra[#Player[1].extra+1] = tempcard
-                tempcard = {}
-            end
-            z = true
-        elseif opcao ~= nil and opcao == 7 then
-                tempcard = {}
-            for k,v in pairs(Decks.PaimOoze) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[1].deck[#Player[1].deck+1] = tempcard
-                tempcard = {}
-            end
-            for k,v in pairs(Decks.PaimOozeExtra) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[1].extra[#Player[1].extra+1] = tempcard
-                tempcard = {}
-            end
-            z = true
-        elseif opcao ~= nil and opcao == 8 then
-                tempcard = {}
-            for k,v in pairs(Decks.LevelUp) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[1].deck[#Player[1].deck+1] = tempcard
-                tempcard = {}
-            end
-            for k,v in pairs(Decks.LevelUpExtra) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[1].extra[#Player[1].extra+1] = tempcard
-                tempcard = {}
-            end
-            z = true
-        else
-            print("CHOOSE A DECK!")
         end
     end
-    while e == false do
-        print(Player[2].name.." must choose a deck:")
-        print("1 - Aristocrats")
-        print("2 - Storm")
-        print("3 - Blink")
-        print("4 - Reanimator")
-        print("5 - Librarian Lich")
-        print("6 - Burn")
-        print("7 - Paim Ooze")
-        print("8 - Level Up")
-        local opcao = tonumber(io.read())
-        if opcao ~= nil and opcao == 1 then
-            tempcard = {}
+end
 
-            for k,v in pairs(Decks.Aristocratas) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[2].deck[#Player[2].deck+1] = tempcard
-                tempcard = {}
-            end
-            for k,v in pairs(Decks.AristocratasExtra) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[2].extra[#Player[2].extra+1] = tempcard
-                tempcard = {}
-            end
-            e = true
-        elseif opcao ~= nil and opcao == 2 then
-            tempcard = {}
-            for k,v in pairs(Decks.Storm) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[2].deck[#Player[2].deck+1] = tempcard
-                tempcard = {}
-            end
-            for k,v in pairs(Decks.StormExtra) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[2].extra[#Player[2].extra+1] = tempcard
-                tempcard = {}
-            end
-            e = true
-        elseif opcao ~= nil and opcao == 3 then
-                tempcard = {}
-            for k,v in pairs(Decks.Blink) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[2].deck[#Player[2].deck+1] = tempcard
-                tempcard = {}
-            end
-            for k,v in pairs(Decks.BlinkExtra) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[2].extra[#Player[2].extra+1] = tempcard
-                tempcard = {}
-            end
-            e = true
-        elseif opcao ~= nil and opcao == 4 then
-                tempcard = {}
-            for k,v in pairs(Decks.Reanimator) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[2].deck[#Player[2].deck+1] = tempcard
-                tempcard = {}
-            end
-            for k,v in pairs(Decks.ReanimatorExtra) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[2].extra[#Player[2].extra+1] = tempcard
-                tempcard = {}
-            end
-            e = true
-        elseif opcao ~= nil and opcao == 5 then
-                tempcard = {}
-            for k,v in pairs(Decks.LibrarianLich) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[2].deck[#Player[2].deck+1] = tempcard
-                tempcard = {}
-            end
-            for k,v in pairs(Decks.LibrarianLichExtra) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[2].extra[#Player[2].extra+1] = tempcard
-                tempcard = {}
-            end
-            e = true
-        elseif opcao ~= nil and opcao == 6 then
-                tempcard = {}
-            for k,v in pairs(Decks.Burn) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[2].deck[#Player[2].deck+1] = tempcard
-                tempcard = {}
-            end
-            for k,v in pairs(Decks.BurnExtra) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[2].extra[#Player[2].extra+1] = tempcard
-                tempcard = {}
-            end
-            e = true
-        elseif opcao ~= nil and opcao == 7 then
-                tempcard = {}
-            for k,v in pairs(Decks.PaimOoze) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[2].deck[#Player[2].deck+1] = tempcard
-                tempcard = {}
-            end
-            for k,v in pairs(Decks.PaimOozeExtra) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[2].extra[#Player[2].extra+1] = tempcard
-                tempcard = {}
-            end
-            e = true
-        elseif opcao ~= nil and opcao == 8 then
-                tempcard = {}
-            for k,v in pairs(Decks.LevelUp) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[2].deck[#Player[2].deck+1] = tempcard
-                tempcard = {}
-            end
-            for k,v in pairs(Decks.LevelUpExtra) do
-                tempcard = Functions.copiar(v,tempcard)
-                Player[2].extra[#Player[2].extra+1] = tempcard
-                tempcard = {}
-            end
-            e = true
-        else
-            print("CHOOSE A DECK!")
+Functions.newPlayer = function()
+    player = {
+        name = '',
+        points = 0,
+        deck = {},
+        hand = {},
+        field = {},
+        bin = {},
+        erased = {},
+        tokenBin = {}
+    }
+    return player
+end
+
+--[[ Creates a unit token on the player's field,
+    since they dont have effects, they cant be activated
+]]
+Functions.newToken = function( player )
+    local token = {
+        name = 'Token',
+        originalPoints = 1,
+        points = 1,
+        activated = false,
+        costText = '',
+        effectText = '',
+        cost = function( player )
+            return true
+        end,
+        effect = function( card , player , opponent )
+            return false
+        end
+    }
+    player.field[#player.field + 1] = token
+    print(player.name..' created a 1 point unit token.')
+end
+
+--[[ Certain effects will ask the player to destroy tokens in order to activate
+    They will count the number of tokens and then ask the player how many they wish to destroy
+]]
+Functions.countTokens = function( player )
+    n = 0
+    for i = 1 , #player.field do
+        if player.field[i].name == 'Token' then
+            n = n + 1
         end
     end
--- elseif opcao == 2 then
---     Draft()
--- end
-print("That's it, peize! Have fun! :3 :3 :3")
+    return n
+end
 
-Functions.game()
+--[[ When cards move from the field to any other zone, they must be reset,
+    unless the card moves from one field to another, that is.
+    It's important to reset the card in this situation so as
+    to mimic the physical card game, where counters cant be moved outside of the field.
+]]
+Functions.resetCard = function( card )
+    card.points = card.originalPoints
+    card.activated = false
+end
+
+--[[
+    When a unit's points become 0, it is destroyed (sent to the bin)
+    Since tokens dont go to the regular bin and should be completely eliminated,
+    the player.tokenBin serves as an easy way to get rid of them
+]]
+Functions.checkDeath = function( card , player )
+    if card.points < 1 then
+        if card.name == 'Token' then
+            Functions.move( card , player.field , player.tokenBin)
+        else
+            Functions.resetCard( card )
+            Functions.move( card , player.field , player.bin )
+        end
+        print(card.name..' was destroyed.')
+    end
+end
+
+--[[
+    Some effects require the player to move many cards from a zone to another
+    moveMany shows all cards from the origin zone for the player to pick, one by one,
+    and moves them all to the destiny zone
+]]
+Functions.moveMany = function( n , origin , destiny )
+    if #origin >= n then
+        while n > 0 do
+            print('Select '..n..' card(s):')
+            Functions.move( Functions.pick( origin ) , origin , destiny )
+            n = n - 1
+        end
+        return true
+    end
+end
+
+--[[
+    Updates the player's score,
+    they must become 0 before the counting so as to not accumulate from earlier turns
+]]
+Functions.updatePoints = function( player )
+    player.points = 0
+    for i = 1 , #player.field do
+        player.points = player.points + player.field[i].points
+    end
+end
+
+Functions.playCard = function( player , card )
+    Functions.printCard( card )
+    print('PLAY CARD?')
+    print('0 - RETURN')
+    print('1 - PLAY')
+    local opt = tonumber(io.read())
+    if not (opt == 1) then 
+        return 
+    else
+        if card.cost( player ) == true then
+            Functions.move( card , player.hand , player.field )
+            Functions.updatePoints( player )
+            print(player.name..' PLAYED '..card.name)
+            return
+        else
+            print('YOU CANNOT PAY THE COST')
+        end
+    end
+end
+
+--[[
+    Very important
+    Cards exist as abstract objects and must be copied into a table (b) before being put into a deck
+    Without this step, all instances of a card in the game would be considered the same entity,
+    that is, a change in one of them would change all others as well
+]]
+Functions.abstractToConcrete = function(card,b)
+    for k,v in pairs(card) do
+        b[k] = v
+    end
+    return b
+end
+
+return Functions
