@@ -1,754 +1,158 @@
-local Player = require("Player")
-local Functions = {}
+# Importing the library
+from ast import Return
+import pygame
+import cards
+# Initializing Pygame
+pygame.init()
+# Initializing Font
+pygame.font.init()
+big_font = pygame.font.Font(None, 36)
+medium_font = pygame.font.Font(None, 26)
+small_font = pygame.font.Font(None, 14)
+# Initializing surface
+surface = pygame.display.set_mode((1200,600))
 
------------SHUFFLE DECK----------------NAO FUNCIONA
-Functions.shuffle  = function(Player1)
-    local deckfim = {}
-    local i = 1
-    while i < #Player1.deck do
-        card = math.random(1,#Player1.deck)
-        deckfim.i = Player1.deck.card
-        Player1.deck.card = nil
-        i = i+1
-    end
-    Player1.deck = deckfim
-    return Player1.deck
-end
+class Player():
+    def __init__(self):
+        self.points = 0
+        self.name = ''
+        self.hand = [ 6 , [] , [[200,460],[300,460],[400,460],[500,460],[600,460],[700,460]] ] # X = 200 até 700 / Y = 460 / 
+        self.field = [ 8 , [] , [[200,320],[300,320],[400,320],[500,320],[600,320],[700,320],[800,320],[900,320]] ] # X = 200 até 800/  Y = 320 / 
+        self.trash = []
+        self.opponent_hand = [ 6 , [] ,  [[200,20],[300,20],[400,20],[500,20],[600,20],[700,20]] ] # X = 200 até 700 / Y= 20 / 
+        self.opponent_field = [ 8 , [] , [[200,160],[300,160],[400,160],[500,160],[600,160],[700,160],[800,160],[900,160]] ] # X = 200 até 800 / Y = 160 / 
+        self.opponent_trash = []
 
---------outro shuffle---------FUNCIONA
-Functions.shuffle2 = function(a)
-	local c = #a
-	for i = 1, c do
-		local ndx0 = math.random( 1, c )
-		a[ ndx0 ], a[ i ] = a[ i ], a[ ndx0 ]
-	end
-	return a
-end
-------------COPIAR---------
-Functions.copiar = function(card,b)
-    for k,v in pairs(card) do
-        b[k] = v
-    end
-    return b
-end
------------FIND-------------
-Functions.find = function(a,n)
-    local i = 1
-    while i <= #a do
-        if a[i] == n then
-            return i
-        else
-            i = i+1
-        end
-    end
-end
-----------FIND2--------------
-Functions.find2 = function(a,n)
-    for k,v in pairs(a) do
-        if v == n then
-        return k
-        end
-    end
-end
-------------DRAW----------------
-Functions.draw = function(j)
-    j.hand[#j.hand+1] = j.deck[#j.deck]
-    j.deck[#j.deck] = nil
-end
+def isInside(mouse_pos , object):
+    x, y = mouse_pos
+    return object.x <= x <= (object.x + object.w) and object.y <= y <= (object.y + object.h)
 
-----------GET GOLD-------------
-Functions.getgold = function(Player)
-    Player.gold = Player.gold+1
-end
+def move(what, origin, destiny):
+    if len(destiny[1]) < destiny[0]: # se houver espaço no destino
+        destiny[1].append(what) # coloca a carta no destino
+        j = destiny[1].index(what) # pega o index da carta no destino
+        what.x = destiny[2][j][0] # muda x da carta pro x do slot do destino
+        what.y = destiny[2][j][1] # muda y da carta pro y do slot do destino
+        i = origin[1].index(what) # pega index da carta na origem
+        origin[1].pop(i) # remove carta da origem
+        origin[1].insert(i, origin[1][-1] ) # move última carta pra posição original do what
+    else:
+        print("can't move")
 
----------GET STAMINA------------
-Functions.getstamina = function(card)
-    card.stamina = card.stamina +1
-end
---------DISCARD--------------
-Functions.discard = function(Player1,Player2)
-    local h = false
-    while h == false do
-        print("Discard a card:")
-        Functions.printzone(Player1.hand)
-        local opcao = tonumber(io.read())
-        if opcao ~= nil and opcao <= #Player1.hand and opcao > 0 then
-            Player1.graveyard[#Player1.graveyard+1] = Player1.hand[opcao]
-            while opcao <= #Player[t].hand do
-                Player[t].hand[opcao] = Player[t].hand[opcao+1]
-                opcao = opcao+1
-            end
-            h = true
-        else
-            print("YOU MUST DISCARD A CARD!")
-        end
-    end
-    if Player1.graveyard[#Player1.graveyard].tipo == "Unit" then
-        if Player1.graveyard[#Player1.graveyard].effect.ifdiscarded then
-            Player1.graveyard[#Player1.graveyard].effect.ifdiscarded(Player1.graveyard[#Player1.graveyard],Player1,Player2)
-        end
-    end
-end
-------------PRINTZONE----------
-Functions.printzone = function(zone)
+#create function for drawing text
+def draw_text(text, font, text_col, x, y):
+	img = font.render(text, True, text_col)
+	surface.blit(img, (x, y))
 
-    local i = 1
-    print("#","Name           ","Cost","Type","Power","Loyalty") --name tem 15 caracteres
-    while i <= #zone do
-        print(i,zone[i].name,zone[i].cost,zone[i].tipo,zone[i].power,zone[i].loyalty)
-        i = i+1
-    end
-end
------------ PRINT CARD---------
-Functions.printcard = function(card)
-    print("Name: "..card.name)
-    print("Cost: "..card.cost)
-    print("Type: "..card.tipo)
-    if card.power then
-        print("power: "..card.power)
-    end
-    print("Description: "..card.description)
-    if card.loyalty then
-        print("Loyalty: "..card.loyalty)
-    end
-end
------------DESTROY------------
-Functions.destroy = function(card,Destruidor,Player,oponente)
+# recebe uma carta e desenha
+def drawCard(card):
+    pygame.draw.rect(surface, (5,102,8), pygame.Rect(card.x, card.y, card.h, card.w)) # dimensions
+    pygame.draw.rect(surface, (5,200,8), pygame.Rect(card.x+5, card.y+25, 85, 70)) # art box
+    draw_text(str(card.name), medium_font, (255,255,255), card.x+20, card.y+5)
+    draw_text(str(card.environment), medium_font, (255,255,255), card.x+10, card.y+110)
+    draw_text(str(card.points), medium_font, (255,255,255), card.x+5, card.y+5)
+    draw_text(str(card.text), small_font, (255,255,255), card.x+20, card.y+100)
 
-    if card.effect.ifwoulddie then
-        card.effect.ifwoulddie(card,Player,oponente)
-    else
+# desenha uma carta com a face para baixo
+def drawHiddenCard( x , y):
+    pygame.draw.rect(surface, (5,102,8), pygame.Rect(x, y, 95, 132)) # dimensions
 
-        Player.graveyard[#Player.graveyard+1] = card
-        if card.tipo == "Unit" then
-            local j = Functions.find(Player.field,card)
-            while j <= #Player.field do
-                Player.field[j] = Player.field[j+1]
-                j = j+1
-            end
-        elseif card.tipo == "Ally" then
-            local j = Functions.find(Player.room,card)
-            while j <= #Player.room do
-                Player.room[j] = Player.room[j+1]
-                j = j+1
-            end
-        end
-        print(card.name.." was destroyed.")
-        if card.effect then
-            if card.effect.ifdies then
-                card.effect.ifdies(card,Player,oponente)
-            else
-            end
-        end
-        if modotchebo and Destruidor then 
-            Destruidor.gold = Destruidor.gold+card.cost
-            print(Destruidor.name.." received "..card.cost.." gold!")
-        end
-    end
-end
-------------exile----------------------------------------------------------
-Functions.exile = function(card,Player,oponente)
-    Player.exile[#Player.exile+1] = card
-    local j = Functions.find(Player.field,card)
-    while j <= #Player.field do
-        Player.field[j] = Player.field[j+1]
-        j = j+1
-    end
-    print(card.name.." was exiled.")
-end
------------combat---------------------------------------------------------
-Functions.combat = function(atacante,defensor,Player1,Player2)
+# desenha o lixo    
+def drawTrash(x,y):
+    pygame.draw.rect(surface, (5,102,8), pygame.Rect(x, y, 95, 132)) # dimensions
+    draw_text("TRASH", big_font, (255,255,255), x+5, y+10)
 
-    if atacante.power > defensor.power then
-        Functions.destroy(defensor,Player1,Player2,Player1)
-        if atacante.effect.ifdestroys then
-            atacante.effect.ifdestroys(atacante,Player1,Player2,defensor)
-        end
-    elseif atacante.power == defensor.power then
-        Functions.destroy(defensor,Player1,Player2,Player1)
-        Functions.destroy(atacante,Player1,Player1,Player2)
-        if atacante.effect.ifdestroys then
-            atacante.effect.ifdestroys(atacante,Player1,Player2,defensor)
-        end
-        if defensor.effect.ifdestroys then
-            defensor.effect.ifdestroys(defensor,Player2,Player1,atacante)
-        end
-    elseif atacante.power < defensor.power then
-        Functions.destroy(atacante,Player1,Player1,Player2)
-        if defensor.effect.ifdestroys then
-            defensor.effect.ifdestroys(defensor,Player2,Player1,atacante)
-        end
-    end
-end
+# desenha o deck
+def drawDeck():
+    pygame.draw.rect(surface, (5,102,8), pygame.Rect(1000, 250, 95, 132)) # dimensions
+    draw_text("DECK", big_font, (255,255,255), 1010, 260)
+    draw_text("Draw 2 cards", small_font, (255,255,255), 1005, 350)
 
------------CAST----------------------------------------------------
-Functions.cast = function(card,Player1,Player2)
-    if card.tipo == "Support" then
-        card.effect(card,Player1,Player2)
-        Player1.graveyard[#Player1.graveyard+1] = card
-        Player1.lastsupport = card
-    elseif card.tipo == "Spell" then
-        card.effect(card,Player1,Player2)
-        Player1.graveyard[#Player1.graveyard+1] = card
-        Player1.magic = Player1.magic-1
-    end
-end
+def drawHand(player):
+    for i in range(len(player.hand[1])):
+        drawCard(player.hand[1][i])
 
------------SUMMON-------------------------------------------------------
-Functions.summon = function(card,Player1,Player2)
-    if card.tipo == "Unit" then
-        Player1.field[#Player1.field+1] = card
-        print(card.name.." was summoned.")
-        if card.effect.ifsummoned then
-            card.effect.ifsummoned(card,Player1,Player2)
-        end
-    end
-end
------------CONVOCAR----------------------------------------------------------
-Functions.convocar = function(card,Player1,Player2)
-    if card.tipo == "Ally" then
-        Player1.room[#Player1.room+1] = card
-        print(card.name.." was called.")
-        if card.effect.ifconvocado then
-            card.effect.ifconvocado(card,Player1,Player2)
-        end
-    end
-end
-----------BUILD-------------------------------------------------------
-Functions.build = function(card,Player1,Player2)
-    if card.tipo == "Totem" then
-        Player1.temple[#Player1.temple+1] = card
-        print(card.name.." was built.")
-        if card.effect.ifbuilt then
-            card.effect.ifbuilt(card,Player1,Player2)
-        end
-    end
-end
-----------PLAY-------------------------------------------------------
-Functions.play = function(card,Player1,Player2)
-    if card.tipo == "Unit" then
-        Functions.summon(card,Player1,Player2)
-    elseif card.tipo == "Support" or card.tipo == "Spell" then
-        Functions.cast(card,Player1,Player2)
-    elseif card.tipo == "Ally" then
-        Functions.convocar(card,Player1,Player2)
-    elseif card.tipo == "Totem" then
-        Functions.build(card,Player1,Player2)
-    end
-end
+def drawField(player):
+    for i in range(len(player.field[1])):
+        drawCard(player.field[1][i])
 
------------damage-----------------------------------------------------
-Functions.damage = function(alvo,quantidade)
-    alvo.life = alvo.life - quantidade
-end
------------GET LIFE----------------------------------------------------
-Functions.getlife = function(alvo,quantidade)
-    alvo.life = alvo.life + quantidade
-end
-----------STORM-------------rajada--------------------------------------------
-Functions.storm = function(Player1,quantidade)
-    Player1.storm = Player1.storm+quantidade
-    print(Player1.name.."'s storm was raised by "..quantidade..".")
-end
----------ability-------------------------------------------------------
-Functions.ability = function(card)
-    if card.stamina > 0 then
-        card.stamina = card.stamina-1
-        card.effect()
-    else 
-        print("THIS UNIT HAS NO ENERGY LEFT!")
-    end
-end
------------End TURN------------nao testada
-Functions.endturn = function(Player1,Player2)
-    eoteffects = {}
--------------------Checks if there are any totem effects-----------------------
-        if #Player1.temple > 0 then
-            local i = 1
-            while i <= #Player1.temple do
-                local cardeot = {card = Player1.temple[i],eot = Player1.temple[i].effect.ateot}
-                eoteffects[#eoteffects+1] = cardeot
-                i = i+1
-            end
-        end
-------------------Checks if there are any unit effects-------------------------
-        if #Player1.field > 0 then
-            local i = 1
-            while i <= #Player1.field do
-                if Player1.field[i].effect.ateot then
-                    local cardeot = {card = Player1.field[i],eot = Player1.field[i].effect.ateot}
-                    eoteffects[#eoteffects+1] = cardeot
-                end
-                i = i+1
-            end
-        end
-------------------Checks if there are any unit effects in the graveyard--------------
-        if #Player1.graveyard > 0 then
-            local i = 1
-            while i <= #Player1.graveyard do
-                if Player1.graveyard[i].tipo == "Unit" then
-                    if Player1.graveyard[i].effect.ateotgrave then
-                        local cardeot = {card = Player1.graveyard[i],eot = Player1.graveyard[i].effect.ateotgrave}
-                        eoteffects[#eoteffects+1] = cardeot
-                    end
-                end
-                i = i+1
-            end
-        end
------------------Activates the effects----------------------------
-        if #eoteffects > 0 then
-            local i = 1
-            while i <= #eoteffects do
-                local card = eoteffects[i].card
-                local eot = eoteffects[i].eot
-                eot(card,Player[t],Player[y])
-                i = i+1
-            end
-        end
------------------Other eot stuff------------------------------
+def drawOpponentField(opponent):
+    for i in range(len(opponent.field[1])):
+        drawCard(opponent.field[1][i])
 
-        print(Player1.name.." turn ends.")
-        Player1.storm = 0
-        Player1.turnevents = {}
-        
-        
-        if #Player2.deck > 0 then
-            Functions.draw(Player2)
-            print(Player2.name.." draws a card.")
-        else
-            print(Player2.name.."'s deck has no more cards.")
-        end
-        Functions.getgold(Player2)
-        print("Player "..Player2.name.." receives 1 gold.")
-        local i = #Player2.field
-        while i > 0 do
-            Player2.field[i].stamina = 1
-            i = i-1
-        end
-        local h = #Player2.room
-        while h > 0 do
-            Player2.room[h].stamina = 1
-            h = h-1
-        end
-        local u = #Player2.hand
-        while u > 0 do
-            Player2.hand[u].stamina = 1
-            u = u-1
-        end
-        local q = #Player2.graveyard
-        while q > 0 do
-            Player2.graveyard[q].stamina = 1
-            q = q-1
-        end
-        Player2.magic = 1
-end
-------------turn---------------
-Functions.turn = function(t)
+def drawBoard(player,opponent):
+    surface.fill((0,0,0))
+    draw_text(player.name+" points: "+str(player.points), medium_font, (255,255,255), 50, 450)
+    draw_text(opponent.name+" points: "+str(opponent.points), medium_font, (255,255,255), 50, 150)
+    draw_text("VEGANO GAME", big_font, (255,255,255), 10, 10)
+    drawDeck()
+    drawTrash(1000,450) # LIXO DO JOGADOR
+    drawTrash(1000,50) # LIXO DO OPONENTE
+    drawField(player)
+    drawOpponentField(opponent)
+    drawHand(player)
+    for i in range(len(opponent.hand[1])): # MÃO DO OPONENTE
+        drawHiddenCard(200+(i*100) , 20)
 
-    while t == 1 or t == 2 do
-        
-        print("It's player "..Player[t].name.." turn!")
-        print(Player[y].name)
-        print("Life: "..Player[y].life,"Level: "..Player[y].level..".")
-        print("--------------------------------------------------------------------------------")
-        print(Player[t].name)
-        print("Life: "..Player[t].life,"Gold: "..Player[t].gold,"Magic: "..Player[t].magic,"Storm: "..Player[t].storm,"Level: "..Player[t].level)
-        print("1 - Hand")
-        print("2 - Field")
-        print("3 - Room")
-        print("4 - Temple")
-        print("5 - Graveyard")
-        print("6 - End turn")
-        print("7 - Extra Deck")
-        
-        local option = tonumber(io.read())
-----------SUA MÃO--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        while option == 1 do
-            print("Your hand:")
-            print("0 - Return")
-            Functions.printzone(Player[t].hand)
-            
-            local opt = tonumber(io.read())
-            
-            if opt == nil then
-                print("SELECT A VALID OPTION!")
-                break
-            elseif opt == 0 then
-                    break
-            elseif opt <= #Player[t].hand and opt > 0 then
-                while opt <= #Player[t].hand and opt > 0 do
-                    local card = Player[t].hand[opt]
-                    Functions.printcard(card)
-                    print("0 - Return")
-                    print("1 - Play")
-                    
-                    opcao = tonumber(io.read())
-                    
-                    if opcao == nil then
-                        print("SELECT A VALID OPTION!")
-                    
-                    elseif opcao == 0 then
-                        opt = 0
-                        break
+def checkWin(player):
+    if player.points >= 7:
+        return True
+
+def endScreen(player):
+    board_font = pygame.font.Font(None, 36)
+    title = board_font.render(player.name+" VENCEU!!!", True, (255,255,255))
+    surface.blit(title, (500,10))
+    winner = True
+    return winner
+
+def action(player): # TO DO
+    while True:
+        for event in pygame.event.get():    
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for card in player.hand[1]:
+                    if isInside(event.pos , card):
+                        print('oi')
+                        move(card , player.hand , player.field)
                         
-                    elseif opcao == 1 and Player[t].hand[opt].tipo == "Spell" and Player[t].magic > 0 and Player[t].gold >= Player[t].hand[opt].cost then
-                        Player[t].gold = Player[t].gold - Player[t].hand[opt].cost
-                        local w = opt
-                            while w <= #Player[t].hand do
-                                Player[t].hand[w] = Player[t].hand[w+1]
-                                w = w+1
-                            end
-                        Functions.play(card,Player[t],Player[y])
-                        break
-                    elseif opcao == 1 and Player[t].hand[opt].tipo ~= "Spell" and Player[t].gold >= Player[t].hand[opt].cost then
-                        Player[t].gold = Player[t].gold - Player[t].hand[opt].cost
-                        local w = opt
-                            while w <= #Player[t].hand do
-                                Player[t].hand[w] = Player[t].hand[w+1]
-                                w = w+1
-                            end
-                        Functions.play(card,Player[t],Player[y])
-                        break
-                    elseif opcao == 1 and Player[t].gold < Player[t].hand[opt].cost then
-                        print("YOU DON'T HAVE ENOUGH GOLD! :x")
-                    elseif opcao == 1 and Player[t].hand[opt].tipo == "Spell" and Player[t].magic < 1 then
-                        print("YOU CAN'T PLAYER ANOTHER MAGIC CARD THIS TURN!")
-                    else
-                        print("SELECT A VALID OPTION")
-                    end
-                end
-            else
-                print("SELECT A VALID OPTION!")
-            end
-        end
-------------------fieldS-------------------
-        while option == 2 do
-            print("Select field:")
-            print("0 - Return")
-            print("1 - Your field")
-            print("2 - Opponent's field")
-                    
-            local num = tonumber(io.read())
-            
-            if num == nil then
-                print("THAT IS NOT A VALID OPTION!")
-                break
-            elseif num == 0 then
-                break
-            end
-                
-            while num == 1 do
-                print("Your field:")
-                print("0 - Return")
-                Functions.printzone(Player[t].field)
-                local opcao = tonumber(io.read())
-                if opcao == nil then
-                    print("THAT IS NOT A VALID OPTION!")
-                    break
-                elseif opcao == 0 then
-                    break
-                elseif opcao <= #Player[t].field then
-                    local card = Player[t].field[opcao]
-                    Functions.printcard(card)
-                    print("0 - Return")
-                    print("1 - Attack")
-                    if card.effect.ability then
-                        print("2 - Ability")
-                    end
-                    if card.effect.ability and card.effect.ultra and Player[t].ultra > 0 then
-                        print("3 - ULTRA")
-                    elseif card.effect.ultra and Player[t].ultra > 0 then
-                        print("2 - ULTRA")
-                    end
-                    local decisao = tonumber(io.read())
-                    if decisao == nil then
-                        print("THAT IS NOT A VALID OPTION!")
-                        break
-                    elseif decisao == 0 then
-                        break
------------------------------ATAQUE---------------------------------------------------------------------
-                    elseif decisao == 1 then
-                        while decisao == 1 do
-                            local atacante = card
-                            print("Select target:")
-                            print("0 - Return")
-                            print("1 - Opponent")
-                            if #Player[y].field > 0 then
-                                print("2 - Enemy units")
-                            end
-                                    
-                            local alvo = tonumber(io.read())
-                            
-                            if alvo == nil then
-                                print("THAT IS NOT A VALID OPTION!")
-                                decisao = 0
-                                break
-                            elseif alvo == 0 then
-                                decisao = 0
-                                break
-                                    
-                            elseif alvo == 1 then
-                                if atacante.stamina > 0 then
-                                    Player[y].life = Player[y].life - atacante.power
-                                    print("Player "..Player[y].name.."'s life is now "..Player[y].life..".")
-                                    atacante.stamina = atacante.stamina - 1
-                                    decisao = 0
-                                    break
-                                else
-                                    print("THIS UNIT HAS NO ENERGY LEFT TO ATTACK! :'(")
-                                    decisao = 0
-                                    break
-                                end
-                            end
-                                    
-                            while alvo == 2 and #Player[y].field > 0 do
-                                print("Select target:")
-                                print("0 - Return")
-                                Functions.printzone(Player[y].field)
-                                
-                                local num2 = tonumber(io.read())
-                                        
-                                if num2 == nil then
-                                    print("THAT IS NOT A VALID OPTION!")
-                                    decisao = 0
-                                    break
-                                elseif num2 == 0 then
-                                    decisao = 0
-                                    break
-                                        
-                                elseif num2 <= #Player[y].field then
-                                    local defensor = Player[y].field[num2]
-                                    Functions.combat(atacante,defensor,Player[t],Player[y])
-                                    decisao = 0
-                                    break
-                                else
-                                    print("THAT IS NOT A VALID OPTION!")
-                                    decisao = 0
-                                    break
-                                end
-                            end
-                                    
-                            if alvo ~= nil and alvo ~= 0 and alvo ~= 1 and alvo ~= 2 then
-                                    print("THAT IS NOT A VALID OPTION!")
-                                    break
-                            end
-                            decisao = 0
-                        end
--------------------------------ability------------------------------------------------------------------------------------------
-                    elseif decisao == 2 and card.effect.ability and card.stamina > 0 then
-                        card.effect.ability(card,Player[t],Player[y])
-                        card.stamina = card.stamina-1
-                        break
-                    elseif decisao == 2 and card.effect.ability and card.stamina < 1 then
-                        print("THAT UNIT HAS NO ENERGY LEFT!")
-                        break
-                    elseif decisao == 2 and Player[t].ultra > 0 and card.effect.ultra and card.stamina > 0 and card.effect.ability == nil then
-                        card.effect.ultra(card,Player[t],Player[y])
-                        Player[t].ultra = Player[t].ultra-1
-                        card.stamina = card.stamina-1
-                    elseif decisao == 3 and Player[t].ultra > 0 and card.effect.ultra and card.stamina > 0 then
-                        card.effect.ultra(card,Player[t],Player[y])
-                        Player[t].ultra = Player[t].ultra-1
-                        card.stamina = card.stamina-1
-                    else
-                        print("THAT IS NOT A VALID OPTION!")
-                        break
-                    end
-                else
-                    print("THAT IS NOT A VALID OPTION!")
-                    break
-                end
-            end
-                
-            while num == 2 do
-                print("Opponent's field:")
-                print("0 - Return")
-                Functions.printzone(Player[y].field)
-                local opcao = tonumber(io.read())
-                if opcao == nil then
-                    print("THAT IS NOT A VALID OPTION!")
-                    break
-                elseif opcao == 0 then
-                    break
-                elseif opcao <= #Player[y].field then
-                    Functions.printcard(Player[y].field[opcao])
-                    print("[Any command] - Return")
-                    local option = tonumber(io.read())
-                    if option then
-                        break
-                    end
-                end
-            end
+        pygame.display.flip()
 
-            if num ~= nil and num ~= 0 and num ~= 1 and num ~= 2 then
-                print("THAT IS NOT A VALID OPTION!")
-                break
-            end
-        end
-        ------------------room--------------------------------------------
-        while option == 3 do
-            print("Your room:")
-            print("0 - Return")
-            Functions.printzone(Player[t].room)
-            local opcao = tonumber(io.read())
-            if opcao == nil then
-                print("THAT IS NOT A VALID OPTION!")
-                    break
-            elseif opcao == 0 then
-                    break
-            elseif opcao <= #Player[t].room then
-                local card = Player[t].room[opcao]
-                Functions.printcard(card)
-                print("0 - Return")
-                if card.stamina > 0 then
-                    print("1 - Ability")
-                end
-                local decisao = tonumber(io.read())
-                if decisao == nil then
-                    print("THAT IS NOT A VALID OPTION!")
-                    break
-                elseif decisao == 0 then
-                    break
-                elseif decisao == 1 and card.stamina > 0 then
-                    card.effect.ability(card,Player[t],Player[y])
-                    card.loyalty = card.loyalty-1
-                    card.stamina = card.stamina-1
-                    if card.loyalty < 1 then
-                        Functions.destroy(card,Player1,Player[t],Player[y])
-                    end
-                else
-                    print("SELECT A VALID OPTION!")
-                end
-            else
-                print("SELECT A VALID OPTION!!")
-            end
-        end
-        
-        while option == 4 do
-            print("Your temple:")
-            print("0 - Return")
-            Functions.printzone(Player[t].temple)
-            
-            local option = tonumber(io.read())
-            
-            if option == nil then
-                print("THAT IS NOT A VALID OPTION!")
-                    break
-            elseif option == 0 then
-                    break
-            elseif option <= #Player[t].temple then
-                local card = Player[t].temple[option]
-                Functions.printcard(card)
-                print("0 - Return")
-                if option == nil then
-                    print("THAT IS NOT A VALID OPTION!")
-                        break
-                elseif option == 0 then
-                        break
-                else
-                    print("THAT IS NOT A VALID OPTION!")
-                end
-            end
-        end
-        
-        while option == 5 do
-            print("Your graveyard:")
-            print("0 - Return")
-            Functions.printzone(Player[t].graveyard)
-            
-            local opti = tonumber(io.read())
-            
-            if opti == 0 then
-                break
-            else
-                print("You can't do anything for them. :'(")
-            end
-        end
-        
-        if option == 6 then
-            Functions.endturn(Player[t],Player[y])
-            break
-        end
-        
-        while option == 7 do
-            print("Your extra deck:")
-            print("0 - Return")
-            Functions.printzone(Player[t].extra)
-            local option = tonumber(io.read())
-            if option ~= nil and option == 0 then
-                break
-            elseif option ~= nil and option > 0 and option <= #Player[t].extra then
-                local card = Player[t].extra[option]
-                Functions.printcard(card)
-                print("0 - Return")
-                print("1 - Play")
-                local option = tonumber(io.read())
-                if option ~= nil and option == 0 then
-                    break
-                elseif option == 1 then
-                    if card.effect.condition then
-                        if card.effect.condition(card,Player[t],Player[y]) == true then
-                            local j = Functions.find(Player[t].extra,card)
-                            while j <= #Player[t].extra do
-                                Player[t].extra[j] = Player[t].extra[j+1]
-                                j = j+1
-                            end
-                            Functions.play(card,Player[t],Player[y])
-                        else
-                            print("YOU CAN'T PLAY THIS CARD! YOU HAVE NOT FULFILLED ITS CONDITION!")
-                        end
-                    end
+def turn(player,opponent):
+    drawBoard(player,opponent)
+    if checkWin(player):
+        endScreen(player)
+        return
+    if action(player):
+        return
 
-                else
-                    print("SELECT A VALID OPTION!")
-                end
-            else
-                print("SELECT A VALID OPTION!")
-            end
-            
-        end
-            
-        if option ~= 1 and option ~= 2 and option ~= 3 and option~= 4 and option ~= 5 and option ~= 6 and option ~= 7 then
-            print("SELECT A VALID OPTION!")
-        end
-    end
-end
-------------GAME----------------
-Functions.game = function()
+def game(player,opponent):
+    player_turn = True
+    while True:
+        if player_turn == True:
+            turn(player,opponent)
+            player_turn = False
+        else:
+            turn(opponent,player)
+            player_turn = True
 
-    Functions.shuffle2(Player[1].deck)
-    Functions.shuffle2(Player[2].deck)
-    Functions.draw(Player[1])
-    Functions.draw(Player[1])
-    Functions.draw(Player[1])
-    Functions.draw(Player[1])
-    Functions.draw(Player[1])
-    Functions.draw(Player[2])
-    Functions.draw(Player[2])
-    Functions.draw(Player[2])
-    Functions.draw(Player[2])
-    Functions.draw(Player[2])
-    Functions.getgold(Player[1])
-    
-    while Player[1].life > 0 and Player[2].life > 0 do
-        t = 1  y = 2
-        Functions.turn(t)
-        if Player[1].life <1 then
-            print(Player[2].name.." won!")
-            break
-        elseif Player[2].life <1 then
-            print(Player[1].name.." won!")
-            break
-        end
-        t = 2  y = 1
-        Functions.turn(t)
-        if Player[1].life <1 then
-            print(Player[2].name.." won!")
-            break
-        elseif Player[2].life <1 then
-            print(Player[1].name.." won!")
-        end
-    end
-end
+        pygame.display.flip()
 
-return Functions
+def newDeck():
+    deck = [10,[]]
+    for i in range(5):
+        deck[1].append( cards.Rat() )
+    for i in range(5):
+        deck[1].append( cards.Fish() )
+    return deck
+
+deck = newDeck()
+nasa = Player()
+ele = Player()
+nasa.name = 'Nasa'
+ele.name = 'Ele'
+
+move(deck[1][0] , deck , nasa.hand)
+move(deck[1][0] , deck , nasa.hand)
+move(deck[1][0] , deck , nasa.hand)
+move(deck[1][0] , deck , nasa.hand)
+move(nasa.hand[1][0] , nasa.hand , nasa.field)
+game(nasa , ele)
